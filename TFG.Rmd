@@ -1,0 +1,31 @@
+---
+title: "HMMS & ANN"
+author: "Ju"
+date: "23 de febrero de 2017"
+header-include:
+  - \usepackage{bbm} 
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Título 
+
+
+\textbf{1.Modelo Oculto de Markov y Algoritmo Baum-Welch/Viterbi }
+
+
+\textbf{Base Teórica }
+
+
+Detallamos a continuación la teoría sobre la cual hemos desarrollado nuestro programa BW/V. Primero partimos de la siguiente definición: una \textbf{cadena de Markov} es una secuencia de variables aleatorias (discretas en nuestro caso) $\{X_1, X_2, ... , X_n\}$ que cumplen la propiedad de Markov, esto es, el estado actual solo depende del estado anterior, el cual contiene toda la información histórica del proceso; en lenguaje formal:
+\\
+
+
+$$
+P(X_n+1 = x | X_1=x_1, ... , X_n = x_n) = Pr(X_{n+1} = x | X_n = x_n)
+$$
+
+
