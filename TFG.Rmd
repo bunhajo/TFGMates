@@ -11,21 +11,56 @@ output: pdf_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Título 
+## 1.  Marco Teórico de las Cadenas de Markov 
 
+# Secuencias
 
-\textbf{1.Modelo Oculto de Markov y Algoritmo Baum-Welch/Viterbi }
+Sea un \textit{alfabeto} $X = \{0, 1, \cdots, m-1\}$ de \textit{símbolos}, con $m$ un natural. Si $x \in X^{\mathbb{Z}}$, entonces $x=\cdots x_{-1} x_{0} x_{1} \cdots$ secuencia infinita.Donde los índicies $i<0$ denotan el pasado de la secuencia, y los $i \geq 0$ el futuro, particularmente el índice $i=0$ es el primer símbolo desconocido de la secuencia. 
 
+En estos términos definimos una palabra $w \in X^l$ de longitud $l$, como una $l$-tupla de $X$. $\phi$ denotará la palabra vacía de longitud 0. Una subsecuencia $s$ es una estructura $s = (w, (a,b))$, donde $w$ es una palabra y $a,b \in \mathbb{Z}$ tq $|w|=b-a+1$. Así, $s$ puede también escribirse $s=s_a \cdots s_b$, y $a$ representaría el tiempo inicial, y $b$ el tiempo final. Una secuencia $x$  contendrá a la subsecuencia $s$ si $\forall t \in [a,b], s_t=x_t$. 
 
-\textbf{Base Teórica }
+El conjunto $A_s = \{x \in X^{\mathbb{Z}} | x_i=s_i \forall i \in [a,b]\}$ es el conjunto de la secuencias de $X^{\mathbb{Z}}$ que contienen a $s$, si por ejemplo $s=(\phi,(a, a-1))$, entonces $A_s=X^{\mathbb{Z}}$.
 
+El conjunto $X^*$ denotará el de todas las palabras.
 
-Detallamos a continuación la teoría sobre la cual hemos desarrollado nuestro programa BW/V. Primero partimos de la siguiente definición: una \textbf{cadena de Markov} es una secuencia de variables aleatorias (discretas en nuestro caso) $\{X_1, X_2, ... , X_n\}$ que cumplen la propiedad de Markov, esto es, el estado actual solo depende del estado anterior, el cual contiene toda la información histórica del proceso; en lenguaje formal:
-\\
+# Procesos
 
+Un proceso es una medida de probabilidad estacionaria en un espacio de secuencias.
 
+Una medida de probabilidad es una función que asigna probabilidades a conjuntos (el espacio medible de probabilidades), en este caso a conjuntos de secuencias. Sea $\chi$ la menor colección de subconjuntos de $X^{\mathbb{Z}}$ tq:
+
+1. Para toda secuencia $s, A_s \in X^{\mathbb{Z}}$.
+2. $\chi$ es cerrado bajo complementos y uniones contables.
+
+El par $(X^{\mathbb{Z}}, \chi)$ es el espacio medible que asigna probabilidades a los conjuntos $A_S$ fijados por las subsecuencias $s$.
+Definiremos entonces $P(s)=P(A_s)$, tenemos en particular:
 $$
-P(X_n+1 = x | X_1=x_1, ... , X_n = x_n) = Pr(X_{n+1} = x | X_n = x_n)
+P(\phi)=P(X^{\mathbb{Z}}) \text{         (1)}
+$$  
+
+En nuestra definición de proceso nos referíamos también a ellos como estacionarios. Si $D$ es la función desplazamiento $D:X^{\mathbb{Z}}  \rightarrow X^{\mathbb{Z}}$, que actúa sobre todo $x \in X^{\mathbb{Z}}$ de manera que $D(x_t)=x_{t+1}$, es decir desplaza el tiempo de origen.
+
+Decimos que $P$ es una medida de probabilidad estacionaria si $\forall A \in X, P(D(A))=P(A)$, como $D$ es de hecho un automorfismo sobre $X^{\mathbb{Z}}$, entonces $P(D^{-1}(A))=P(D^{-1}(D(A)))=P(A)$ 
+
+Finalmente podemos definir de forma más formal un proceso \textit{Q} Como el espacio de probabilidades estacionario $(X^{\mathbb{Z}}, \chi, P)$.
+
+Sea $w$ una palabra, entonces si $P$ estacionario $P(w)=P(s)$. Además de manera trivial podemos obtener que, si $W_l$ es el conjunto de las palabras de longitud $l>0$:
 $$
+\sum_{z \in W_l}P(wz)=\sum_{z \in W_l}P(zw)= P(w) \text{          (2)} 
+$$
+
+Así, cualquier función de $X^*$ que satisfaga (1) y (2) define un proceso.
+
+
+
+
+
+
+
+
+
+
+
+
 
 
