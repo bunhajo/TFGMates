@@ -1,17 +1,16 @@
 #ALGORITMO BAUM-WELCH
 
+BaumWelch = function(returns, mu, sigma, p, n_states){
 
-change_likelihood=data.frame(c(Inf, Inf))
-
-
-
-Baum-Welch = function(returns, mu, sigma, p, n_states=2)
-
+change_likelihood=c(rep(Inf, n_states))
+likelihood=data.frame()
 
 returns=as.data.frame(returns)
-sigma=c(cov(retornos),cov(retornos))
-A=data.frame(c(0.5,0.5),c(0.5,0.5))
-p=c(0.5,0.5)
+mu = as.data.frame(mu)
+sigma=as.data.frame(sigma)
+A=data.frame(rep(1/n_states,n_states))
+A[1:n_states]=rep(1/n_states,n_states)
+p=rep(1/n_states,n_states)
 k=ncol(returns)
 L=nrow(returns)
 
@@ -22,18 +21,24 @@ backward=B
 smoothed=B
 xi=vector("list", L-1)
 xi[1:L-1]=list(data.frame(c(rep(0,n_states)),c(rep(0,n_states))))
-while(change_likelihood[iteration-1,1] > Tolerance && change_likelihood[iteration-1,2] > Tolerance){
+iteration=1
+while(change_likelihood[1] > Tolerance & change_likelihood[2] > Tolerance & iteration<=3){
 
 #SECCION A
 
-  #Arreglar
+
 for(i in 1:n_states){
-  if(k!=1){
-    B[,i] = exp(-.5*apply(t((returns-mu[,i]))%*%sigma^(-1)*t((returns-mu[,i])), 1, function(x)sum(x)))/((2*pi)^(k/2)*sqrt(abs(det(sigma))))
-  }else{
-    B[,i] = exp(-.5*((returns-mu[i,])*sigma^(-1)*(returns-mu[i,])))/((2*pi)^(k/2)*sqrt(cov(as.data.frame(returns))))
+  R=returns
+  for(j in 1:nrow(returns)){
+    R[j,]=returns[j,]-t((mu[i,]))
   }
-}
+  if(k!=1){
+      B[,i] = exp(-.5*apply((as.matrix(R)%*%solve(as.matrix(sigma)))*as.matrix(R), 1, function(x)sum(x)))/((2*pi)^(k/2)*sqrt(abs(det(sigma))))
+    }else{
+      B[,i] = exp(-.5*((returns-mu[i,])*sigma[i,]^(-1)*(returns-mu[i,])))/(sqrt(2*pi*sigma[i,]))
+    }
+  }
+  
 # % for t=1:T
 # %     B(t,1) =  exp(-.5*((returns(t)-mu(1))/sigma(1)).^2)/(sqrt(2*pi)*sigma(1));
 # %     B(t,2) =  exp(-.5*((returns(t)-mu(2))/sigma(2)).^2)/(sqrt(2*pi)*sigma(2));
@@ -48,7 +53,7 @@ forward[1,] = forward[1,]/sum(forward[1,])
 
 for (t in 2:L){
  aux=c(rep(0,n_states))
- for(i in 1:length(A)){
+ for(i in 1:n_states){
   aux[i] =  aux[i] + sum(forward[t-1,]*A[,i])
  }
  forward[t,]=aux*B[t,]
@@ -63,7 +68,7 @@ backward[L,]=backward[L,]/sum(backward[L,])
 t=L-1
 while (t>=1){
     aux=c(rep(0,n_states))
-    for(i in 1:length(A)){
+    for(i in 1:n_states){
       aux[i] =  aux[i] + sum(A[,i]*backward[t+1,])
     }
 backward[t,]=aux*B[t+1,]
@@ -81,10 +86,10 @@ for (t in 1:L){
 
 t=1
 while(t<=L-1){
-aux = data.frame(c(rep(0,n_states)),c(rep(0,n_states)))
+aux = diag(0,n_states,n_states)
 
 for(j in 1:n_states){
-  aux[j,]=forward[t,j]*backward[t+1,]*B[t+1,]
+  aux[j,]=as.matrix(forward[t,j]*backward[t+1,]*B[t+1,])
 } 
 
 xi[[t]] = A*aux
@@ -100,45 +105,61 @@ p=smoothed[1,]
 exp_num_transitions=data.frame(c(rep(0,n_states)),c(rep(0,n_states)))
 for(i in 1:n_states){
   for(j in 1:n_states){
-  exp_num_transitions[i,j]=sum(sapply(lapply(xi, function(x)sum(x[i,j])), function(x)(sum(x))))  
+   exp_num_transitions[i,j]=sum(sapply(lapply(xi, function(x)sum(x[i,j])), function(x)(sum(x))))  
   }
 }
 
 for(i in 1:n_states){
-A[i,] = exp_num_transitions[i,]/sum(sapply(lapply(xi, function(x)sum(x[i,])), function(x)(sum(x))))
+  if(sum(sapply(lapply(xi, function(x)sum(x[i,])), function(x)(sum(x))))!=0){
+  A[i,] = exp_num_transitions[i,]/sum(sapply(lapply(xi, function(x)sum(x[i,])), function(x)(sum(x))))
+  }else{A[i,]=c(rep(0,n_states))}
 if(k!=1){
-  for(j in 1:k)
-  mu[i,k]=sum(smoothed[,i]*returns[,j])/sum(smoothed[,i])
+  for(j in 1:k){
+    #Mirar
+    if(sum(smoothed[,i])!=0){mu[i,j]=sum(smoothed[,i]*returns[,j])/sum(smoothed[,i])}else{mu[i,j]=0}
+  
   #sigma[i,]=sqrt(sum(smoothed[,i]*(returns-as.data.frame(mu)[i,])^2)/sum(smoothed[,i]))
   #sigma[i,]=sqrt(apply((smoothed[,i]%*%(returns-as.data.frame(mu)[i,])^2),1, function(x) sum(x))/sum(smoothed[,i]))
+    }
   }else{
-  mu[i]=sum(smoothed[,i]*returns)/sum(smoothed[,i])
-  sigma[i]=sqrt(apply((smoothed[,i]*(returns-as.data.frame(mu)[i,])^2),1, function(x) sum(x))/sum(smoothed[,i]))
+  mu[i,]=sum(smoothed[,i]*returns)/sum(smoothed[,i])
+  sigma[i,]=sqrt(apply((smoothed[,i]*(returns-mu[i,])^2),2, function(x)sum(x)/sum(smoothed[,i])))
   }
-}
+
 
 
 #TOLERANCE
 
-# for i=1:2
-# A(i,:)=exp_num_transitions(i,:)/sum(sum(xi(i,:,:),2),3);%(2)
-#        sigma(i)=sqrt(sum(smoothed(:,i).*(returns-mu(i)).^2)/sum(smoothed(:,i)));%(3)
-#        end
-#        
-#        %TOLERANCE
-#        %%
-#          
-#          likelihood(iteration,1)=log(...
-#                                      (((exp(-.5*((returns(t)-mu(1)*ones(T,1))/sigma(1)).^2)/(sqrt(2*pi)*sigma(1)))'*smoothed(:,1))/sum(smoothed(:,1)))...
+
+#          likelihood(iteration,1)=log(
+#                             (((exp(-.5*((returns(t)-mu(1)*ones(T,1))/sigma(1)).^2)/(sqrt(2*pi)*sigma(1)))*smoothed(:,1))/sum(smoothed(:,1)))...
 #                                      );
 #                                        likelihood(iteration,2)=log(...
 #                                        (((exp(-.5*((returns(t)-mu(2)*ones(T,1))/sigma(2)).^2)/(sqrt(2*pi)*sigma(2)))'*smoothed(:,2))/sum(smoothed(:,2)))...
 #                                        );
-#        
+# 
 #        change_likelihood(iteration,:)= abs(likelihood(iteration,:)-likelihood(iteration-1,:));
 #        iteration=iteration+1;
-#        
-# }               
+# 
+# }
                               
-                              
-                              
+  # R=returns
+  # for(j in 1:nrow(returns)){
+  #   R[j,]=returns[j,]-t((mu[i,]))
+  # }                
+  # if(k!=1){
+  # likelihood[iteration, i] = sum(log(smoothed[,i]/sum(smoothed[,i])*exp(-.5*apply((as.matrix(R)%*%solve(as.matrix(sigma)))*as.matrix(R), 1, function(x)sum(x)))/((2*pi)^(k/2)*sqrt(abs(det(sigma))))))
+  # }else{
+  # likelihood[iteration, i] = sum(log(smoothed[,i]/sum(smoothed[,i])*exp(-.5*((returns-mu[i,])*sigma^(-1)*(returns-mu[i,])))/((2*pi)^(k/2)*sqrt(cov(as.data.frame(returns))))))
+  # }
+}
+#if(iteration>1){change_likelihood= abs(likelihood[iteration,]-likelihood[iteration-1,])}
+iteration=iteration+1
+}}
+
+
+
+
+
+
+
