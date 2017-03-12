@@ -8,9 +8,9 @@ BaumWelch = function(returns, mu, sigma, p, n_states=2, Tolerance=7*10^{-2}){
   returns=as.data.frame(returns)
   mu = as.data.frame(mu)
   sigma=as.data.frame(sigma)
-  A=data.frame(c(0.9,0.1), c(0.1,0.9))
   #A=data.frame(rep(1/n_states,n_states))
   #A[1:n_states]=rep(1/n_states,n_states)
+  A=data.frame(c(0.9,0.1),c(0.1,0.9))
   p=rep(1/n_states,n_states)
   k=ncol(returns)
   L=nrow(returns)
@@ -145,7 +145,7 @@ BaumWelch = function(returns, mu, sigma, p, n_states=2, Tolerance=7*10^{-2}){
   iteration=iteration+1
   }
 
-return(list(mu=mu, sigma=sigma, A=A, forward=forward, backward=backward, smoothed=smoothed, exp_num_transitions))
+return(list(mu=mu, sigma=sigma, p = p, A=A, forward=forward, backward=backward, smoothed=smoothed, exp_num_transitions))
 
 }
 

@@ -1,6 +1,6 @@
 ---
 title: "HMMS & ANN"
-author: "Ju"
+author: "Juan Tornero Lucas"
 date: "23 de febrero de 2017"
 header-include:
   - \usepackage{bbm} 

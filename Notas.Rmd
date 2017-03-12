@@ -1,0 +1,91 @@
+---
+title: "Notas TFG"
+author: "Juan"
+date: "11 de marzo de 2017"
+header-include:
+  - \usepackage{bbm} 
+output: pdf_document
+---
+
+
+#Aplicación del HMM
+
+Vemos a continuación cómo podemos emplear un HMM para modelizar un sistema estocástico como es el de la Bolsa. 
+
+Nuestro punto de partida será suponer que los retornos pueden pertenecer a dos estados $X=\{1,2\}$, uno cuando el mercado tiende al alza (1), y otro cuando tiende a la baja (2), y que ambos estados tienen una distribución Gaussiana, con $\mu_1>\mu_2$ y $\sigma_1>\sigma_2$.
+
+Nuestro caso de estudio será el correspondiente a los valores diarios de apertura del IBEX35 entre el 19/10/1990 y 12/08/1991. 
+
+```{r, echo=FALSE}
+df=read.csv("C:/Users/Tornero/Documents/Uni/TFGMates/Ibex35.csv", header = T)[1:200,]
+returns=double()
+for (i in 1:199){returns[i]=(df$APERTURA[i+1]-df$APERTURA[i])/df$APERTURA[i]}
+df$RETORNOS[2:nrow(df)]=paste0(round(100*returns,1),"%")
+print(head(df[,c(2:3,ncol(df))]))
+
+```
+
+Trabajaremos con los retornos (R), y estableceremos como condiciones iniciales $\mu_1= \overline{R_+}$, donde $R_+=\{R | R>0\}$, y $\mu_2= \overline{R_-}$, con $R_-=\{R | R<0\}$
+De la misma manera $\sigma_1=\sigma(R_+)$ y $\sigma_2=\sigma(R_-)$. En cuanto a la matriz de transición y a la probabilidad inicial,los suponemos de la siguiente manera:
+$$A= \{a_{ij}\} = \{P(X_t = j | X_{t-1} = i)\} = \begin{pmatrix} a_{11} & a_{12} \\ a_{21}& a_{22} \end{pmatrix} = \begin{pmatrix} 0.9 & 0.1 \\ 0.1 & 0.9 \end{pmatrix}
+$$
+$$
+\left\{
+ \pi_1 = 0.5 \atop
+ \pi_2 = 1-\pi_1 = 0.5
+ \right.
+$$
+
+Tras aplicar el algoritmo de BaumWelch, obtenemos la estimación de los parámetros:
+
+$$
+ \mu= \begin{pmatrix} 5.8 \cdot 10^{-3} \\ -3.6 \cdot 10^{-3} \end{pmatrix} 
+$$ 
+$$  
+  \sigma = \begin{pmatrix} 9.43 \cdot 10^{-5} \\ 4.17 \cdot 10^{-5} \end{pmatrix}
+$$
+
+La nueva matriz de transición y probabilidad inicial son:
+
+$$
+A= \begin{pmatrix} 0.802 & 0.198 \\ 0.196 & 0.804 \end{pmatrix}
+$$
+$$
+\left\{ \pi_1 = 1 \atop
+        \pi_2 = 0
+\right.
+$$
+
+Para ilustrar la capacidad clasificadora del HMM, mostramos un gráfico que de la evolución de los valores del IBEX35 en el periodo estudiado, junto a la clasificación que ha hecho las smoothed del estado alcista de los retornos generados.
+
+```{r, echo=F, fig.height=4, fig.width=8}
+
+library(ggplot2)
+
+source("C:/Users/Tornero/Documents/Uni/TFGMates/Baum-Welch.R")
+mu=c(mean(returns[which(returns>0)]), mean(returns[which(returns<0)]))
+sigma=c(var(returns[which(returns>0)]), var(returns[which(returns>0)]))
+var=BaumWelch(returns = returns, mu=mu, sigma=sigma, n_states = 2)
+smoothed=var$smoothed[,1]
+
+ggplot(df[-1,], aes(x=FECHA, y=APERTURA, group=1, colour=smoothed))+geom_line(size=0.2) +
+  scale_x_discrete(limits=df[-1,]$FECHA,breaks=df[-1,]$FECHA[seq(1,191,10)])+
+  scale_color_gradient(low="red",high="green")+theme(axis.text.x=element_text(angle=30))
+
+
+```
+
+Vemos cómo nuestra clasificación de los retornos se aproxima de manera muy efectiva al comportamiento que muestra la gráfica.
+
+```{r, echo=FALSE, warning=FALSE,fig.height=4, fig.width=8}
+library(ggplot2)
+
+var=BaumWelch(returns = returns, mu=mu, sigma=sigma, n_states = 2)
+smoothed=var$smoothed[,1]
+df=data.frame(x=returns, y=round(smoothed))
+ggplot(df, aes(x=x, group=y, colour=y, fill=y))+geom_density(alpha=0.2)+
+      stat_function(fun = dnorm, colour = "green",args =list(mean=var$mu[1,],sd=100*var$sigma[1,]))+
+      stat_function(fun = dnorm, colour = "red", args = list(mean=var$mu[2,], sd=100*var$sigma[2,]))+
+      xlim(c(-0.05,0.035))+scale_fill_continuous(guide=F)+scale_color_continuous(guide=F)+xlab("")
+
+```
