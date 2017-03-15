@@ -1,6 +1,6 @@
 #ALGORITMO BAUM-WELCH
 
-BaumWelch = function(returns, mu, sigma, p, n_states=2, Tolerance=7*10^{-2}){
+BaumWelch = function(returns, mu, sigma, n_states=3, Tolerance=7*10^{-2}, maxstep=1000){
 
   change_likelihood=c(rep(Inf, n_states))
   likelihood=data.frame()
@@ -8,9 +8,9 @@ BaumWelch = function(returns, mu, sigma, p, n_states=2, Tolerance=7*10^{-2}){
   returns=as.data.frame(returns)
   mu = as.data.frame(mu)
   sigma=as.data.frame(sigma)
-  #A=data.frame(rep(1/n_states,n_states))
-  #A[1:n_states]=rep(1/n_states,n_states)
-  A=data.frame(c(0.9,0.1),c(0.1,0.9))
+  A=data.frame(rep(1/n_states,n_states))
+  A[1:n_states]=rep(1/n_states,n_states)
+  #A=data.frame(c(0.9,0.1),c(0.1,0.9))
   p=rep(1/n_states,n_states)
   k=ncol(returns)
   L=nrow(returns)
@@ -23,7 +23,7 @@ BaumWelch = function(returns, mu, sigma, p, n_states=2, Tolerance=7*10^{-2}){
   xi=vector("list", L-1)
   xi[1:L-1]=list(data.frame(c(rep(0,n_states)),c(rep(0,n_states))))
   iteration=1
-  while(change_likelihood[1] > Tolerance & change_likelihood[2] > Tolerance){
+  while(change_likelihood[1] > Tolerance & change_likelihood[2] > Tolerance & iteration<=maxstep){
   
   #SECCION A
   
@@ -31,10 +31,10 @@ BaumWelch = function(returns, mu, sigma, p, n_states=2, Tolerance=7*10^{-2}){
   for(i in 1:n_states){
     R=returns
     for(j in 1:nrow(returns)){
-      R[j,]=returns[j,]-t((mu[i,]))
+      R[j,]=returns[j,]-mu[,i]
     }
     if(k!=1){
-        B[,i] = exp(-.5*apply((as.matrix(R)%*%solve(as.matrix(sigma)))*as.matrix(R), 1, function(x)sum(x)))/((2*pi)^(k/2)*sqrt(abs(det(sigma))))
+        B[,i] = exp(-.5*apply((as.matrix(R)%*%solve(as.matrix(sigma)))*as.matrix(R), 1, function(x)sum(x)))/((2*pi)^(k/2)*sqrt(abs(det(as.matrix(sigma)))))
       }else{
         B[,i] = exp(-.5*((returns-mu[i,])*sigma[i,]^(-1)*(returns-mu[i,])))/(sqrt(2*pi*sigma[i,]))
       }
@@ -117,8 +117,9 @@ BaumWelch = function(returns, mu, sigma, p, n_states=2, Tolerance=7*10^{-2}){
   if(k!=1){
     for(j in 1:k){
       #Mirar
-      if(sum(smoothed[,i])!=0){mu[i,j]=sum(smoothed[,i]*returns[,j])/sum(smoothed[,i])}else{mu[i,j]=0}
+      if(sum(smoothed[,i])!=0){mu[j,i]=sum(smoothed[,i]*returns[,j])/sum(smoothed[,i])}else{mu[i,j]=0}
     
+      #### CALCULAR TAMBIEN 
     #sigma[i,]=sqrt(sum(smoothed[,i]*(returns-as.data.frame(mu)[i,])^2)/sum(smoothed[,i]))
     #sigma[i,]=sqrt(apply((smoothed[,i]%*%(returns-as.data.frame(mu)[i,])^2),1, function(x) sum(x))/sum(smoothed[,i]))
       }
@@ -133,10 +134,10 @@ BaumWelch = function(returns, mu, sigma, p, n_states=2, Tolerance=7*10^{-2}){
 
     R=returns
     for(j in 1:nrow(returns)){
-      R[j,]=returns[j,]-t((mu[i,]))
+      R[j,]=returns[j,]-mu[,i]
     }
     if(k!=1){
-    likelihood[iteration, i] = log(sum(smoothed[,i]/sum(smoothed[,i])*exp(-.5*apply((as.matrix(R)%*%solve(as.matrix(sigma)))*as.matrix(R), 1, function(x)sum(x)))/((2*pi)^(k/2)*sqrt(abs(det(sigma))))))
+    likelihood[iteration, i] = log(sum(smoothed[,i]/sum(smoothed[,i])*exp(-.5*apply((as.matrix(R)%*%solve(as.matrix(sigma)))*as.matrix(R), 1, function(x)sum(x)))/((2*pi)^(k/2)*sqrt(abs(det(as.matrix(sigma)))))))
     }else{
     likelihood[iteration, i] = log(sum(smoothed[,i]/sum(smoothed[,i])*exp(-.5*((returns-mu[i,])*sigma^(-1)*(returns-mu[i,])))/((2*pi)^(k/2)*sqrt(cov(as.data.frame(returns))))))
     }
