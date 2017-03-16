@@ -90,12 +90,15 @@ mu=data.frame(good=rep(0.1,4),
               meh=rep(0,4),
               bad=rep(-.1,4))
 
-var=BaumWelch(returns = retornos, mu=mu, sigma= var(retornos), n_states = 3)
+sigma=list()
+for(i in 1:4){sigma[[i]]=var(retornos)}
+
+var=BaumWelch(returns = retornos, mu=mu, sigma= sigma, n_states = 2)
 #smoothed=c(0,as.double(var$smoothed[,1]>var$smoothed[,2]))
 
 
 smoothed = var$smoothed
-names(smoothed)=c("1","2","3")
+names(smoothed)=c("1","2")
 A=double()
 for (i in 1:nrow(smoothed)) {
   A[i]=as.double(names(smoothed)[which(t(smoothed[i,])==max(t(smoothed[i,])))])
@@ -104,22 +107,73 @@ for (i in 1:nrow(smoothed)) {
 
 DesigualB2C_ANN$smoothed=as.double(c(2, A))
 
-ggplot(DesigualB2C_ANN, aes(x=date, y=transactions, group=1, colour= factor(smoothed)))+geom_line(size=0.2) + 
+ggplot(DesigualB2C_ANN, aes(x=date, y=sessions, group=1, colour= factor(smoothed)))+geom_line(size=0.2) + 
   scale_x_discrete(limits=df$date,breaks=df$date[seq(1,366,10)])+scale_colour_manual(labels=c("1","2","3"), values=c("green", "yellow", "red"))
 
 
 
 #Semanal
+df_wretornos=df_w[-nrow(df_w),]
 for(i in 1:(nrow(df_wretornos))){
   for(j in 2:(ncol(df_wretornos))){
     df_wretornos[i, j]=(df_w[i+1,j]-df_w[i,j])/df_w[i,j]
   }
 }
-
 wretornos=df_wretornos[,c(2:5)]
-mu=data.frame(good=as.double(sapply(wretornos[which(df_wretornos$w_transactions>0),], function(x)median(x))),
-              meh= c(0,0,0,0),
-              bad= as.double(sapply(wretornos[which(df_wretornos$w_transactions<0),], function(x)median(x))))
 
-var=BaumWelch(returns = wretornos[-10,], mu=mu, sigma= var(wretornos[-10,]), n_states = 3, Tolerance = 0.7)
+ggplot(data=wretornos)+
+  geom_density(aes(x=w_sessions), fill="blue", alpha=.2)+
+  geom_density(aes(x=w_users), fill="green", alpha=0.2)+
+  geom_density(aes(x=w_bounces), fill="red", alpha=.2)+
+  geom_density(aes(x=w_newusers), fill="yellow",alpha=0.2)+
+  #stat_function(fun=dnorm, args = list(mean=0.07, sd=0.1))+
+  scale_x_continuous(breaks = round(seq(min(retornos$sessions), max(retornos$sessions), by = 0.1),1)) 
 
+mu=data.frame(good=c(mean(wretornos$w_sessions[which(wretornos$w_sessions>0)]),
+                     mean(wretornos$w_users[which(wretornos$w_users>0)]),
+                     mean(wretornos$w_bounces[which(wretornos$w_bounces>0)]),
+                     mean(wretornos$w_newusers[which(wretornos$w_newusers>0)])),
+              bad=c(mean(wretornos$w_sessions[which(wretornos$w_sessions<0)]),
+                    mean(wretornos$w_users[which(wretornos$w_users<0)]),
+                    mean(wretornos$w_bounces[which(wretornos$w_bounces<0)]),
+                    mean(wretornos$w_newusers[which(wretornos$w_newusers<0)])))
+
+
+# mu=data.frame(good=as.double(sapply(wretornos[which(df_wretornos$w_transactions>0),], function(x)median(x))),
+#               meh= c(0,0,0,0),
+#               bad= as.double(sapply(wretornos[which(df_wretornos$w_transactions<0),], function(x)median(x))))
+
+sigma=list()
+sigma[[1]]=var(wretornos[which(as.double(apply(wretornos, 1, function(x)mean(x)))>0),])
+sigma[[2]]=var(wretornos[which(as.double(apply(wretornos, 1, function(x)mean(x)))<0),])
+
+var=BaumWelch(returns = wretornos, mu=mu, sigma= sigma, n_states = 2, Tolerance = 0.001)
+
+ggplot(prov1, aes(x=w_sessions))+
+  geom_density(aes(x=w_sessions), fill="blue", alpha=.2)+
+  geom_density(aes(x=w_users), fill="green", alpha=0.2)+
+  geom_density(aes(x=w_bounces), fill="red", alpha=.2)+
+  geom_density(aes(x=w_newusers), fill="yellow",alpha=0.2)+
+  stat_function(fun=dnorm, args = list(mean=0.14, sd=0.1))+
+  stat_function(fun=dnorm, args = list(mean=var$mu[2,2], sd=0.1))+
+  stat_function(fun=dnorm, args = list(mean=var$mu[3,2], sd=0.1))+
+  stat_function(fun=dnorm, args = list(mean=var$mu[4,2], sd=0.1))+
+  stat_function(fun=dnorm, args = list(mean=mu[1,1], sd=1))+
+  stat_function(fun=dnorm, args = list(mean=mu[2,1], sd=1))+
+  stat_function(fun=dnorm, args = list(mean=mu[3,1], sd=1))+
+  stat_function(fun=dnorm, args = list(mean=mu[4,1], sd=1))
+  scale_x_continuous(breaks = round(seq(min(retornos$sessions), max(retornos$sessions), by = 0.1),1)) 
+  
+  smoothed = var$smoothed
+  names(smoothed)=c("1","2","3")
+  A=double()
+  for (i in 1:nrow(smoothed)) {
+    A[i]=as.double(names(smoothed)[which(t(smoothed[i,])==max(t(smoothed[i,])))])
+  }
+  
+  
+  df_w$smoothed=as.double(c(2, A))
+
+  ggplot(df_w[,c(1:2, ncol(df_w))], aes(x=week, y=w_sessions,  group=1,colour= factor(smoothed)))+geom_line(size=0.2) + 
+    scale_x_discrete(limits=df_w$week,breaks=df_w$week[seq(1,53,10)])+scale_colour_manual(labels=c("1","2","3"), values=c("green", "yellow", "red"))
+  
