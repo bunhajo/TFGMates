@@ -56,11 +56,17 @@ var=BaumWelch(returns = observ, mu=a_mu, sigma=diag(1,ncol(observ)), n_states = 
 #### Red Neuronal
 
 Prueba_ANN  = read.delim(paste0(getwd(), "/Prueba_TFG.txt")) 
+# Prueba_ANN  = read.delim(paste0(getwd(), "/DesigualB2C_ANN.txt")) 
 df=DesigualB2C_ANN
-net=neuralnet(transactions ~ sessions + users + bounces + newusers, DesigualB2C_ANN[1:300,], 
-              hidden = 300, threshold = 0.001, stepmax = 500000)
+net=neuralnet(transactions ~ sessions + users + var_sess$smoothed[-365,1], df_retornos[-365,], 
+              hidden = 10, threshold = 0.005, stepmax = 100000)
+
+#Esto Funciona
+net_smoothed=neuralnet(smoothed ~ sessions + users + transactions, df_retornos[-365,], 
+              hidden = 15, threshold = 0.005, stepmax = 100000)
+
 copy_net=net
-test=data.frame(net$net.result, Prueba_ANN$transactions)
+test=data.frame(as.data.frame(net_smoothed$net.result), df_retornos[-365,]$transactions)
 
 
 # Diario
@@ -73,43 +79,59 @@ for(i in 1:(nrow(df_retornos))){
 
 
 retornos=df_retornos[,c(2:5)]
+retornos_sess=df_retornos[,2]
+retornos_users=df_retornos[,3]
 # mu=data.frame(good=as.double(sapply(retornos[which(df_retornos$transactions>0),], function(x)median(x))),
 #               meh= as.double(sapply(retornos[which(df_retornos$transactions>-0.05 & df_retornos$transactions<0.05),], function(x)median(x))),
 #               bad= as.double(sapply(retornos[which(df_retornos$transactions<(-0)),], function(x)median(x))))
 
-ggplot(data=retornos)+
+ggplot(data=df_retornos)+
   geom_density(aes(x=sessions), fill="blue", alpha=.2)+
+  stat_function(fun=dnorm, args = list(mean=0.07, sd=0.1))+
+  stat_function(fun=dnorm, args = list(mean=-0.01, sd=0.05))+
+  scale_x_continuous(breaks = round(seq(min(df_retornos$sessions), max(df_retornos$sessions), by = 0.1),1)) 
   geom_density(aes(x=users), fill="green", alpha=0.2)+
   geom_density(aes(x=bounces), fill="red", alpha=.2)+
   geom_density(aes(x=newusers), fill="yellow",alpha=0.2)+
-  stat_function(fun=dnorm, args = list(mean=0.07, sd=0.1))+
-  scale_x_continuous(breaks = round(seq(min(retornos$sessions), max(retornos$sessions), by = 0.1),1)) 
 
 
-mu=data.frame(good=rep(0.1,4),
-              meh=rep(0,4),
-              bad=rep(-.1,4))
+mu=data.frame(good=rep(0.1,1),
+              bad=rep(-.05,1))
+mu=c(0.2,0,-0.2)
 
 sigma=list()
-for(i in 1:4){sigma[[i]]=var(retornos)}
+for(i in 1:2){sigma[[i]]=var(retornos)}
 
-var=BaumWelch(returns = retornos, mu=mu, sigma= sigma, n_states = 2)
+var_sess=BaumWelch(returns = retornos_sess, mu=mu, sigma= rep(var(retornos_sess),3), n_states = 3)
+var_users=BaumWelch(returns = retornos_users, mu=mu, sigma= rep(var(retornos_users),3), n_states = 3)
 #smoothed=c(0,as.double(var$smoothed[,1]>var$smoothed[,2]))
 
 
-smoothed = var$smoothed
-names(smoothed)=c("1","2")
+smoothed_users = var_users$smoothed
+names(smoothed)=c("1","2","3")
 A=double()
 for (i in 1:nrow(smoothed)) {
   A[i]=as.double(names(smoothed)[which(t(smoothed[i,])==max(t(smoothed[i,])))])
 }
 
+smoothed_sessions= var_sess$smoothed
+names(smoothed)=c("1","2","3")
+B=double()
+for (i in 1:nrow(smoothed)) {
+  B[i]=as.double(names(smoothed)[which(t(smoothed[i,])==max(t(smoothed[i,])))])
+}
 
-DesigualB2C_ANN$smoothed=as.double(c(2, A))
+df_retornos$smoothed=as.double(A)
+df$smoothed=as.double(c(2,A))
+p=ggplot(df, aes(x=date, y=sessions, group=1, colour= factor(smoothed)))+geom_line(size=0.2) + geom_smooth()+theme(axis.text.x = element_text(angle=30))+
+  scale_x_discrete(limits=df$date,breaks=df$date[seq(1,366,10)])+scale_colour_manual(labels=c("1","2","3"), values=c("red", "green", "yellow"))
 
-ggplot(DesigualB2C_ANN, aes(x=date, y=sessions, group=1, colour= factor(smoothed)))+geom_line(size=0.2) + 
-  scale_x_discrete(limits=df$date,breaks=df$date[seq(1,366,10)])+scale_colour_manual(labels=c("1","2","3"), values=c("green", "yellow", "red"))
+df_retornos$smoothed=as.double(B)
+df$smoothed=as.double(c(2,B))
+q=ggplot(df, aes(x=date, y=users, group=1, colour= factor(smoothed)))+geom_line(size=0.2) + geom_smooth()+theme(axis.text.x = element_text(angle=30))+
+  scale_x_discrete(limits=df$date,breaks=df$date[seq(1,366,10)])+scale_colour_manual(labels=c("1","2","3"), values=c("red", "green", "yellow"))
 
+multiplot(p,q)
 
 
 #Semanal
