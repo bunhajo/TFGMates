@@ -1,0 +1,48 @@
+---
+title: "Notas2"
+author: "Juan Tornero"
+date: "21 de marzo de 2017"
+header-include:
+  - \usepackage{bbm} 
+output: pdf_document
+---
+
+#Ejemplo Red Neuronal Artificial
+
+Veremos a continuación un par de aplicaciones de una ANN, usando el algoritmo de \textit{Resilient Backpropagation}.
+
+El primer ejemplo entrenaremos una red neuronal para que sea capaz de calcular el cuadrado de un número.
+
+Usaremos una muestra aleatoria de 50 números entre el 0 y el 10 como inputs, y el cuadrado de estos números como output de una ANN con 10 neuronas ocultas y un error de $\delta = 0.01$.
+
+```{r, fig.width=20, echo=FALSE, warning=FALSE, fig.height=8, message=FALSE}
+
+library(neuralnet)
+library(nnet)
+#import the function from Github
+library(devtools)
+source_url('https://gist.githubusercontent.com/fawda123/7471137/raw/466c1474d0a505ff044412703516c34f1a4684a5/nnet_plot_update.r')
+ 
+
+Output <- runif(50, 0, 100) 
+df <- data.frame(Output, Input=sqrt(Output))
+net.sqrt <- neuralnet(Output~Input,  df, hidden=10, 
+                  threshold=0.01)
+
+plot.nnet(net.sqrt, node.labs = F)
+
+
+```
+\textit{En el gráfico se muestra un esquema de esta ANN, cuanto mayor es el peso de la conexión más oscuro es el color de la representación de esta conexión.}
+
+Veamos la precisión de esta ANN calculando el cuadrado de los naturales del 1 al 10.
+
+```{r xtable1, results="asis",message=FALSE,echo=FALSE,warning=FALSE}
+tab<-as.data.frame(cbind(c(1:10),compute(net.sqrt, c(1:10))$net.result,abs(compute(net.sqrt, (1:10))$net.result-c(1:10)^2)))
+colnames(tab)<-c("Input","Output","Error")
+
+library(xtable)
+options(xtable.caption.placement = 'top',xtable.comment = FALSE)
+tabla_1 <- xtable(tab,caption=c(""))
+print(tabla_1, type="latex", include.rownames=F)
+```
