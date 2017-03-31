@@ -1,4 +1,4 @@
-BaumWelch = function(returns, w, p, n_states=2, Tolerance=7*10^{-2}){
+BaumWelch_ANN = function(returns, w, p, n_states=2, Tolerance=7*10^{-2}){
   
   change_likelihood=c(rep(Inf, n_states))
   likelihood=data.frame()
@@ -113,7 +113,7 @@ BaumWelch = function(returns, w, p, n_states=2, Tolerance=7*10^{-2}){
         }
       }else{
         w[i,]=sum(smoothed[,i]*returns)/sum(smoothed[,i])
-        sigma[i,]=apply((smoothed[,i]*(returns-w[i,])^2),2, function(x)sum(x)/sum(smoothed[,i]))
+       # sigma[i,]=apply((smoothed[,i]*(returns-w[i,])^2),2, function(x)sum(x)/sum(smoothed[,i]))
       }
       
       

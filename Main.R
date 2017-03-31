@@ -6,6 +6,7 @@ library(neuralnet)
 
 #### Ejemplo HMM
 source(paste(getwd(), "/","Baum-Welch.R", sep=""))
+source(paste(getwd(), "/","GHMM-ANN.R", sep=""))
 
 df=read.csv(paste0(getwd(), "/Ibex35.csv"), header = T)[1:200,]
 returns=double()
@@ -62,11 +63,11 @@ net=neuralnet(transactions ~ sessions + users + var_sess$smoothed[-365,1], df_re
               hidden = 10, threshold = 0.005, stepmax = 100000)
 
 #Esto Funciona
-net_smoothed=neuralnet(smoothed ~ sessions + users + transactions, df_retornos[-365,], 
-              hidden = 15, threshold = 0.005, stepmax = 100000)
+net_smoothed=neuralnet(smoothed ~ sessions + users + transactions + bounceRate, df_retornos[-365,], 
+              hidden = 4, threshold = 0.001, stepmax = 100000)
 
 copy_net=net
-test=data.frame(as.data.frame(net_smoothed$net.result), df_retornos[-365,]$transactions)
+test=data.frame(as.data.frame(net_smoothed$net.result), df_retornos[-365,]$smoothed)
 
 
 # Diario
@@ -123,8 +124,8 @@ for (i in 1:nrow(smoothed)) {
 
 df_retornos$smoothed=as.double(A)
 df$smoothed=as.double(c(2,A))
-p=ggplot(df, aes(x=date, y=sessions, group=1, colour= factor(smoothed)))+geom_line(size=0.2) + geom_smooth()+theme(axis.text.x = element_text(angle=30))+
-  scale_x_discrete(limits=df$date,breaks=df$date[seq(1,366,10)])+scale_colour_manual(labels=c("1","2","3"), values=c("red", "green", "yellow"))
+p=ggplot(df_retornos, aes(x=date, y=sessions, group=1, colour= factor(round(smoothed,1))))+geom_line(size=0.2) + geom_smooth()+theme(axis.text.x = element_text(angle=30))+
+  scale_x_discrete(limits=df$date,breaks=df$date[seq(1,366,10)])+scale_colour_gradient(low="red", high = "green")
 
 df_retornos$smoothed=as.double(B)
 df$smoothed=as.double(c(2,B))
@@ -196,6 +197,6 @@ ggplot(prov1, aes(x=w_sessions))+
   
   df_w$smoothed=as.double(c(2, A))
 
-  ggplot(df_w[,c(1:2, ncol(df_w))], aes(x=week, y=w_sessions,  group=1,colour= factor(smoothed)))+geom_line(size=0.2) + 
-    scale_x_discrete(limits=df_w$week,breaks=df_w$week[seq(1,53,10)])+scale_colour_manual(labels=c("1","2","3"), values=c("green", "yellow", "red"))
+  ggplot(df_retornos, aes(x=week, y=w_sessions,  group=1,colour= factor(round(smoothed,1))))+geom_line(size=0.2) + 
+    scale_x_discrete(limits=df_w$week,breaks=df_w$week[seq(1,53,10)])+scale_colour_gradient(low="red", high = "green")
   
