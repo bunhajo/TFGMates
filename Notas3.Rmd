@@ -11,13 +11,13 @@ output: pdf_document
 Para denotar los parámetros de un HMM con frecuencia se usa:
 
 $$
-\lambda = \(A, B, \pi \)
+\lambda = ( A, B, \pi )
 $$
 
 Para denotar distribuciones discretas, o bien:
 
 $$
-\lambda= \(A, c_{jm}, \mu_{jm}, \Sigma_{jm}, \pi \)
+\lambda= ( A, c_{jm}, \mu_{jm}, \Sigma_{jm}, \pi )
 $$
 
 Cuando se trata de distribuciones contínuas asociadas a funciones de densidad.
@@ -28,15 +28,15 @@ El objetivo de un HMM, a grosso modo, es aprender a clasificar los datos proporc
 
 En la historia de los HMM han destacado los estudios de tres problemas:
 
-1. _Problema de Evaluación_
+\textbf{1. Problema de Evaluación}
 
 Dada la secuencia de observaciones $O=\{o_1, \ldots, o_m\}$, ¿Cuál es la probabilidad de que $O$ haya sido generada por el modelo $P(O|\lambda)$? Dado un $\lambda$.
 
-2. _Problema de Decodificación_
+\textbf{2. Problema de Decodificación}
 
 Dada la secuencia de observaciones $O=\{o_1, \ldots, o_m\}$, ¿Cuál es la secuencia de estados más problemas daod el model $\lambda$?
 
-3. _Problema de Aprendizaje_
+\textbf{3. Problema de Aprendizaje}
 
 Dada la secuencia de observaciones $O=\{o_1, \ldots, o_m\}$, ¿Cómo debemos ajustar los parámetros de $\lambda$ para maximiazar $P(O|\lambda)$?
 
