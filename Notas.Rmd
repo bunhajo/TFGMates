@@ -18,6 +18,8 @@ Nuestro caso de estudio será el correspondiente a los valores diarios de apertu
 
 ```{r, echo=FALSE}
 df=read.csv("C:/Users/Tornero/Documents/Uni/TFGMates/Ibex35.csv", header = T)[1:200,]
+source("C:/Users/Tornero/Documents/Uni/TFGMates/Baum-Welch.R")
+
 returns=double()
 for (i in 1:199){returns[i]=(df$APERTURA[i+1]-df$APERTURA[i])/df$APERTURA[i]}
 df$RETORNOS[2:nrow(df)]=paste0(round(100*returns,1),"%")
@@ -58,19 +60,25 @@ $$
 
 Para ilustrar la capacidad clasificadora del HMM, mostramos un gráfico que de la evolución de los valores del IBEX35 en el periodo estudiado, junto a la clasificación que ha hecho las smoothed del estado alcista de los retornos generados.
 
-```{r, echo=F, fig.height=4, fig.width=8}
-
+```{r, echo=F, fig.height=4, fig.width=8,warning=FALSE}
 library(ggplot2)
 
-source("C:/Users/Tornero/Documents/Uni/TFGMates/Baum-Welch.R")
+
 mu=c(mean(returns[which(returns>0)]), mean(returns[which(returns<0)]))
 sigma=c(var(returns[which(returns>0)]), var(returns[which(returns>0)]))
 var=BaumWelch(returns = returns, mu=mu, sigma=sigma, n_states = 2)
-smoothed=var$smoothed[,1]
-
-ggplot(df[-1,], aes(x=FECHA, y=APERTURA, group=1, colour=smoothed))+geom_line(size=0.2) +
+smoothed= var$smoothed
+names(smoothed)=c("1","2")
+B=double()
+for (i in 1:nrow(smoothed)) {
+  B[i]=as.double(names(smoothed)[which(t(smoothed[i,])==max(t(smoothed[i,])))])
+}
+df$smoothed=as.double(c(round(var$p[1]), B))
+ggplot(df, aes(x=FECHA, y=APERTURA, group=1, colour=factor(smoothed)))+geom_line(size=0.2) +
   scale_x_discrete(limits=df[-1,]$FECHA,breaks=df[-1,]$FECHA[seq(1,191,10)])+
-  scale_color_gradient(low="red",high="green")+theme(axis.text.x=element_text(angle=30))
+  scale_colour_manual(labels=c("1","2"), 
+                      values=c("green", "red"), guide=F)+
+  theme(axis.text.x=element_text(angle=30))
 
 
 ```
@@ -78,9 +86,7 @@ ggplot(df[-1,], aes(x=FECHA, y=APERTURA, group=1, colour=smoothed))+geom_line(si
 Vemos cómo nuestra clasificación de los retornos se aproxima de manera muy efectiva al comportamiento que muestra la gráfica.
 
 ```{r, echo=FALSE, warning=FALSE,fig.height=4, fig.width=8}
-library(ggplot2)
 
-var=BaumWelch(returns = returns, mu=mu, sigma=sigma, n_states = 2)
 smoothed=var$smoothed[,1]
 df=data.frame(x=returns, y=round(smoothed))
 ggplot(df, aes(x=x, group=y, colour=y, fill=y))+geom_density(alpha=0.2)+
