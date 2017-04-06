@@ -1,0 +1,49 @@
+---
+title: "Notas3"
+author: "Juan Tornero"
+date: "3 de abril de 2017"
+header-include:
+  - \usepackage{bbm} 
+
+output: pdf_document
+---
+
+Para denotar los parámetros de un HMM con frecuencia se usa:
+
+$$
+\lambda = ( A, B, \pi )
+$$
+
+Para denotar distribuciones discretas, o bien:
+
+$$
+\lambda= ( A, c_{jm}, \mu_{jm}, \Sigma_{jm}, \pi )
+$$
+
+Cuando se trata de distribuciones contínuas asociadas a funciones de densidad.
+
+## Algoritmos Relacionados con los HMM's
+
+El objetivo de un HMM, a grosso modo, es aprender a clasificar los datos proporcionados. Es decir, un HMM tiene que ser capaz de discernir las diferencias de comportamiento que posean los diferentes estados del *stream* de observaciones con el que lo alimentamos. 
+
+En la historia de los HMM han destacado los estudios de tres problemas:
+
+\textbf{1. Problema de Evaluación}
+
+Dada la secuencia de observaciones $O=\{o_1, \ldots, o_m\}$, ¿Cuál es la probabilidad de que $O$ haya sido generada por el modelo $P(O|\lambda)$? Dado un $\lambda$.
+
+\textbf{2. Problema de Decodificación}
+
+Dada la secuencia de observaciones $O=\{o_1, \ldots, o_m\}$, ¿Cuál es la secuencia de estados más problemas daod el model $\lambda$?
+
+\textbf{3. Problema de Aprendizaje}
+
+Dada la secuencia de observaciones $O=\{o_1, \ldots, o_m\}$, ¿Cómo debemos ajustar los parámetros de $\lambda$ para maximiazar $P(O|\lambda)$?
+
+El problema de evaluación es la piedra angular en muchos estudios de reconocimiento de voz. El problema de decodificación resulta útil a la hora de segmentar, y el problema de aprendizaje debe ser resuelto si queremos entrenar un HMM para su uso en labores de reconocimiento.
+
+
+
+
+
+

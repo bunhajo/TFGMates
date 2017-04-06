@@ -14,6 +14,9 @@ Vemos a continuación cómo podemos emplear un HMM para modelizar un sistema est
 
 Nuestro punto de partida será suponer que los retornos pueden pertenecer a dos estados $X=\{1,2\}$, uno cuando el mercado tiende al alza (1), y otro cuando tiende a la baja (2), y que ambos estados tienen una distribución Gaussiana, con $\mu_1>\mu_2$ y $\sigma_1>\sigma_2$.
 
+Nota: nosotros suponemos que las observaciones que el HMM clasifique como estado 1 serán las correspondientes al estado alcista porque corresponden a una $\mu$ positiva, sin embargo, como por lo general la $\sigma'$'s de este estado son mayores que las del estado 2, cabe la posibilidad de que en observaciones muy negativas, aunque sean las menos probables, encajen mejor con la distribución del estado 1 que con la del estado 2, en contra de lo intuitivo.
+
+
 Nuestro caso de estudio será el correspondiente a los valores diarios de apertura del IBEX35 entre el 19/10/1990 y 12/08/1991. 
 
 ```{r, echo=FALSE}
