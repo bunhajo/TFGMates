@@ -5,6 +5,7 @@ date: "21 de marzo de 2017"
 header-include:
   - \usepackage{bbm} 
   - \usepackage{fancyhdr}
+  - \usepackage{amsmath}
 
 output: pdf_document
 ---
@@ -29,7 +30,7 @@ El conjunto $X^*$ denotará el de todas las palabras.
 
 Un proceso *Q* es una medida de probabilidad estacionaria en un espacio de secuencias.
 
-Una medida de probabilidad es una función que asigna probabilidades a conjuntos (el espacio medible de probabilidades), en este caso a conjuntos de secuencias. Sea $\mathbb{X}$ la menor colección de subconjuntos de $X^{\mathbb{Z}}$ tq:
+Una medida de probabilidad es una función que asigna probabilidades a conjuntos (el espacio medible de probabilidades), en este caso a conjuntos de secuencias, que es llamado un campo $\sigma$. Sea $\mathbb{X}$ la menor colección de subconjuntos de $X^{\mathbb{Z}}$ tq:
 
 1. Para toda secuencia $s, A_s \in \mathbb{X}$.
 2. $\mathbb{X}$ es cerrado bajo complementos y uniones contables.
@@ -63,7 +64,50 @@ El recíproco también es cierto, y cualquier función de $X^*$ que satisfaga (1
 
 existe un único proceso $Q=(X^{\mathbb{Z}}, \mathbb{X}, P)$ tq $\forall w \in X^*, P(w)=f(w)$.
 
-_DEMOSTRACIÓN PENDIENTE_
+##Kolmogorov
+
+
+Este resultado deriva del Teorema de Extensión de Kolmogorov (TEK).
+
+\textbf{Teormea de Extensión de Kolmogorov}. Suponemos que nos dan un conjunto de medidas de probabilidad $\mu_n$ en $(\mathbb{R}, R^n)$ que cumplen:
+
+$$
+\mu_{n+1} ((a_1,b_1] \times \ldots \times (a_n, b_n] x \mathbb{R}) = \mu_n((a_1,b_1] \times \ldots \times (a_n, b_n]).
+$$
+Entonces existe una única medida de probabilidad $P'$ en $(\mathbb{R}^\mathbb{N}, R^\mathbb{N})$, con 
+$$
+P'(x|x \in (a_i, b_i], i \in \{1, \ldots, n\})=\mu_n((a_1,b_1] \times \ldots \times (a_n, b_n])).
+$$
+Hay tres diferencias entre el espacio de probabilidad $(\mathbb{R}, R^n), P'$ y el de un proceso estacionario $(X^\mathbb{Z}, \mathbb{X}, P)$
+
+1. $\mathbb{R^N}$ es producto de copias de números reales, mientras que $X^\mathbb{Z}$ es producto de copias de un conjunto finito $X$. Para resolver esta diferencia utilizaremos un mapeado inyectivo $g: X \rightarrow \mathbb{R}$.
+
+2. Los elementos de $\mathbb{R^N}$ son secuencias semi-infinitas mientras que los de $X^\mathbb{Z}$ son, de hecho, secuencias bi-infinitas. Utilizaremos de nuevo un mapeado, esta vez biyectivo $h: \mathbb{N} \rightarrow \mathbb{Z}$. Corsideraremos los dígitos en el orden $0, 1 , -1, 2, -2, \ldots$.
+
+3. Por último, $P'$ no necesita ser estacionario, así que usaremos el TEK para provar que $P$ existe, y luego veremos que es estacionario.
+
+Introducimos primero los mapas $g$ y $h$. 
+
+Para el caso $g: X \rightarrow \mathbb{R}$ solo ha de cumplir que sea inyectivo, da igual la imagen de los símbolos $x \in X$.
+
+El mapa biyectivo  $h: \mathbb{N} \rightarrow \mathbb{Z}$ será
+
+$$
+h(n) =
+\begin{cases}
+n/2 & \quad n \text{par}\\
+(1-n)/2 & \quad n \text{impar}
+\end{cases}
+$$
+
+
+
+---------
+
+
+
+
+
 
 \textit{Ejemplo de Proceso.}Para ilustrar el concepto de proceso, pondremos un pequeño ejemplo basado en un dado 'ideal' de seis caras, $X=\{1,2,3,4,5,6\}$ y cualquier palabra de longitud $l$ tendrá asociada una probabilidad de $P(w)=\frac{1}{6}^l$. En particular, si la palabra es de longitud $l=0$, entonces $\displaystyle P(w)=\frac{1}{6}^0=1$. Si además tenemos otra palabra $z \in X$ entonces, a partir de (1) vemos que $\displaystyle f(wz)=f(zw)=\frac{1}{6}^l( \sum_{i = 1}^{6} \frac{1}{6})=\frac{1}{6}=f(w)$. Por lo tanto cumple tanto (1) como (2) y es un proceso. \textit{cqd}
 
@@ -71,7 +115,7 @@ _DEMOSTRACIÓN PENDIENTE_
 
 Supongamos que tenemos un proceso $Q = (X^{\mathbb{Z}}, \mathbb{X}, P)$ del que conocemos algunos símbolos recientes. Si $s = (w, (a,b))$ es una subsecuencia conocida, con $b=-1$, $s$ induce una distribución condicional en un espacio futuro (DCF) del tipo $P(\cdot | s) = P(\cdot | A_s)$. Esta DCF condensa todo nuestro conocimiento sobre las posibilidades futuras del proceso $Q$, por lo que al concer esta distribución, en cierto sentido, podemos olvidar todo lo acontecido en el proceso anteriormente. Esta es la base con la que decimos que  $P(\cdot | s)$ es un estado.
 
-Ahora ampliaremos esta noción. Primero definimos $\mathbb{X}^+=\{ x^+ = x_0 x_1, \ldots | \forall i \geq 0, x_i \in X \}$, y respectivamente $\mathbb{X}^-=\{ x^+ = \ldots x_-2, x_-1 | \forall i \leq 0, x_i \in X \}$.  Las DCF están condicionadas por secuencias $s = (w, (a,b))$ con $w$ palabra y $w \in \mathbb{X}^-$, por lo que estas subsecuencias pueden o no acabar en la última observación conocida (también conocidas como  \textit{historias}), pero nos centraremos únicamente en este último caso.
+Ahora ampliaremos esta noción. Primero definimos $\mathbb{X}^+=\{ x^+ = x_0 x_1, \ldots | \forall i \geq 0, x_i \in X \}$, y respectivamente $\mathbb{X}^-=\{ x^+ = \ldots x_-2, x_-1 | \forall i \leq 0, x_i \in X \}$.  Los campos $\sigma$ generados por $\mathbb{X}^+$ y $\mathbb{X}^-$ son  $\mathbb{F}$ y $\mathbb{H}$, respectivamente. Las DCF están condicionadas por secuencias $s = (w, (a,b))$ con $w$ palabra y $w \in \mathbb{X}^-$, por lo que estas subsecuencias pueden o no acabar en la última observación conocida (también conocidas como  \textit{historias}), pero nos centraremos únicamente en este último caso.
 
 Si dos historias, $z$ e $y$ acaban determinando la misma DCF $P(\cdot|z)=P(\cdot|y)$, entonces decimos que $y \thicksim z$ son equivalentes, es decir podemos definir la clase de equivalencia $\thicksim$ y $\overline{z} = \{y \in X^*| y \thicksim z\}$.
 
@@ -87,9 +131,20 @@ P(A|s_l)=\frac{P(A \cap A_{s_l})}{P(A_{(s_l})},
 $$
 En concreto, si $x^-=\lim_{l \rightarrow \infty} s_l$, entonces tenemos 
 $$
-P(A|x^-)=\lim_{l \rightarrow -\infty} P(A|s_l).
+P(A|x^-)=\lim_{l \rightarrow -\infty} P(A|s_l)  \quad \text{(1)} 
 $$
-Para demostrarlo, usamos el teorema de convergencia de martingale _DEMOSTRACIÓN PENDIENTE_
+
+Si definimos:
+
+$$
+1_A =
+\begin{cases}
+    1       & \quad \text{if }  \text{si} x \in A\\
+    0  & \quad \text{en caso contrario, } \\
+  \end{cases}
+$$
+
+$P(A|w_l)$ es la esperanza condicional $E(1_A)|\mathbb{H})(x)$ para cualquier secuencia $x$ que coincide con $w$. Por lo tanto podemos escribir (1) como $\displaystyle \lim_{l \rightarrow \infty} E(1_A|\mathbb{H})$. Este límite converge casi seguramente a $E(1_A|H)(x)$, mediante el Teorema de convergencia de Martingale, el cual demostramos al final del capítulo, para no entorpecer la lectura. De esta manera tendremos que (1)=$P(\cdot|x^-)$.
 
 Si $x^-$ tiene una historia $s_l$ con probabilidad nula, entonces $P(A|x^-)=0$. Denominaremos al conjunto de historias con probabilidad nula $N=\{x^- \in X^{\mathbb{Z}} | P(x^-)=0 \}$.
 
@@ -128,6 +183,15 @@ $$
 $\{A(w)\}$ es un conjunto medible y $f^w$ es una función medible, así que su la antiimagen $(f^w)^-1(A)$ ha de ser medible. Por lo que $J_k(A)$ es intersección finita de conjuntos medibles y por lo tanto medible. Sea $\displaystyle J(A)= \bigcap_{k=1}^{\infty} J_k(A)$, $J(A)$ es intersección contable de conjuntos medibles, por lo que es medible. Ahora, cada historia $\displaystyle J(A) \cap (X^{\mathbb{Z}} \backslash N)$ induce un estado $A$, con $X^{\mathbb{Z}} \backslash N$ un conjunto demedida completa,  y no hay ninguna historia que no esté en $J(A)$ que induzca $A$. Por lo tanto $\displaystyle J(A)= \bigcap_{k=1}^{\infty} J_k(A) = G^{-1}(A)$. \textit{cqd}
 
 La idea central es que un estado es una predicción basada en lo sabido sobre el pasado del proceso. En la siguiente sección clasificaremos los diferentes tipos de estados que podemos encontrar.
+
+##Martingales
+
+--------
+
+
+
+
+
 
 ##Tipos de Estado
 
@@ -303,6 +367,44 @@ $$
 $$
 \pi_i=P(q_1=i), \forall i \in \{1, \ldots, N\}
 $$
+Para denotar los parámetros de un HMM con frecuencia se usa:
+
+$$
+\lambda = ( A, B, \pi )
+$$
+
+Para denotar distribuciones discretas, o bien:
+
+$$
+\lambda= ( A, c_{jm}, \mu_{jm}, \Sigma_{jm}, \pi )
+$$
+
+Cuando se trata de distribuciones contínuas asociadas a funciones de densidad.
+
+## Arquitectura de los HMM
+
+????
+
+## Algoritmos Relacionados con los HMM's
+
+El objetivo de un HMM, a grosso modo, es aprender a clasificar los datos proporcionados. Es decir, un HMM tiene que ser capaz de discernir las diferencias de comportamiento que posean los diferentes estados del *stream* de observaciones con el que lo alimentamos. 
+
+En la historia de los HMM han destacado los estudios de tres problemas:
+
+\textbf{1. Problema de Evaluación}
+
+Dada la secuencia de observaciones $O=\{o_1, \ldots, o_m\}$, ¿Cuál es la probabilidad de que $O$ haya sido generada por el modelo $P(O|\lambda)$? Dado un $\lambda$.
+
+\textbf{2. Problema de Decodificación}
+
+Dada la secuencia de observaciones $O=\{o_1, \ldots, o_m\}$, ¿Cuál es la secuencia de estados más problemas dado el modelo $\lambda$?
+
+\textbf{3. Problema de Aprendizaje}
+
+Dada la secuencia de observaciones $O=\{o_1, \ldots, o_m\}$, ¿Cómo debemos ajustar los parámetros de $\lambda$ para maximiazar $P(O|\lambda)$?
+
+El problema de evaluación es la piedra angular en muchos estudios de reconocimiento de voz. El problema de decodificación resulta útil a la hora de segmentar, y el problema de aprendizaje debe ser resuelto si queremos entrenar un HMM para su uso en labores de reconocimiento.
+
 
 
 
