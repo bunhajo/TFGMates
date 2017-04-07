@@ -99,6 +99,88 @@ n/2 & \quad n \text{par}\\
 (1-n)/2 & \quad n \text{impar}
 \end{cases}
 $$
+Su inversa, por lo tanto:
+$$
+h^{-1}(y)=
+\begin{cases}
+2y & \quad y>0\\
+1-2y & \quad y \leq 0.
+\end{cases}
+$$
+Vemos como $h$ envía $1,2,3,4,5$ a $0,1,-1,2,-2$ respectivamente, y viceversa $h^{-1}$. Definiremos el conjunto $J(n)=\{y \in \mathbb{Z}| h^{-1}(y) \leq\}$, y los valores $d(n)$ y $c(n)$ como los mayores y menores de $J(n)$ respectivamente, caracterizadas de la siguiente manera:
+
+$$
+c(n)=min(h(n), h(n-1)) = 
+\begin{cases}
+\frac{2-n}{2} & \quad n \text{ par}\\
+\frac{1-n}{2} & \quad n \text{ impar}\\
+\end{cases}
+$$
+$$
+d(n)=max(h(n), h(n-1)) = 
+\begin{cases}
+\frac{n}{2} & \quad n \text{ par}\\
+\frac{n-1}{2} & \quad n \text{ impar}
+\end{cases}
+$$
+$$
+J(n)=\{c(n), \ldots, d(n)\}.
+$$
+Observamos que $c$ y $d$ cumplen las siguientes propiedades:
+
+1. Si $n$ par, entonces $h(n+1)<0, c(n+1)=c(n)-1, d(n+1)=d(n)$.
+2. Si $n$ impar, entonces $h(n+1)>0, c(n+1)=c(n), d(n+1)=d(n)+1$.
+
+\textbf{Demostración}
+
+1. Si $n$ par, entonces $n=2*i$, para algún $i \in \mathbb{N} \textbackslash 0$, y:
+
+$$
+h(n+1) \overbrace{=}^{n+1 \text{ impar}} \frac{1-(n+1)}{2}=\frac{-2i}{2}=-i<0
+$$
+$$
+\begin{cases}
+c(n+1) \overbrace{=}^{n+1 \text{ impar}} \frac{1-(2i+1)}{2}=-i\\
+c(n) \overbrace{=}^{n \text{ par}} \frac{2-2i}{2} = -i + 1
+\end{cases}
+$$
+Luego $c(n+1)=c(n)-1$
+$$
+\begin{cases}
+d(n) \overbrace{=}^{n \text{ par}} \frac{2i}{2}=i\\
+d(n+1) \overbrace{=}^{n+1 \text{ impar}} \frac{(2i+1)-1}{2}=i
+ \end{cases}
+ $$
+ Luego $d(n+1)=d(n)$.
+ 
+ 
+2. Si $n$ impar, entonces $n=2i +1$, para algún $i \in \mathbb{N} \textbackslash \{0\}$, y:
+
+$$
+h(n+1)\overbrace{=}^{n+1 \text{ par}} \frac{2i+2}{2}=i+1>0
+$$
+$$
+\begin{cases}
+c(n+1) \overbrace{=}^{n+1 \text{ par}} \frac{2-(2i+2)}{2}=-i\\
+c(n) \overbrace{=}^{n \text{ impar}} \frac{1-(2i+1)}{2} = -i
+\end{cases}
+$$
+Luego $c(n+1)=c(n)$
+$$
+\begin{cases}
+d(n) \overbrace{=}^{n \text{ impar}} \frac{(2i+1)-1}{2}=i\\
+d(n+1) \overbrace{=}^{n+1 \text{ par}} \frac{2i+2}{2}=i+1
+ \end{cases}
+ $$
+ Y finalmente $d(n+1)=d(n)+1$
+ 
+ 
+
+
+
+
+
+
 
 
 
