@@ -8,7 +8,10 @@ header-include:
   - \usepackage{amsmath}
 
 output: pdf_document
+fontsize: 12pt
 ---
+
+
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -16,34 +19,38 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # 1.  Marco Teórico de las Cadenas de Markov 
 
+En este primer capítulo desarrollaremos toda la teoría que involucra a las Cadenas de Markov. Empezaremos viendo qué son las secuencias y, a continuación, los espacios de probabilidad conocidos como *Procesos*. Además, mediante una versión adaptada del *Teorema de Extensión de Kolmogorov* veremos cómo estos procesos están definidos de forma única. A continuación definiremos los estados de un proceso, para lo cuál necesitaremos un par de resultados relacionados con los procesos estocásticos de martingala.
+
+Finalmente, veremos la definición de una Cadena de Markov y demostraremos que se tratan de *procesos*.
+
 ## Secuencias
 
-Comenzamos definiendo el conjunto canónico $X=\{0,1,\ldots, m-1\}$ con $m \in \mathbb{N}$ llamado *alfabeto*, cuyos elementos se denominan *símbolos*, los cuales no tienen por qué ser necesariamente números naturales.   Si $x \in X^{\mathbb{Z}}$, entonces $x=\cdots x_{-1} x_{0} x_{1} \cdots$  es una secuencia numerable infinita.Donde los índices $i<0$ denotan el pasado de la secuencia, y los $i \geq 0$ el futuro, particularmente el índice $i=0$ es el primer símbolo desconocido de la secuencia. 
+Comenzamos definiendo el conjunto canónico $X=\{0,1,\ldots, m-1\}$ con $m \in \mathbb{N}$ llamado *alfabeto*, cuyos elementos se denominan *símbolos*, los cuales no tienen por qué ser necesariamente números naturales.   Si $x \in X^{\mathbb{Z}}$, entonces $x=\cdots x_{-1} x_{0} x_{1} \cdots$  es una secuencia numerable bi-infinita, los índices $i<0$ denotan el pasado de la secuencia, y los $i \geq 0$ el futuro, particularmente el índice $i=0$ es el primer símbolo desconocido de la secuencia. 
 
-En estos términos definimos una palabra $w \in X^l$ de longitud $l$, como una $l$-tupla de $X$. $\phi$ denotará la palabra vacía de longitud 0. Una subsecuencia $s$ es una estructura $s = (w, (a,b))$, donde $w$ es una palabra y $a,b \in \mathbb{Z}$ tq $|w|=b-a+1$. Así, $s$ puede también escribirse $s=s_a \cdots s_b$, y $a$ representaría el tiempo inicial, y $b$ el tiempo final. Una secuencia $x$  contendrá a la subsecuencia $s$ si $\forall t \in [a,b], s_t=x_t$. 
+En estos términos definimos una palabra $w \in X^l$ de longitud $l$, como una $l$-tupla de $X$. $\emptyset$ denotará la palabra vacía de longitud 0. Una subsecuencia $s$ es una estructura $s = (w, (a,b))$, donde $w$ es una palabra y $a,b \in \mathbb{Z}$ tq $|w|=b-a+1$. Así, $s$ puede también escribirse $s=s_a \cdots s_b$, y $a$ representaría el tiempo inicial, y $b$ el tiempo final. Una secuencia $x$  contendrá a la subsecuencia $s$ si $\forall t \in [a,b], s_t=x_t$. 
 
-El conjunto $A_s = \{x \in X^{\mathbb{Z}} | x_i=s_i \forall i \in [a,b]\}$ es el conjunto de las secuencias de $X^{\mathbb{Z}}$ que contienen a $s$. Si por ejemplo $s=(\phi,(a, a-1))$, entonces $A_s=X^{\mathbb{Z}}$.
+El conjunto $A_s = \{x \in X^{\mathbb{Z}} | x_i=s_i \forall i \in [a,b]\}$ es el conjunto de las secuencias de $X^{\mathbb{Z}}$ que contienen a $s$. Si por ejemplo $s=(\emptyset,(a, a-1))$, entonces $A_s=X^{\mathbb{Z}}$.
 
 El conjunto $X^*$ denotará el de todas las palabras.
 
 ## Procesos
 
-Un proceso *Q* es una medida de probabilidad estacionaria en un espacio de secuencias.
+Un proceso *Q* es una espacio de probabilidad estacionaria en un espacio de secuencias.
 
-Una medida de probabilidad es una función que asigna probabilidades a conjuntos (el espacio medible de probabilidades), en este caso a conjuntos de secuencias, que es llamado un campo $\sigma$. Sea $\mathbb{X}$ la menor colección de subconjuntos de $X^{\mathbb{Z}}$ tq:
+Una medida de probabilidad es una función que asigna probabilidades a conjuntos (el espacio medible de probabilidades), en este caso a conjuntos de secuencias $\mathbb{X}$,  que es la $\sigma$-álgebra definida como la menor colección de subconjuntos de $X^{\mathbb{Z}}$ tq:
 
 1. Para toda secuencia $s, A_s \in \mathbb{X}$.
 2. $\mathbb{X}$ es cerrado bajo complementos y uniones contables.
 
-El par $(X^{\mathbb{Z}}, \mathbb{X})$ es el espacio medible que asigna probabilidades a los conjuntos $A_s$ fijados por las subsecuencias $s$.
+El par $(X^{\mathbb{Z}}, \mathbb{X})$ asigna probabilidades a los conjuntos $A_s$ fijados por las subsecuencias $s$.
 Definiremos entonces $P(s)=P(A_s)$, tenemos en particular:
 $$
-P(\phi)=P(X^{\mathbb{Z}})
+P(\emptyset)=P(X^{\mathbb{Z}})
 $$  
 
 En nuestra definición de proceso nos referíamos también a ellos como estacionarios. Sea $D$ la función desplazamiento $D:X^{\mathbb{Z}}  \rightarrow X^{\mathbb{Z}}$, que actúa sobre todo $x \in X^{\mathbb{Z}}$ de manera que $D(x_t)=x_{t+1}$, es decir desplaza el tiempo de origen.
 
-Decimos que $P$ es una medida de probabilidad estacionaria si $\forall A \in X, P(D(A))=P(A)$, como $D$ es de hecho un automorfismo sobre $X^{\mathbb{Z}}$, entonces $P(D^{-1}(A))=P(D^{-1}(D(A)))=P(A)$ 
+Decimos que $P$ es una medida de probabilidad estacionaria si $\forall A \in \mathbb{X}, P(D(A))=P(A)$, como $D$ es de hecho un automorfismo sobre $X^{\mathbb{Z}}$, entonces $P(D^{-1}(A))=P(D^{-1}(D(A)))=P(A)$ 
 
 Finalmente podemos definir de forma más formal un proceso \textit{Q} como el espacio de probabilidades estacionario $\displaystyle (X^{\mathbb{Z}}, \mathbb{X}, P)$.
 
@@ -52,14 +59,16 @@ $$
 \sum_{z \in W_l}P(wz)=\sum_{z \in W_l}P(zw)= P(w) \text{          (1)} 
 $$
 
-Además, para $w=\phi$:
+Además, para $w=\emptyset$:
 $$
-P(\phi)=1 \text{          (2)} 
+P(\emptyset)=1 \text{          (2)} 
 $$
 El recíproco también es cierto, y cualquier función de $X^*$ que satisfaga (1) y (2) define un proceso.
 
+A continuación, demostraremos la unicidad de los procesos.
+
 \textbf{Teorema} Dado $f: X^* \rightarrow [0,1]$ que satisface:
- $$1.f(\phi)=1 $$
+ $$1.f(\emptyset)=1 $$
  $$ 2.\forall w \in X^*, f(w)= \sum_{z \in X^*} f(zw) = \sum_{z \in X^*}f(wz)$$,
 
 existe un único proceso $Q=(X^{\mathbb{Z}}, \mathbb{X}, P)$ tq $\forall w \in X^*, P(w)=f(w)$.
@@ -128,12 +137,12 @@ J(n)=\{c(n), \ldots, d(n)\}.
 $$
 Observamos que $c$ y $d$ cumplen las siguientes propiedades:
 
-1. Si $n$ par, entonces $h(n+1)<0, c(n+1)=c(n)-1, d(n+1)=d(n)$.
-2. Si $n$ impar, entonces $h(n+1)>0, c(n+1)=c(n), d(n+1)=d(n)+1$.
+P1. Si $n$ par, entonces $h(n+1)<0, c(n+1)=c(n)-1, d(n+1)=d(n)$.
+P2. Si $n$ impar, entonces $h(n+1)>0, c(n+1)=c(n), d(n+1)=d(n)+1$.
 
 \textbf{Demostración}
 
-1. Si $n$ par, entonces $n=2*i$, para algún $i \in \mathbb{N} \textbackslash 0$, y:
+P1. Si $n$ par, entonces $n=2*i$, para algún $i \in \mathbb{N} \textbackslash 0$, y:
 
 $$
 h(n+1) \overbrace{=}^{n+1 \text{ impar}} \frac{1-(n+1)}{2}=\frac{-2i}{2}=-i<0
@@ -154,7 +163,7 @@ d(n+1) \overbrace{=}^{n+1 \text{ impar}} \frac{(2i+1)-1}{2}=i
  Luego $d(n+1)=d(n)$.
  
  
-2. Si $n$ impar, entonces $n=2i +1$, para algún $i \in \mathbb{N} \textbackslash \{0\}$, y:
+P2. Si $n$ impar, entonces $n=2i +1$, para algún $i \in \mathbb{N} \textbackslash \{0\}$, y:
 
 $$
 h(n+1)\overbrace{=}^{n+1 \text{ par}} \frac{2i+2}{2}=i+1>0
@@ -174,14 +183,102 @@ d(n+1) \overbrace{=}^{n+1 \text{ par}} \frac{2i+2}{2}=i+1
  $$
  Y finalmente $d(n+1)=d(n)+1$
  
+ Necesitaremos también definir una serie de conjuntos de subsecuencias, una función para mapear esos conjuntos y, finalmente, un conjunto producto.
  
+ Empezamos definiendo estos conjuntos de subsecuencias:
+ 
+ 1. $X^{[a,b]} \subset X^*$ el conjunto de todas las subsecuencias $s=(w, (a,b))$ que empiezan en el tiempo $a$ y terminan en el tiempo $b$.
+ 
+ 2. De forma similar $X^{J(n)} \subset X^*$ denotará el conjunto de todas las subsecuencias $s=(w, (c(n), d(n)))$ que empiezan en $c(n)$ y terminan en $d(n)$. Como $|J(n)|=n$, $X^{J(n)}$ es un producto de $n$ copias de $X$. La diferencia entre $X^n$ y $X^{J(n)}$ es cómo están etiquetadas las coordenadas, en el primer caso el orden es $1,2,\ldots, n$ mientras que el segundo lo hace como $c(n), \ldots, d(n)$. Por las propiedades P1 y P2 demostradas anteriormente, tenemos que:
+ 
+ Si $n$ es impar:
+ 
+$$
+X^{J(n+1)}=X^{J(n)} \times X
+$$
 
+ si $n$ es par:
+ 
+ $$
+ X^{J(n+1)}= X \times X^{J(n)} 
+ $$
+ 
+ Ahora definimos la función $H$ que envía subsecuencias en $X^{J(n)}$ a subsecuencias en $\mathbb{R}^n$, en el caso que $n=\infty$ $H$ enviará secuencias bi-infinitas en $X^{\mathbb{Z}}$$ a secuencias semi-infinitas en $\mathbb{R}^{\mathbb{N}}$.
+El objetivos de esta función es reordenar los argumentos de las coordenadas y enviarlas a $\mathbb{R}$. Si $x \in X^{J(n)}$, entonces hay una subsecuencia $v \in \mathbb{R}^n$ que satisface $v_i = g(x_{h(i)}), \forall i \in \{1, \ldots, n \}$. Recordamos que $g$ es una función a la que solo imponemos que sea inyectiva, por lo tanto no es invertible. Definimos $H: X^{J(n)} \rightarrow \mathbb{R}^n$ como $H(x)=v$. Si $x=x_{c(n)}, \ldots, x_{d(n)} \in X^{J(n)}$, entonces:
 
+$$
+H(x_{c(n)}x_{c_n+1} \ldots x_{d(n)}) = g(x_0)g(x_1) \ldots g(x_{c(n)}+d(n)+1)
+$$
 
+Esta función puede ser igualmente definida para el caso $x \in X^{\mathbb{Z}}$. Y aunque $H$ no es invertible, porque $g$ no es invertible. Sí que tiene conjuntos inversos. Por ejemplo, si $A \subset \mathbb{R}^n$, entonces:
 
+$$
+H^{-1}(A)=\{x \in X^{J(n)}| H(x) \in A \}
+$$
 
+Finalemte, definimos el conjunto producto $S$ MCo el subconjunto de $X^{[a,b]}$ de la siguiente forma $S=S_a \times \ldots \times S_b$, donde $S_i \subset X$. Si $S' \subset X$, entonces $S \times S'$ es un producto contenido en $X^{[a,b+1]}$. De forma natural definimos el cilindro $C(S)$ de la siguiente manera:
 
+$$
+C(S)=\{x \in X^{\mathbb{Z}}|x_i \in S_i, i \in [a,b]\}
+$$
+De forma parecida a como definíamos $A_s$, tenemos que $C(S)$ es el conjunto de todas las secuencias de $X^{\mathbb{Z}}$ que coinciden con la subsecuencia en $S$.
 
+A partir de $C(S)$ definimos también el cilindro desplazado $D(S)$ como:
+
+$$
+D(S)=\{x \in X^{[a-1, b-1]} | x_i \in S_{i+1}, i+1 \in [a,b]\}.
+$$
+
+\textbf{Lema.} Los cilindros $C$ y $T$ verifican:
+
+1. $C(S) = C(S  \times X) = C(X \times S)$
+2. $D(S \times X) = D(S) \times X = X \times D(S)$
+3. $T(C(S))=C(D(S))$
+
+\textbf{Demostración.} 
+
+Sea $S= S_a \times \ldots \times S_b$.
+
+1. Por definición, $\forall i \in \mathbb{Z}, x_i \in X$:
+$$
+C(S)=\{x \in X^{\mathbb{Z}}|x_i \in S_i, i \in [a,b]\} = \{x \in X^{\mathbb{Z}}|x_{a-1} \in X, x_i \in S_i, i \in [a,b]\} = C(X \times S) 
+$$ 
+De la misma manera:
+$$
+C(S)=\{x \in X^{\mathbb{Z}}|x_i \in S_i, i \in [a,b]\} = \{x \in X^{\mathbb{Z}}|x_{b+1} \in X, x_i \in S_i, i \in [a,b]\} = C(S \times X) 
+$$ 
+2. Tenemos en cuenta $S \times X \subset X^{[a, b+1]}$:
+$$
+D(S \times X) =\{x \in X^{[a-1, b]} | x_b+1 \in X, x_i \in S_{i+1}, i+1 \in [a,b]\} =\{x \in X^{[a-1, b-1]} | x_i \in S_{i+1}, i+1 \in [a,b]\} \times X
+$$
+De forma semejante a lo visto anteriormente también tenemos:
+$$
+D(S \times X) =\{x \in X^{[a-2, b-1]} |x_{a-2} \in X, x_i \in S_{i+1}, i+1 \in [a,b]\} = X \times \{x \in X^{[a-1, b-1]} | x_i \in S_{i+1}, i+1 \in [a,b]\}
+$$
+3. 
+$$
+T(C(S)) = \{x \in X^{\mathbb{Z}-1} | x_i \in S_{i+1}, \forall i + 1 \in [a,b], x_j \in X \forall j \notin [a,b]\} =  \{x \in X^{\mathbb{Z}}| x_i \in S_{i+1}, \forall i + 1 \in [a, b]\} = C(D(S))
+$$
+*cqd*
+
+\textbf{Corolario.} Sea $S = S_{c(n)} \times \ldots \times S_{d(n)} \subset X^{J(n)}$ un conjunto producto, y sea
+
+$$
+A = C(S) = \{x \in X^{\mathbb{Z}}|x_i \in S_i, i \in [c(n),d(n)]\}
+$$
+Entonces tenemos
+$$
+D(S)=\{x \in X^{[c(n)-1, d(n)-1]} | x_i \in S_{i+1}, i+1 \in [c(n),d(n)]\}
+$$
+y
+$$
+D(A)=\{x \in X^{\mathbb{Z}} | x_i \in S_{i+1}, i+1 \in [c(n),d(n)]\}
+$$
+Además $D(A) = C(D(A))$ y, por el lema $D(A)= C(D(S) \times X)$.
+
+Finalmente, observamos que para cada $S \in X^{[a,b]}$ existe un conjunto $S' \in X^{J(n)}$, donde $n=min(-2a, 2b+1)$, tal que $C(S)=C(S')$. Como cada conjunto cilindrico puede ser escrito como $C(S)$ para algún $S \in X^{[a,b]}$, esto significa que cada conjunto cilíndrico puede ser escrito como $C(S')$ para algún $S' \in X^{J(n)}$.
+
+Finalmente, ya estamos en disposición de demostrar el Teorema de extensión de Kolmogorov aplicado a procesos.
 
 
 ---------
@@ -209,7 +306,7 @@ Usando el ejemplo del dado, en este caso todas las historias son equivalentes, l
 
 Sea $s_l = x_{-l} \ldots x_{-1}$, con $l>0$ y $R_l=\{s_l|P(s_l)>0\}$. Dada la historia $s_l$, para cualquier evento futuro $A$:
 $$
-P(A|s_l)=\frac{P(A \cap A_{s_l})}{P(A_{(s_l})},
+P(A|s_l)=\frac{P(A \cap A_{s_l})}{P(A_{s_l})},
 $$
 En concreto, si $x^-=\lim_{l \rightarrow \infty} s_l$, entonces tenemos 
 $$
@@ -242,7 +339,7 @@ Además, definimos la función $G: \mathbb{X}^- \rightarrow PS$ que envía histo
 
 Usaremos $l$ para las longitudes de las historias y $k$ para longitudes futuras. Además diremos que $A(w)$ s la probabilidad que asigna $A$ a la palabra $w$.
 
-Además, diremos que dos estados del proceso $B$ y $c$ son $k-equialentes$ si, para todas palabras $w$ tq $|w| \leq = k$, B(w)=C(w) 
+Además, diremos que dos estados del proceso $B$ y $c$ son $k-equivalentes$ si, para todas palabras $w$ tq $|w| \leq k$, B(w)=C(w) 
 
 \textbf{Demostración} Para cada natural $l$ y palabra $w$, y para cada historia $x^-$, definimos:
 
@@ -254,7 +351,7 @@ $$
 f^w(x^-)= P(w|x^-),
 $$
 
-Por el \textit{Teorema de Convergencia de Martingale} $\displaystyle \lim_{l \rightarrow \infty} f_{l}^{w}(x-) = f^w(x^-)$ \textit{casi seguramente}. Como $f_l^w$ es medible, su límite también lo será.
+Por el \textit{Teorema de Convergencia de Martingalas} $\displaystyle \lim_{l \rightarrow \infty} f_{l}^{w}(x-) = f^w(x^-)$ \textit{casi seguramente}. Como $f_l^w$ es medible, su límite también lo será.
 
 Sea $A$ un estado del proceso y $J_k(A)$ el conjunto de historias $x^-$ que inducen estados del proceso $G(x^-)$ que son $k$-equivalentes a $A$, $J_k(A)=\{x^- \text{ tq } \forall w \text{ tq } |w| \leq k, P(w|x^-) = A(w) \}$. Es decir:
 
@@ -279,7 +376,7 @@ La idea central es que un estado es una predicción basada en lo sabido sobre el
 
 La definición del conjunto de estados de un proceso nos indica que estos están inducidos por historias, ya sean finitas o semi-infinitas. 
 
-Definimos antes de describir la tipología de estados, y algunas de sus propiedades, una propiedad asociada a los estados. Consideramos por ejemplo un estado del proceso $A \in PS$, y consideramos $G^{-1}(A)$, el conjunto de historias que induce $A$. Podemos asignar a este conjunto una probabilidad $P(A)=P(G-1(A))$. En particulas, ante la historia $w$, $P(A)$ será la probabilidad de que $s$ induzca el estado del proceso $A$.
+Definimos antes de describir la tipología de estados, y algunas de sus propiedades, una propiedad asociada a los estados. Consideramos por ejemplo un estado del proceso $A \in PS$, y consideramos $G^{-1}(A)$, el conjunto de historias que induce $A$. Podemos asignar a este conjunto una probabilidad $P(A)=P(G^{-1}(A))$. En particulas, ante la historia $w$, $P(A)$ será la probabilidad de que $s$ induzca el estado del proceso $A$.
 
 Un estado del proceso está \textit{infinitamente precedido} si la historia $w$ que lo genera es de longitud infinita, $|w|= \infty$ y $P(w)>0$. 
 
@@ -346,7 +443,7 @@ $$
 P(v)=\pi_{v_0} a_{v_0 v_1} \ldots a_{v_{l-2} v_{l-1}},
 $$
 
-Definiendo $P(\phi)=0$, vemos que una MC es un proceso estacionario.
+Definiendo $P(\emptyset)=0$, vemos que una MC es un proceso estacionario.
 
 Recordamos que un proceso es estacionario si cumple:
 
@@ -354,22 +451,22 @@ $$
 \sum_{z \in S}P(wz)=\sum_{z \in S}P(zw)= P(w) \text{          (1)} 
 $$
 $$
-P(\phi)=1 \text{          (2),} 
+P(\emptyset)=1 \text{          (2),} 
 $$
 La condición (2) se cumple trivialmente. Para ver la (1) sea $z \in S$, entonces
 $$
-P(\phi z) = P(z \phi) = P(z) = \pi_z.
+P(\emptyset z) = P(z \emptyset) = P(z) = \pi_z.
 $$
 Por tanto, aplicando la propiedad 2 de las MC
 $$
-\sum_{z \in S} P(z \phi) = \sum_{z \in S} P(\phi z) = \sum_{z\in S} \pi_z \overbrace{=}^{P2 MC} 1 = P(\phi)
+\sum_{z \in S} P(z \emptyset) = \sum_{z \in S} P(\emptyset z) = \sum_{z\in S} \pi_z \overbrace{=}^{P2 MC} 1 = P(\emptyset)
 $$
 Ahora sea la probabilidad de la unión de $v$ y $z$, y teniendo en cuenta la primera propiedad de las MC
 
 $$
 P(vz)= P(v)a_{v_{l-1} v} \rightarrow \sum{z \in S} P(vz) = P(v) \sum_{z \in S} a_{v_{l-1} z} \overbrace{=}^{P1 MC} P(v) \cdot 1 = P(v)
 $$
-En el otro sentido, la unión de $z$ con $v$ no da
+En el otro sentido, la unión de $z$ con $v$ nos da
 $$
 P(zv)=\pi_z a_{z v_0} \ldots a_{v_{l-2} v_{l-1}}
 $$
