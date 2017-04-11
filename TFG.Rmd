@@ -76,9 +76,9 @@ existe un único proceso $Q=(X^{\mathbb{Z}}, \mathbb{X}, P)$ tq $\forall w \in X
 ##Kolmogorov
 
 
-Este resultado deriva del Teorema de Extensión de Kolmogorov (TEK).
+Este resultado deriva del Teorema de Extensión de Kolmogorov (TEK). Usando las notaciones $R^n$ y $R^{\mathbb{N}}$ para referirnos a las $\sigma$-álgebras en $\mathbb{R}^n$ y $\mathbb{R}\mathbb{^N}$ respectivamente.
 
-\textbf{Teormea de Extensión de Kolmogorov}. Suponemos que nos dan un conjunto de medidas de probabilidad $\mu_n$ en $(\mathbb{R}, R^n)$ que cumplen:
+\textbf{Teormea de Extensión de Kolmogorov}. Suponemos que nos dan un conjunto de medidas de probabilidad $\mu_n$ consitentes en $(\mathbb{R}, R^n)$, es decir que cumplen:
 
 $$
 \mu_{n+1} ((a_1,b_1] \times \ldots \times (a_n, b_n] x \mathbb{R}) = \mu_n((a_1,b_1] \times \ldots \times (a_n, b_n]).
@@ -87,7 +87,7 @@ Entonces existe una única medida de probabilidad $P'$ en $(\mathbb{R}^\mathbb{N
 $$
 P'(x|x \in (a_i, b_i], i \in \{1, \ldots, n\})=\mu_n((a_1,b_1] \times \ldots \times (a_n, b_n])).
 $$
-Hay tres diferencias entre el espacio de probabilidad $(\mathbb{R}, R^n), P'$ y el de un proceso estacionario $(X^\mathbb{Z}, \mathbb{X}, P)$
+No demostraremos el TEK directamente, sino que lo usaremos para demostrar una variante del mismo que se adapte a nuestras necesidades, teniendo en cuenta las diferencias que existen entre el espacio de probabilidad $(\mathbb{R}, R^n), P'$ y el de un proceso estacionario $(X^\mathbb{Z}, \mathbb{X}, P)$
 
 1. $\mathbb{R^N}$ es producto de copias de números reales, mientras que $X^\mathbb{Z}$ es producto de copias de un conjunto finito $X$. Para resolver esta diferencia utilizaremos un mapeado inyectivo $g: X \rightarrow \mathbb{R}$.
 
@@ -278,7 +278,46 @@ Además $D(A) = C(D(A))$ y, por el lema $D(A)= C(D(S) \times X)$.
 
 Finalmente, observamos que para cada $S \in X^{[a,b]}$ existe un conjunto $S' \in X^{J(n)}$, donde $n=min(-2a, 2b+1)$, tal que $C(S)=C(S')$. Como cada conjunto cilindrico puede ser escrito como $C(S)$ para algún $S \in X^{[a,b]}$, esto significa que cada conjunto cilíndrico puede ser escrito como $C(S')$ para algún $S' \in X^{J(n)}$.
 
-Finalmente, ya estamos en disposición de demostrar el Teorema de extensión de Kolmogorov aplicado a procesos.
+Finalmente, ya estamos en disposición de demostrar nuestra variante del TEK.
+
+\textbf{Teorema. } Suponemos que tenemos una secuencia de medidas  $v_n$ en $X^{J(n)}$ que satisfacen que $\forall n$ y para todo $S \subset X^{(J_n)}$, si $n$ es impar,
+
+$$
+v_n(S)=v_{n+1}(S \times X) \quad \text{(T.1)}
+$$
+y si $n$ es par,
+
+$$
+v_n(S)=v_{n+1}(X \times S) \quad \text{(T.2)}
+v_n(S)=v_{n+1}(T(S) \times X), \quad \text{(T.3)}
+$$
+
+Entonce existe un único proceso estacionario $Q=(X^{\mathbb{Z}}, \mathbb{X}, P)$ tal que, $\forall n, S \subset X^{J_n}$,
+
+$$
+P(C(S))=v_n(S)
+$$
+
+La demostración la haremos en dos partes: primero demostraremos que $P$ existe y, posteriormente comprobaremos que $P$ es estacionario.
+
+\textbf{Demostración. } Definimos una secuencia de medidas $\mu_n$ rn $\mathbb{R}^{\mathbb{N}}$ de la siguiente manera: Si $A \subset \mathbb{R}^{\mathbb{N}}$, entonces definimos $\mu_n(A)=v_n(H^{-1}(A))=v_n\{x \in X^{J(n)}|H(x) \in A\}$, por la definición de anticonjuntos que establece $H$.
+
+
+La consistencia de estas $\mu$'s se puede comprobar:
+
+$$
+\mu_{n+1}(A \times \mathbb{R})=v_{n+1}(H^{-1}(A \times \mathbb{R}))
+$$
+Dado que 
+$$
+H^{-1}(A \times \mathbb{R}) = 
+\begin{cases}
+H^{-1}(A) \times X & \quad n \text{impar}\\
+X \times H^{-1}(A) & \quad n \text{par}
+\end{cases}
+$$
+Tenemos que:
+
 
 
 ---------

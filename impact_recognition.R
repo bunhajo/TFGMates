@@ -8,6 +8,8 @@ source(paste(getwd(), "/","Baum-Welch.R", sep=""))
 source(paste(getwd(), "/","GHMM-ANN.R", sep=""))
 
 df  = read.delim("DesigualB2C_ANN.txt")
+df_1=df[1:365,]
+df_2=df[c(-1:-365),]
 
 df_retornos=df[-nrow(df),]
 for(i in 1:(nrow(df_retornos))){
@@ -16,35 +18,42 @@ for(i in 1:(nrow(df_retornos))){
   }
 }
 
+net_1=neuralnet( ~ round(sessions), df, 
+              hidden = 10, threshold = 10 , stepmax = 10000)
+
+
 #### ANN
   
   df_retornos$smoothed=0
-  df_retornos$smoothed[which(df_retornos$sessions>0)]=1
+  df_retornos$smoothed[which(df_retornos$transactions>0)]=1
   St_4 = df_retornos
   df_retornos$smoothed=0
-  df_retornos$smoothed[which(df_retornos$sessions<0)]=1
+  df_retornos$smoothed[which(df_retornos$transactions<0)]=1
   St_3 = df_retornos
   df_retornos$smoothed=0
   df_retornos$smoothed[which(df_retornos$sessions<0 & df_retornos$sessions>-0.1)]=1
-  St_2 = df_retornos
-  df_retornos$smoothed=0
-  df_retornos$smoothed[which(df_retornos$sessions<(-0.1))]=1
-  St_1 = df_retornos
+  # St_2 = df_retornos
+  # df_retornos$smoothed=0
+  # df_retornos$smoothed[which(df_retornos$sessions<(-0.1))]=1
+  # St_1 = df_retornos
   
   
-  net_st_1=neuralnet(smoothed ~ sessions + users + bounceRate + transactions, St_1, 
-                         hidden = 4, threshold = 0.001, stepmax = 100000)
-  net_st_2=neuralnet(smoothed ~ sessions + users + bounceRate + transactions, St_2, 
-                     hidden = 4, threshold = 0.001, stepmax = 100000)
-  net_st_3=neuralnet(smoothed ~ sessions + users + bounceRate + transactions, St_3, 
-                     hidden = 1, threshold = 0.001, stepmax = 100000)
-  net_st_4=neuralnet(smoothed ~ sessions + users + bounceRate + transactions, St_4, 
-                     hidden = 1, threshold = 0.001, stepmax = 100000)
+  # net_st_1=neuralnet(smoothed ~ sessions + users + bounceRate, St_1, 
+  #                        hidden = 4, threshold = 0.001, stepmax = 100000)
+  # net_st_2=neuralnet(smoothed ~ sessions + users + bounceRate + transactions, St_2, 
+  #                    hidden = 4, threshold = 0.001, stepmax = 100000)
+  net_st_3=neuralnet(smoothed ~ sessions + users + newusers + pageviews + avgTimeOnPage, St_3, 
+                     hidden = 10, threshold = 0.1, stepmax = 1000000)
+  net_st_4=neuralnet(smoothed ~ sessions + users + bounceRate, St_4, 
+                     hidden = 10, threshold = 0.1, stepmax = 100000)
   
-  w=data.frame(unlist(net_st_3$weights)[2:5] , unlist(net_st_4$weights)[2:5])
-  netp=data.frame(unlist(net_st_3$weights)[1] , unlist(net_st_4$weights)[1])
+  test=data.frame(St_3$smoothed, round(as.data.frame(net_st_3$net.result)[,1]))
   
-  results=BaumWelch_ANN(returns = df_retornos[,c(2,3,4,6)], w=w,p=p,n_states = 2)
+  w=list(as.data.frame(net_st_3$weights[[1]][[1]])[-1,] , as.data.frame(net_st_4$weights[[1]][[1]])[-1,])
+  p=list(as.data.frame(net_st_3$weights[[1]][[1]])[1,] , as.data.frame(net_st_4$weights[[1]][[1]])[1,])
+  source(paste(getwd(), "/","GHMM-ANN.R", sep=""))
+  
+  results=BaumWelch_ANN(returns = df_retornos[,c(2,3,5,7,8)], w=w,p=p,n_states = 2)
   
   net_st_4$weights[[1]][[1]]=data.frame(c(p[2], w[,2] ))
   net_st_3$weights[[1]][[1]]=data.frame(c(p[1], w[,1] ))
