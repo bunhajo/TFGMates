@@ -78,7 +78,7 @@ existe un único proceso $Q=(X^{\mathbb{Z}}, \mathbb{X}, P)$ tq $\forall w \in X
 
 Este resultado deriva del Teorema de Extensión de Kolmogorov (TEK). Usando las notaciones $R^n$ y $R^{\mathbb{N}}$ para referirnos a las $\sigma$-álgebras en $\mathbb{R}^n$ y $\mathbb{R}\mathbb{^N}$ respectivamente.
 
-\textbf{Teormea de Extensión de Kolmogorov}. Suponemos que nos dan un conjunto de medidas de probabilidad $\mu_n$ consitentes en $(\mathbb{R}, R^n)$, es decir que cumplen:
+\textbf{Teorema de Extensión de Kolmogorov}. Suponemos que nos dan un conjunto de medidas de probabilidad $\mu_n$ consitentes en $(\mathbb{R}^n, R^n)$, es decir que cumplen:
 
 $$
 \mu_{n+1} ((a_1,b_1] \times \ldots \times (a_n, b_n] x \mathbb{R}) = \mu_n((a_1,b_1] \times \ldots \times (a_n, b_n]).
@@ -87,7 +87,7 @@ Entonces existe una única medida de probabilidad $P'$ en $(\mathbb{R}^\mathbb{N
 $$
 P'(x|x \in (a_i, b_i], i \in \{1, \ldots, n\})=\mu_n((a_1,b_1] \times \ldots \times (a_n, b_n])).
 $$
-No demostraremos el TEK directamente, sino que lo usaremos para demostrar una variante del mismo que se adapte a nuestras necesidades, teniendo en cuenta las diferencias que existen entre el espacio de probabilidad $(\mathbb{R}, R^n), P'$ y el de un proceso estacionario $(X^\mathbb{Z}, \mathbb{X}, P)$
+No demostraremos el TEK directamente, sino que lo usaremos para demostrar una variante del mismo que se adapte a nuestras necesidades, teniendo en cuenta las diferencias que existen entre el espacio de probabilidad $(\mathbb{R}^{\mathbb{N}}, R^n, P')$ y el de un proceso estacionario $(X^\mathbb{Z}, \mathbb{X}, P)$
 
 1. $\mathbb{R^N}$ es producto de copias de números reales, mientras que $X^\mathbb{Z}$ es producto de copias de un conjunto finito $X$. Para resolver esta diferencia utilizaremos un mapeado inyectivo $g: X \rightarrow \mathbb{R}$.
 
@@ -203,7 +203,7 @@ $$
  X^{J(n+1)}= X \times X^{J(n)} 
  $$
  
- Ahora definimos la función $H$ que envía subsecuencias en $X^{J(n)}$ a subsecuencias en $\mathbb{R}^n$, en el caso que $n=\infty$ $H$ enviará secuencias bi-infinitas en $X^{\mathbb{Z}}$$ a secuencias semi-infinitas en $\mathbb{R}^{\mathbb{N}}$.
+ Ahora definimos la función $H$ que envía subsecuencias en $X^{J(n)}$ a subsecuencias en $\mathbb{R}^n$, en el caso que $n=\infty$ $H$ enviará secuencias bi-infinitas en $X^{\mathbb{Z}}$ a secuencias semi-infinitas en $\mathbb{R}^{\mathbb{N}}$.
 El objetivos de esta función es reordenar los argumentos de las coordenadas y enviarlas a $\mathbb{R}$. Si $x \in X^{J(n)}$, entonces hay una subsecuencia $v \in \mathbb{R}^n$ que satisface $v_i = g(x_{h(i)}), \forall i \in \{1, \ldots, n \}$. Recordamos que $g$ es una función a la que solo imponemos que sea inyectiva, por lo tanto no es invertible. Definimos $H: X^{J(n)} \rightarrow \mathbb{R}^n$ como $H(x)=v$. Si $x=x_{c(n)}, \ldots, x_{d(n)} \in X^{J(n)}$, entonces:
 
 $$
@@ -233,7 +233,7 @@ $$
 
 1. $C(S) = C(S  \times X) = C(X \times S)$
 2. $D(S \times X) = D(S) \times X = X \times D(S)$
-3. $T(C(S))=C(D(S))$
+3. $D(C(S))=C(D(S))$
 
 \textbf{Demostración.} 
 
@@ -241,23 +241,32 @@ Sea $S= S_a \times \ldots \times S_b$.
 
 1. Por definición, $\forall i \in \mathbb{Z}, x_i \in X$:
 $$
-C(S)=\{x \in X^{\mathbb{Z}}|x_i \in S_i, i \in [a,b]\} = \{x \in X^{\mathbb{Z}}|x_{a-1} \in X, x_i \in S_i, i \in [a,b]\} = C(X \times S) 
+C(S)=\{x \in X^{\mathbb{Z}}|x_i \in S_i, i \in [a,b]\} = \{x \in X^{\mathbb{Z}}|x_{a-1} \in X \text{ y } x_i \in S_i, i \in [a,b]\} = C(X \times S) 
 $$ 
 De la misma manera:
 $$
-C(S)=\{x \in X^{\mathbb{Z}}|x_i \in S_i, i \in [a,b]\} = \{x \in X^{\mathbb{Z}}|x_{b+1} \in X, x_i \in S_i, i \in [a,b]\} = C(S \times X) 
+C(S)=\{x \in X^{\mathbb{Z}}|x_i \in S_i, i \in [a,b]\} = \{x \in X^{\mathbb{Z}}|x_{b+1} \in X \text{ y } x_i \in S_i, i \in [a,b]\} = C(S \times X) 
 $$ 
 2. Tenemos en cuenta $S \times X \subset X^{[a, b+1]}$:
 $$
-D(S \times X) =\{x \in X^{[a-1, b]} | x_b+1 \in X, x_i \in S_{i+1}, i+1 \in [a,b]\} =\{x \in X^{[a-1, b-1]} | x_i \in S_{i+1}, i+1 \in [a,b]\} \times X
+D(S \times X) =\{x \in X^{[a-1, b]} | x_b+1 \in X \text{ y } x_i \in S_{i+1}, i+1 \in [a,b]\} 
+$$
+$$
+=\{x \in X^{[a-1, b-1]} | x_i \in S_{i+1}, i+1 \in [a,b]\} \times X
 $$
 De forma semejante a lo visto anteriormente también tenemos:
 $$
-D(S \times X) =\{x \in X^{[a-2, b-1]} |x_{a-2} \in X, x_i \in S_{i+1}, i+1 \in [a,b]\} = X \times \{x \in X^{[a-1, b-1]} | x_i \in S_{i+1}, i+1 \in [a,b]\}
+D(S \times X) =\{x \in X^{[a-2, b-1]} |x_{a-2} \in X \text{ y } x_i \in S_{i+1}, i+1 \in [a,b]\} 
+$$
+$$
+=X \times \{x \in X^{[a-1, b-1]} | x_i \in S_{i+1}, i+1 \in [a,b]\}
 $$
 3. 
 $$
-T(C(S)) = \{x \in X^{\mathbb{Z}-1} | x_i \in S_{i+1}, \forall i + 1 \in [a,b], x_j \in X \forall j \notin [a,b]\} =  \{x \in X^{\mathbb{Z}}| x_i \in S_{i+1}, \forall i + 1 \in [a, b]\} = C(D(S))
+D(C(S)) = \{x \in X^{\mathbb{Z}-1} | x_i \in S_{i+1}, \forall i + 1 \in [a,b] \text{ y } x_j \in X, \forall j \notin [a,b]\}
+$$
+$$
+=\{x \in X^{\mathbb{Z}}| x_i \in S_{i+1}, \forall i + 1 \in [a, b]\} = C(D(S))
 $$
 *cqd*
 
@@ -288,8 +297,8 @@ $$
 y si $n$ es par,
 
 $$
-v_n(S)=v_{n+1}(X \times S) \quad \text{(T.2)}
-v_n(S)=v_{n+1}(T(S) \times X), \quad \text{(T.3)}
+v_n(S)=v_{n+1}(X \times S) \quad \text{(T.2)}\\
+v_n(S)=v_{n+1}(D(S) \times X), \quad \text{(T.3)}
 $$
 
 Entonce existe un único proceso estacionario $Q=(X^{\mathbb{Z}}, \mathbb{X}, P)$ tal que, $\forall n, S \subset X^{J_n}$,
@@ -316,7 +325,84 @@ H^{-1}(A) \times X & \quad n \text{impar}\\
 X \times H^{-1}(A) & \quad n \text{par}
 \end{cases}
 $$
-Tenemos que:
+Obtenemos para $\mu_{n+1}$
+
+$$
+\mu_{n+1}(A \times \mathbb{R})=
+\begin{cases}
+v_{n+1}(H^{-1}(A) \times X) & \quad n \text{ impar}\\
+v_{n+1}(X \times H^{-1}(A)) & \quad n \text{ par}
+\end{cases}
+$$
+
+Ahora, aplicando T.1 y T.2 a la derecha de las igualdades
+
+$$
+\mu_{n+1}(A \times \mathbb{R}) = v_n(H^{-1}(A))=\mu_n(A).
+$$
+
+Aplicando TEK sobre las $\mu_n$'s, obtenemos una única $P'$ en $(\mathbb{R}^{\mathbb{N}}, R^{\mathbb{N}})$ que concuerda con $\mu_n$. Por lo tanto, si $A_i$ es una $\sigma$-álgebra $\forall i \in \{1, \ldots, n \}$ y $A = A_1 \times \ldots \times A_n$, entonces
+$$
+P'(x| x_i \in A_i, i \in \{1, \ldots, n \}).
+$$
+
+Ahora pasamos a demostrar la segunda parte del Teorema. Definimos $P$ tq $\forall S \in \mathbb{X}$,
+
+$$
+P(S)= P'(H(x)| x \in S).
+$$
+Probamos primero que $P$ existe. Sea $S \in X^{J(n)}$, tenemos
+
+$$
+v_n(S)= \mu_n(H(S)) = P' \big(a \in \mathbb{R}^{\mathbb{N}}| a_i \ldots a_n \in H(S))= P(x \in X^{\mathbb{Z}}| x_{c(n)} \ldots x_{d(n)} \in S ) = P(C(S)) \big)
+$$
+
+Por lo tanto, esta $P$ es en realidad una extensión de las $\mu_n$'s y existe. 
+
+Para ver que $P$ es estacionaria, necesitamos demostrar que $P(D(A))=P(A)$ para cualquier $A \in \mathbb{X}$ que contenga al cilindro $C(S)$. Llamaremos a esta colección $\Theta$
+
+$$
+\Theta = \{C(S)| S \subset X^{J(n)} \text{ para algún } n\}.
+$$
+
+Aunque cada $A \in \Theta$ pueden tener asociado más de un par $n, S$ siempre escogeremos el de menor $n$ -que tiene asociado una única $S$-.
+
+Si $n$ es par,  T.3 y el lema demostrado anteriormente nos da
+
+$$\displaystyle
+P(A)= v_n(S) = v_{n+1}(D(S)\times X) = P(C(D(S)) \times X)\\
+$$
+$$
+= P(C(D(S)))=P(D(A))
+$$
+
+Y por último, vemos que ocurre lo mismo con $n$ impar
+
+$$
+P(A)=v_n(S) = v_{n+1}(S \times X) 
+=v_{n+1}(D(S \times X) \times X)
+= P(C(D(S \times X) \times X))
+$$
+$$
+= P(C(D(S \times X) \times X)) \\
+= P(C(D(S) \times X \times X)) \\
+= P(C(D(S) \times X) \times X) \\
+$$
+$$
+= P(D(A) \times X) = P(D(A))
+$$
+
+Por lo tanto, $P(A)=P(D(A))$. *cqd*
+
+Finalmente estamos en disposición de demostrar el nuestro nuestro teorema de partida.
+
+\textbf{Teorema} Dado $f: X^* \rightarrow [0,1]$ que satisface:
+ $$1.f(\emptyset)=1 $$
+ $$ 2.\forall w \in X^*, f(w)= \sum_{z \in X^*} f(zw) = \sum_{z \in X^*}f(wz)$$,
+
+existe un único proceso $Q=(X^{\mathbb{Z}}, \mathbb{X}, P)$ tq $\forall w \in X^*, P(w)=f(w)$.
+
+\textbf{Demostración. }
 
 
 
