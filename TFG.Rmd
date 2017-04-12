@@ -65,15 +65,15 @@ P(\emptyset)=1 \text{          (2)}
 $$
 El recíproco también es cierto, y cualquier función de $X^*$ que satisfaga (1) y (2) define un proceso.
 
-A continuación, demostraremos la unicidad de los procesos.
+## Unicidad de los Procesos
+
+Este apartado estará dedicado a demostrar la unicidad de los procesos mediante el siguiente Teorema.
 
 \textbf{Teorema} Dado $f: X^* \rightarrow [0,1]$ que satisface:
  $$1.f(\emptyset)=1 $$
  $$ 2.\forall w \in X^*, f(w)= \sum_{z \in X^*} f(zw) = \sum_{z \in X^*}f(wz)$$,
 
 existe un único proceso $Q=(X^{\mathbb{Z}}, \mathbb{X}, P)$ tq $\forall w \in X^*, P(w)=f(w)$.
-
-##Kolmogorov
 
 
 Este resultado deriva del Teorema de Extensión de Kolmogorov (TEK). Usando las notaciones $R^n$ y $R^{\mathbb{N}}$ para referirnos a las $\sigma$-álgebras en $\mathbb{R}^n$ y $\mathbb{R}\mathbb{^N}$ respectivamente.
@@ -402,18 +402,105 @@ Finalmente estamos en disposición de demostrar el nuestro nuestro teorema de pa
 
 existe un único proceso $Q=(X^{\mathbb{Z}}, \mathbb{X}, P)$ tq $\forall w \in X^*, P(w)=f(w)$.
 
-\textbf{Demostración. }
+\textbf{Demostración. } Primero construiremos $v_n$'s que satisfagan T.1, T.2 y T.3 para a continuación aplicar el Teorema que acabamos de demostrar.
 
+$\forall w \in X^*$ y $|w|=n$, sea $S=\{w\}$; entonces definimos
 
+$$
+v_n(S)=f(w).
+$$
 
----------
+Para un $S \subset X^{J(n)}$, $S$ es una unión disjunta de conjuntos de la forma $S_w = \{w\}$, para cada $w \in S$. Podemos entonces definir $v_n$ en todos los subconjuntos de $X^{J(n)}$
 
+$$
+v_n(S)=\sum_{w \in S}v_n(S_w)= \sum_{w \in S} f(w).
+$$
 
+Para que las $v_n$'s sean realmente una medida de probabilidad han de cumplir $v_n\big(X^{J(n)}\big)=1$. Por inducción, si $n=0$ entonces $X^{J(n)}=\emptyset$ y, por lo tanto $f(\emptyset)=1$. Para los próximos pasos de la inducción debemos usar la condición 2 del Teorema, separando los casos par e impar.
 
+Suponemos que (1) se cumplen en $n$ impar, entonces
 
+$$
+v_{n+1} \big(X^{J(n+2)}\big)=\sum_{w \in X^{J(n)}} f(w)
+$$
+$$
+\sum_{w \in X^{J(n+1)}} \sum_{x \in X} f(wx)
+$$
+$$
+\sum_{w \in X^{J(n+1)}} f(w)
+$$
+$$
+v_n\big(X^{J(n)}\big)=1.
+$$
 
+En el caso de $n$ par se hace de forma semejante
 
-\textit{Ejemplo de Proceso.}Para ilustrar el concepto de proceso, pondremos un pequeño ejemplo basado en un dado 'ideal' de seis caras, $X=\{1,2,3,4,5,6\}$ y cualquier palabra de longitud $l$ tendrá asociada una probabilidad de $P(w)=\frac{1}{6}^l$. En particular, si la palabra es de longitud $l=0$, entonces $\displaystyle P(w)=\frac{1}{6}^0=1$. Si además tenemos otra palabra $z \in X$ entonces, a partir de (1) vemos que $\displaystyle f(wz)=f(zw)=\frac{1}{6}^l( \sum_{i = 1}^{6} \frac{1}{6})=\frac{1}{6}=f(w)$. Por lo tanto cumple tanto (1) como (2) y es un proceso. \textit{cqd}
+$$
+v_{n+1} \big(X^{J(n+2)}\big)=\sum_{w \in X^{J(n)}} f(w)
+$$
+$$
+\sum_{w \in X^{J(n+1)}} \sum_{x \in X} f(xw)
+$$
+$$
+\sum_{w \in X^{J(n+1)}} f(w)
+$$
+$$
+v_n\big(X^{J(n)}\big)=1.
+$$
+
+Vemos que se satisface T.1 para $n$ impar
+
+$$
+v_n(S)= \sum_{w \in S}f(w)= \sum_{w \in S} \sum_{x \in X} f(wx) 
+$$
+$$
+\sum_{z \in (S \times X)} f(z)
+$$
+$$
+v_{n+1}(S \times X).
+$$
+
+Para $n$ par, comprobamos T.2
+
+$$
+v_n(S)= \sum_{w \in S} f(w) = \sum_{w \in S} \sum_{x \in X} f(xw)
+$$
+$$
+=\sum_{z \in (X \times X)} f(z) 
+$$
+$$
+=v_{n+1}(X \times S)
+$$
+
+Por último, asumiendo que $n$ es par vemos T.3
+
+$$
+v_n(S) = \sum_{w \in S} f(w) = \sum_{w \in S} \sum_{x \in X} f(wx)
+$$
+$$
+=\sum_{z \in (S \times X)}f(z).
+$$
+
+Recordamos que, mientras que $X \times S \subset X^{J(n)}$, no ocurre lo mismo con $S \times X \nsubseteq X^{J(n)}$, sin embargo sí sabemos $D(S \times X) = D(S) \times X \subset X^{J(n)}$, y $f$ no depende del ínidce temporal, así que
+
+$$
+v_n(S) = \sum_{z \in (S \times X)} f(z) = \sum_{z \in (T(S) \times X)} f(z =
+$$
+$$
+v_{n+1} (D(S) \times X).
+$$
+
+Ya podemos aplicar el Teorema anterior para ver que $\exists ! \text{ proceso } Q=(X^{\mathbb{Z}}, \mathbb{X}, P)$ tal que, $\forall n, S \in X^{J(n)}$, tenemos que $P(C(S))=v_n(S)$. Por lo tanto, si definimos $S=\{w\}$ para cualquier longitud $n$ y palabra $w$, se cumple
+
+$$
+f(w) = v_n(S) = P(C(S)) = P(w)
+$$
+*cqd*
+
+##Ejemplo de Proceso
+
+Para ilustrar el concepto de proceso, pondremos un pequeño ejemplo basado en un dado 'ideal' de seis caras, $X=\{1,2,3,4,5,6\}$ y cualquier palabra de longitud $l$ tendrá asociada una probabilidad de $P(w)=\frac{1}{6}^l$. En particular, si la palabra es de longitud $l=0$, entonces $\displaystyle P(w)=\frac{1}{6}^0=1$. Si además tenemos otra palabra $z \in X$ entonces, a partir de (1) vemos que $\displaystyle f(wz)=f(zw)=\frac{1}{6}^l( \sum_{i = 1}^{6} \frac{1}{6})=\frac{1}{6}=f(w)$. Por lo tanto cumple tanto (1) como (2) y es un proceso. \textit{cqd}
+
 
 ## Estados de un Proceso
 

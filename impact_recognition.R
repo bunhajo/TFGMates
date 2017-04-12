@@ -25,13 +25,13 @@ net_1=neuralnet( ~ round(sessions), df,
 #### ANN
   
   df_retornos$smoothed=0
-  df_retornos$smoothed[which(df_retornos$transactions>0)]=1
-  St_4 = df_retornos
-  df_retornos$smoothed=0
-  df_retornos$smoothed[which(df_retornos$transactions<0)]=1
-  St_3 = df_retornos
-  df_retornos$smoothed=0
-  df_retornos$smoothed[which(df_retornos$sessions<0 & df_retornos$sessions>-0.1)]=1
+  up=which(df_retornos$transactions>0)
+  St_4 = df_retornos[which(df_retornos$transactions>0),]
+  df_retornos$smoothed=1
+  down=which(df_retornos$transactions<0)
+  St_3 = df_retornos[which(df_retornos$transactions<0),]
+  stdp=list(up, down)
+  
   # St_2 = df_retornos
   # df_retornos$smoothed=0
   # df_retornos$smoothed[which(df_retornos$sessions<(-0.1))]=1
@@ -53,7 +53,7 @@ net_1=neuralnet( ~ round(sessions), df,
   p=list(as.data.frame(net_st_3$weights[[1]][[1]])[1,] , as.data.frame(net_st_4$weights[[1]][[1]])[1,])
   source(paste(getwd(), "/","GHMM-ANN.R", sep=""))
   
-  results=BaumWelch_ANN(returns = df_retornos[,c(2,3,5,7,8)], w=w,p=p,n_states = 2)
+  results=BaumWelch_ANN(returns = df_retornos[,c(2,3,5,7,8)], w=w,p=p,n_states = 2, n_neurons=10, stdp=stdp)
   
   net_st_4$weights[[1]][[1]]=data.frame(c(p[2], w[,2] ))
   net_st_3$weights[[1]][[1]]=data.frame(c(p[1], w[,1] ))

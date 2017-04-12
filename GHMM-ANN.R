@@ -11,10 +11,9 @@ BaumWelch_ANN = function(returns, w, p, n_states=2, Tolerance=7*10^{-2}){
   #p=rep(1/n_states,n_states)
   k=ncol(returns)
   L=nrow(returns)
-  
-  B=data.frame(c(rep(0,L)))
-  B[1:n_states]=c(rep(0,L))
-  R=B
+  w_new=list(list(),list())
+  B[1:n_states]=list(data.frame(c(rep(0,L))))
+  #B[1:n_states]=c(rep(0,L))
   forward=B
   backward=B
   smoothed=B
@@ -27,11 +26,14 @@ BaumWelch_ANN = function(returns, w, p, n_states=2, Tolerance=7*10^{-2}){
     
     
     for(i in 1:n_states){
-        B[,i] = exp(t(w[[i]]%*%t(returns)))
+      for(j in 1:L){
+        for(h in 1:n_neurons){
+          B[[i]][j,h] = exp(sum(t(as.data.frame(w[[i]][h]))*returns[j,]))
+        }
+        B[[i]][j,] = B[[i]][j,]/sum(B[[i]][j,])
+      }
     }
-    for(i in 1:L){
-      R[i,]=B[i,]/sum(B[i,])
-    }
+
     
     #SECCION E
     
