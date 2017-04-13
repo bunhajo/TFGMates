@@ -8,10 +8,12 @@ BaumWelch_ANN = function(returns, w, p, n_states=2, Tolerance=7*10^{-2}){
   A=data.frame(rep(1/n_states,n_states))
   A[1:n_states]=rep(1/n_states,n_states)
   #A=data.frame(c(0.9,0.1),c(0.1,0.9))
-  #p=rep(1/n_states,n_states)
+  p=rep(1/n_neurons, n_neurons)
+  
   k=ncol(returns)
   L=nrow(returns)
-  w_new=list(list(),list())
+  m = matrix(0, ncol = n_neurons, nrow = L)
+  B=list(as.data.frame(m), as.data.frame(m))
   B[1:n_states]=list(data.frame(c(rep(0,L))))
   #B[1:n_states]=c(rep(0,L))
   forward=B
@@ -20,20 +22,53 @@ BaumWelch_ANN = function(returns, w, p, n_states=2, Tolerance=7*10^{-2}){
   xi=vector("list", L-1)
   xi[1:L-1]=list(data.frame(c(rep(0,n_states)),c(rep(0,n_states))))
   iteration=1
+  
+  #Generate Poisson Train
+  n_trains=n_neurons*n_states
+  high_freq=L/2
+  low_freq=L/10
+  df=1/L
+  m = matrix(ncol = L, nrow = n_trains)
+  for(i in 1:n_trains){
+    m[i,] = as.double(runif(L)<ifelse(i %in% stdp[[i]], high_freq*df, low_freq*df))
+  }
+  
+  
   while(change_likelihood[1] > Tolerance & change_likelihood[2] > Tolerance){
     
     #SECCION A
-    
-    
     for(i in 1:n_states){
       for(j in 1:L){
-        for(h in 1:n_neurons){
-          B[[i]][j,h] = exp(sum(t(as.data.frame(w[[i]][h]))*returns[j,]))
-        }
-        B[[i]][j,] = B[[i]][j,]/sum(B[[i]][j,])
+          B[[i]][j,]=as.double(p[[i]])*exp(sum(t(as.data.frame(w[[i]][h]))*returns[j,]))
       }
+      B[[i]][j,] = B[[i]][j,]/sum(B[[i]][j,])
     }
 
+    #Repensarlo, hay que almacenar 5*20*730 datos, no sé bien con qué formato --- epsp depende también de la entrada y, no solo de t.
+    w_change = function(w,L, n_neurons, n_states, stdp){
+      aux=list(data.frame())
+      for(i_1 in 1:L){
+        if(i_1 %in% stdp[[1]]){poisson_train=m[,i_1]}else{poisson_train=rev(m[,i_1])}
+        for(i_2 in 1:n_states){
+          for(i_3 in 1:k){
+            for(i_4 in 1:n_neurons){
+            if(poisson_train[n_neurons*(i_2-1)+i_4]==1){aux[[i_1]][n_neurons*(i_2-1)+i_4,i_3]=exp(w[[i_2]][i_4,i_3]+1)-1}else{aux[[i_1]][n_neurons*(i_2-1)+i_4]=-1}
+          }
+        }
+      }
+      return(aux)
+    }
+    delta=w_change(w, L, n_neurons, n_states, stdp)
+    
+    
+   
+    
+    
+    
+    
+    
+    
+    
     
     #SECCION E
     

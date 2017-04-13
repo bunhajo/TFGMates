@@ -43,9 +43,9 @@ net_1=neuralnet( ~ round(sessions), df,
   # net_st_2=neuralnet(smoothed ~ sessions + users + bounceRate + transactions, St_2, 
   #                    hidden = 4, threshold = 0.001, stepmax = 100000)
   net_st_3=neuralnet(smoothed ~ sessions + users + newusers + pageviews + avgTimeOnPage, St_3, 
-                     hidden = 10, threshold = 0.1, stepmax = 1000000)
+                     hidden = 10, threshold = 0.01, stepmax = 1000000)
   net_st_4=neuralnet(smoothed ~ sessions + users + bounceRate, St_4, 
-                     hidden = 10, threshold = 0.1, stepmax = 100000)
+                     hidden = 10, threshold = 0.01, stepmax = 100000)
   
   test=data.frame(St_3$smoothed, round(as.data.frame(net_st_3$net.result)[,1]))
   
