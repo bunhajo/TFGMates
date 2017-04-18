@@ -44,13 +44,17 @@ net_1=neuralnet( ~ round(sessions), df,
   #                    hidden = 4, threshold = 0.001, stepmax = 100000)
   net_st_3=neuralnet(smoothed ~ sessions + users + newusers + pageviews + avgTimeOnPage, St_3, 
                      hidden = 10, threshold = 0.01, stepmax = 1000000)
-  net_st_4=neuralnet(smoothed ~ sessions + users + bounceRate, St_4, 
+  net_st_4=neuralnet(smoothed ~ sessions + users + newusers + pageviews + avgTimeOnPage, St_4, 
                      hidden = 10, threshold = 0.01, stepmax = 100000)
   
   test=data.frame(St_3$smoothed, round(as.data.frame(net_st_3$net.result)[,1]))
   
-  w=list(as.data.frame(net_st_3$weights[[1]][[1]])[-1,] , as.data.frame(net_st_4$weights[[1]][[1]])[-1,])
-  p=list(as.data.frame(net_st_3$weights[[1]][[1]])[1,] , as.data.frame(net_st_4$weights[[1]][[1]])[1,])
+  w=rbind(as.data.frame(net_st_3$weights[[1]][[1]])[-1,] , as.data.frame(net_st_4$weights[[1]][[1]])[-1,])
+  p=rbind(as.data.frame(net_st_3$weights[[1]][[1]])[1,] , as.data.frame(net_st_4$weights[[1]][[1]])[1,])
+  w=matrix(ncol = n_neurons, nrow = n_inputs*n_states)
+  for(i in 1:nrow(w)){w[i,]=runif(ncol(w))}
+  p=matrix(nrow = n_states, ncol = n_neurons)
+  for(i in 1:nrow(p)){w[i,]=runif(ncol(p))}
   source(paste(getwd(), "/","GHMM-ANN.R", sep=""))
   
   results=BaumWelch_ANN(returns = df_retornos[,c(2,3,5,7,8)], w=w,p=p,n_states = 2, n_neurons=10, stdp=stdp)

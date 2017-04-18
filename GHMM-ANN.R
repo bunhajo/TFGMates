@@ -10,7 +10,7 @@ BaumWelch_ANN = function(returns, w, p, n_states=2, Tolerance=7*10^{-2}){
   #A=data.frame(c(0.9,0.1),c(0.1,0.9))
   p=rep(1/n_neurons, n_neurons)
   
-  k=ncol(returns)
+  n_inputs=ncol(returns)
   L=nrow(returns)
   m = matrix(0, ncol = n_neurons, nrow = L)
   B=list(as.data.frame(m), as.data.frame(m))
@@ -24,13 +24,13 @@ BaumWelch_ANN = function(returns, w, p, n_states=2, Tolerance=7*10^{-2}){
   iteration=1
   
   #Generate Poisson Train
-  n_trains=n_neurons*n_states
-  high_freq=L/2
-  low_freq=L/10
-  df=1/L
-  m = matrix(ncol = L, nrow = n_trains)
-  for(i in 1:n_trains){
-    m[i,] = as.double(runif(L)<ifelse(i %in% stdp[[i]], high_freq*df, low_freq*df))
+  n_trains=n_inputs*n_states
+  high_freq=n_trains/2
+  low_freq=n_trains/10
+  df=1/n_trains
+  m = matrix(ncol = L, nrow = n_inputs)
+  for(i in 1:L){
+    m[,i] = as.double(runif(n_trains)<ifelse(i %in% stdp[[1]], high_freq*df, low_freq*df))
   }
   
   
@@ -39,24 +39,29 @@ BaumWelch_ANN = function(returns, w, p, n_states=2, Tolerance=7*10^{-2}){
     #SECCION A
     for(i in 1:n_states){
       for(j in 1:L){
-          B[[i]][j,]=as.double(p[[i]])*exp(sum(t(as.data.frame(w[[i]][h]))*returns[j,]))
+        B[[i]][j,]=exp(apply(w_new[[i]][seq((i-1)*n_inputs+1:i*n_inputs),]*as.double(returns[j,]),2,function(x)sum(x))+p[i,])
       }
-      B[[i]][j,] = B[[i]][j,]/sum(B[[i]][j,])
+      R[[i]][j,] = B[[i]][j,]/sum(B[[i]][j,])
     }
+    
+    rbind(apply(B[[1]], 1, function(x)max(x)), apply(B[[2]], 1, function(x)max(x)))
+    
 
     #Repensarlo, hay que almacenar 5*20*730 datos, no sé bien con qué formato --- epsp depende también de la entrada y, no solo de t.
     w_change = function(w,L, n_neurons, n_states, stdp){
       aux=list(data.frame())
       for(i_1 in 1:L){
+        aux[[i_1]]=w
         if(i_1 %in% stdp[[1]]){poisson_train=m[,i_1]}else{poisson_train=rev(m[,i_1])}
-        for(i_2 in 1:n_states){
-          for(i_3 in 1:k){
-            for(i_4 in 1:n_neurons){
-            if(poisson_train[n_neurons*(i_2-1)+i_4]==1){aux[[i_1]][n_neurons*(i_2-1)+i_4,i_3]=exp(w[[i_2]][i_4,i_3]+1)-1}else{aux[[i_1]][n_neurons*(i_2-1)+i_4]=-1}
+          for(i_2 in 1:n_trains){
+            if(poisson_train[i_2]==1){aux[[i_1]][i_2,]=exp(-aux[[i_1]][i_2,]+1)-1}else{aux[[i_1]][i_2,]=rep(-1,n_neurons)}
           }
         }
-      }
       return(aux)
+    }
+    w_new=list(data.frame())
+    for(i in 1:L){
+      w_new[[i]]=w+0.1*w_change[[i]]
     }
     delta=w_change(w, L, n_neurons, n_states, stdp)
     
