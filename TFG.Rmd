@@ -6,6 +6,9 @@ header-include:
   - \usepackage{bbm} 
   - \usepackage{fancyhdr}
   - \usepackage{amsmath}
+  - \usepackage{stackrel}
+  - \usepackage{booktabs}
+
 
 output: pdf_document
 fontsize: 12pt
@@ -25,7 +28,7 @@ Finalmente, veremos la definición de una Cadena de Markov y demostraremos que s
 
 ## Secuencias
 
-Comenzamos definiendo el conjunto canónico $X=\{0,1,\ldots, m-1\}$ con $m \in \mathbb{N}$ llamado *alfabeto*, cuyos elementos se denominan *símbolos*, los cuales no tienen por qué ser necesariamente números naturales.   Si $x \in X^{\mathbb{Z}}$, entonces $x=\cdots x_{-1} x_{0} x_{1} \cdots$  es una secuencia numerable bi-infinita, los índices $i<0$ denotan el pasado de la secuencia, y los $i \geq 0$ el futuro, particularmente el índice $i=0$ es el primer símbolo desconocido de la secuencia. 
+Comenzamos definiendo el conjunto canónico $X=\{0,1,\ldots, m-1\}$ con $m \in \mathbb{N}$ llamado *alfabeto*, cuyos elementos se denominan *símbolos*, los cuales no tienen por qué ser necesariamente números naturales.   Si $x \in X^{\mathbb{Z}}$, entonces $x=\cdots x_{-1} x_{0} x_{1} \cdots$  es una secuencia numerable bi-infinita, donde los índices $i<0$ denotan el pasado de la secuencia, y los $i \geq 0$ el futuro, particularmente el índice $i=0$ es el primer símbolo desconocido de la secuencia. 
 
 En estos términos definimos una palabra $w \in X^l$ de longitud $l$, como una $l$-tupla de $X$. $\emptyset$ denotará la palabra vacía de longitud 0. Una subsecuencia $s$ es una estructura $s = (w, (a,b))$, donde $w$ es una palabra y $a,b \in \mathbb{Z}$ tq $|w|=b-a+1$. Así, $s$ puede también escribirse $s=s_a \cdots s_b$, y $a$ representaría el tiempo inicial, y $b$ el tiempo final. Una secuencia $x$  contendrá a la subsecuencia $s$ si $\forall t \in [a,b], s_t=x_t$. 
 
@@ -37,10 +40,10 @@ El conjunto $X^*$ denotará el de todas las palabras.
 
 Un proceso *Q* es una espacio de probabilidad estacionaria en un espacio de secuencias.
 
-Una medida de probabilidad es una función que asigna probabilidades a conjuntos (el espacio medible de probabilidades), en este caso a conjuntos de secuencias $\mathbb{X}$,  que es la $\sigma$-álgebra definida como la menor colección de subconjuntos de $X^{\mathbb{Z}}$ tq:
+Una medida de probabilidad es una función que asigna probabilidades a conjuntos (el espacio medible de probabilidades), en este caso a conjuntos de secuencias $\mathbb{X}$, definida como la menor colección de subconjuntos de $X^{\mathbb{Z}}$ tq:
 
 1. Para toda secuencia $s, A_s \in \mathbb{X}$.
-2. $\mathbb{X}$ es cerrado bajo complementos y uniones contables.
+2. $\mathbb{X}$ es cerrado bajo complementos y uniones contables. Es decir, $\mathbb{X}$ es una $\sigma$-álgebra.
 
 El par $(X^{\mathbb{Z}}, \mathbb{X})$ asigna probabilidades a los conjuntos $A_s$ fijados por las subsecuencias $s$.
 Definiremos entonces $P(s)=P(A_s)$, tenemos en particular:
@@ -56,12 +59,12 @@ Finalmente podemos definir de forma más formal un proceso \textit{Q} como el es
 
 Sea $w$ una palabra y $s = (w, (a,b))$, entonces si $P$ estacionario $P(w)=P(s)$. Además de manera trivial podemos obtener que, si $W_l$ es el conjunto de las palabras de longitud $l>0$:
 $$
-\sum_{z \in W_l}P(wz)=\sum_{z \in W_l}P(zw)= P(w) \text{          (1)} 
+\sum_{z \in W_l}P(wz)=\sum_{z \in W_l}P(zw)= P(w) \quad \quad (1) 
 $$
 
 Además, para $w=\emptyset$:
 $$
-P(\emptyset)=1 \text{          (2)} 
+P(\emptyset)=1 \quad \quad (2) 
 $$
 El recíproco también es cierto, y cualquier función de $X^*$ que satisfaga (1) y (2) define un proceso.
 
@@ -69,10 +72,9 @@ El recíproco también es cierto, y cualquier función de $X^*$ que satisfaga (1
 
 Este apartado estará dedicado a demostrar la unicidad de los procesos mediante el siguiente Teorema.
 
-\textbf{Teorema} Dado $f: X^* \rightarrow [0,1]$ que satisface:
+\textbf{Teorema.} Dado $f: X^* \rightarrow [0,1]$ que satisface:
  $$1.f(\emptyset)=1 $$
- $$ 2.\forall w \in X^*, f(w)= \sum_{z \in X^*} f(zw) = \sum_{z \in X^*}f(wz)$$,
-
+ $$ 2.\forall w \in X^*, f(w)= \sum_{z \in X^*} f(zw) = \sum_{z \in X^*}f(wz)$$
 existe un único proceso $Q=(X^{\mathbb{Z}}, \mathbb{X}, P)$ tq $\forall w \in X^*, P(w)=f(w)$.
 
 
@@ -104,8 +106,8 @@ El mapa biyectivo  $h: \mathbb{N} \rightarrow \mathbb{Z}$ será
 $$
 h(n) =
 \begin{cases}
-n/2 & \quad n \text{par}\\
-(1-n)/2 & \quad n \text{impar}
+n/2 & \quad n \text{ par}\\
+(1-n)/2 & \quad n \text{ impar}
 \end{cases}
 $$
 Su inversa, por lo tanto:
@@ -133,16 +135,17 @@ d(n)=max(h(n), h(n-1)) =
 \end{cases}
 $$
 $$
-J(n)=\{c(n), \ldots, d(n)\}.
+J(n)=\{c(n), \ldots, d(n)\}
 $$
-Observamos que $c$ y $d$ cumplen las siguientes propiedades:
+Observamos que $c$ y $d$ cumplen las propiedades:
 
 P1. Si $n$ par, entonces $h(n+1)<0, c(n+1)=c(n)-1, d(n+1)=d(n)$.
+
 P2. Si $n$ impar, entonces $h(n+1)>0, c(n+1)=c(n), d(n+1)=d(n)+1$.
 
 \textbf{Demostración}
 
-P1. Si $n$ par, entonces $n=2*i$, para algún $i \in \mathbb{N} \textbackslash 0$, y:
+P1. Si $n$ par, entonces $n=2i$, para algún $i \in \mathbb{N} \textbackslash 0$, y:
 
 $$
 h(n+1) \overbrace{=}^{n+1 \text{ impar}} \frac{1-(n+1)}{2}=\frac{-2i}{2}=-i<0
@@ -191,19 +194,19 @@ d(n+1) \overbrace{=}^{n+1 \text{ par}} \frac{2i+2}{2}=i+1
  
  2. De forma similar $X^{J(n)} \subset X^*$ denotará el conjunto de todas las subsecuencias $s=(w, (c(n), d(n)))$ que empiezan en $c(n)$ y terminan en $d(n)$. Como $|J(n)|=n$, $X^{J(n)}$ es un producto de $n$ copias de $X$. La diferencia entre $X^n$ y $X^{J(n)}$ es cómo están etiquetadas las coordenadas, en el primer caso el orden es $1,2,\ldots, n$ mientras que el segundo lo hace como $c(n), \ldots, d(n)$. Por las propiedades P1 y P2 demostradas anteriormente, tenemos que:
  
- Si $n$ es impar:
+ $\quad \quad$ Si $n$ es impar:
  
 $$
 X^{J(n+1)}=X^{J(n)} \times X
 $$
 
- si $n$ es par:
+$\quad \quad$  Si $n$ es par:
  
  $$
  X^{J(n+1)}= X \times X^{J(n)} 
  $$
  
- Ahora definimos la función $H$ que envía subsecuencias en $X^{J(n)}$ a subsecuencias en $\mathbb{R}^n$, en el caso que $n=\infty$ $H$ enviará secuencias bi-infinitas en $X^{\mathbb{Z}}$ a secuencias semi-infinitas en $\mathbb{R}^{\mathbb{N}}$.
+ Ahora definimos la función $H$ que envía subsecuencias en $X^{J(n)}$ a subsecuencias en $\mathbb{R}^n$, en el caso que $n=\infty$, $H$ enviará secuencias bi-infinitas en $X^{\mathbb{Z}}$ a secuencias semi-infinitas en $\mathbb{R}^{\mathbb{N}}$.
 El objetivos de esta función es reordenar los argumentos de las coordenadas y enviarlas a $\mathbb{R}$. Si $x \in X^{J(n)}$, entonces hay una subsecuencia $v \in \mathbb{R}^n$ que satisface $v_i = g(x_{h(i)}), \forall i \in \{1, \ldots, n \}$. Recordamos que $g$ es una función a la que solo imponemos que sea inyectiva, por lo tanto no es invertible. Definimos $H: X^{J(n)} \rightarrow \mathbb{R}^n$ como $H(x)=v$. Si $x=x_{c(n)}, \ldots, x_{d(n)} \in X^{J(n)}$, entonces:
 
 $$
@@ -292,13 +295,13 @@ Finalmente, ya estamos en disposición de demostrar nuestra variante del TEK.
 \textbf{Teorema. } Suponemos que tenemos una secuencia de medidas  $v_n$ en $X^{J(n)}$ que satisfacen que $\forall n$ y para todo $S \subset X^{(J_n)}$, si $n$ es impar,
 
 $$
-v_n(S)=v_{n+1}(S \times X) \quad \text{(T.1)}
+v_n(S)=v_{n+1}(S \times X) \quad \quad \text{(T.1)}
 $$
 y si $n$ es par,
 
 $$
-v_n(S)=v_{n+1}(X \times S) \quad \text{(T.2)}\\
-v_n(S)=v_{n+1}(D(S) \times X), \quad \text{(T.3)}
+v_n(S)=v_{n+1}(X \times S) \quad \quad \text{(T.2)}\\
+v_n(S)=v_{n+1}(D(S) \times X), \quad \quad \text{(T.3)}
 $$
 
 Entonce existe un único proceso estacionario $Q=(X^{\mathbb{Z}}, \mathbb{X}, P)$ tal que, $\forall n, S \subset X^{J_n}$,
@@ -321,8 +324,8 @@ Dado que
 $$
 H^{-1}(A \times \mathbb{R}) = 
 \begin{cases}
-H^{-1}(A) \times X & \quad n \text{impar}\\
-X \times H^{-1}(A) & \quad n \text{par}
+H^{-1}(A) \times X & \quad n \text{ impar}\\
+X \times H^{-1}(A) & \quad n \text{ par}
 \end{cases}
 $$
 Obtenemos para $\mu_{n+1}$
@@ -343,13 +346,13 @@ $$
 
 Aplicando TEK sobre las $\mu_n$'s, obtenemos una única $P'$ en $(\mathbb{R}^{\mathbb{N}}, R^{\mathbb{N}})$ que concuerda con $\mu_n$. Por lo tanto, si $A_i$ es una $\sigma$-álgebra $\forall i \in \{1, \ldots, n \}$ y $A = A_1 \times \ldots \times A_n$, entonces
 $$
-P'(x| x_i \in A_i, i \in \{1, \ldots, n \}).
+P'(x| x_i \in A_i, i \in \{1, \ldots, n \})
 $$
 
 Ahora pasamos a demostrar la segunda parte del Teorema. Definimos $P$ tq $\forall S \in \mathbb{X}$,
 
 $$
-P(S)= P'(H(x)| x \in S).
+P(S)= P'(H(x)| x \in S)
 $$
 Probamos primero que $P$ existe. Sea $S \in X^{J(n)}$, tenemos
 
@@ -362,7 +365,7 @@ Por lo tanto, esta $P$ es en realidad una extensión de las $\mu_n$'s y existe.
 Para ver que $P$ es estacionaria, necesitamos demostrar que $P(D(A))=P(A)$ para cualquier $A \in \mathbb{X}$ que contenga al cilindro $C(S)$. Llamaremos a esta colección $\Theta$
 
 $$
-\Theta = \{C(S)| S \subset X^{J(n)} \text{ para algún } n\}.
+\Theta = \{C(S)| S \subset X^{J(n)} \text{ para algún } n\}
 $$
 
 Aunque cada $A \in \Theta$ pueden tener asociado más de un par $n, S$ siempre escogeremos el de menor $n$ -que tiene asociado una única $S$-.
@@ -384,8 +387,8 @@ P(A)=v_n(S) = v_{n+1}(S \times X)
 = P(C(D(S \times X) \times X))
 $$
 $$
-= P(C(D(S \times X) \times X)) \\
-= P(C(D(S) \times X \times X)) \\
+= P(C(D(S \times X) \times X)) 
+= P(C(D(S) \times X \times X)) 
 = P(C(D(S) \times X) \times X) \\
 $$
 $$
@@ -397,8 +400,8 @@ Por lo tanto, $P(A)=P(D(A))$. *cqd*
 Finalmente estamos en disposición de demostrar el nuestro nuestro teorema de partida.
 
 \textbf{Teorema} Dado $f: X^* \rightarrow [0,1]$ que satisface:
- $$1.f(\emptyset)=1 $$
- $$ 2.\forall w \in X^*, f(w)= \sum_{z \in X^*} f(zw) = \sum_{z \in X^*}f(wz)$$,
+ $$1.f(\emptyset)=1$$
+ $$2.\forall w \in X^*, f(w)= \sum_{z \in X^*} f(zw) = \sum_{z \in X^*}f(wz)$$
 
 existe un único proceso $Q=(X^{\mathbb{Z}}, \mathbb{X}, P)$ tq $\forall w \in X^*, P(w)=f(w)$.
 
@@ -424,13 +427,10 @@ $$
 v_{n+1} \big(X^{J(n+2)}\big)=\sum_{w \in X^{J(n)}} f(w)
 $$
 $$
-\sum_{w \in X^{J(n+1)}} \sum_{x \in X} f(wx)
+= \sum_{w \in X^{J(n+1)}} \sum_{x \in X} f(wx) = \sum_{w \in X^{J(n+1)}} f(w)
 $$
 $$
-\sum_{w \in X^{J(n+1)}} f(w)
-$$
-$$
-v_n\big(X^{J(n)}\big)=1.
+= v_n\big(X^{J(n)}\big)=1.
 $$
 
 En el caso de $n$ par se hace de forma semejante
@@ -439,13 +439,10 @@ $$
 v_{n+1} \big(X^{J(n+2)}\big)=\sum_{w \in X^{J(n)}} f(w)
 $$
 $$
-\sum_{w \in X^{J(n+1)}} \sum_{x \in X} f(xw)
+= \sum_{w \in X^{J(n+1)}} \sum_{x \in X} f(xw) = \sum_{w \in X^{J(n+1)}} f(w)
 $$
 $$
-\sum_{w \in X^{J(n+1)}} f(w)
-$$
-$$
-v_n\big(X^{J(n)}\big)=1.
+= v_n\big(X^{J(n)}\big)=1.
 $$
 
 Vemos que se satisface T.1 para $n$ impar
@@ -454,10 +451,10 @@ $$
 v_n(S)= \sum_{w \in S}f(w)= \sum_{w \in S} \sum_{x \in X} f(wx) 
 $$
 $$
-\sum_{z \in (S \times X)} f(z)
+= \sum_{z \in (S \times X)} f(z)
 $$
 $$
-v_{n+1}(S \times X).
+= v_{n+1}(S \times X).
 $$
 
 Para $n$ par, comprobamos T.2
@@ -466,10 +463,7 @@ $$
 v_n(S)= \sum_{w \in S} f(w) = \sum_{w \in S} \sum_{x \in X} f(xw)
 $$
 $$
-=\sum_{z \in (X \times X)} f(z) 
-$$
-$$
-=v_{n+1}(X \times S)
+=\sum_{z \in (X \times X)} f(z) =v_{n+1}(X \times S)
 $$
 
 Por último, asumiendo que $n$ es par vemos T.3
@@ -507,6 +501,8 @@ Para ilustrar el concepto de proceso, pondremos un pequeño ejemplo basado en un
 Supongamos que tenemos un proceso $Q = (X^{\mathbb{Z}}, \mathbb{X}, P)$ del que conocemos algunos símbolos recientes. Si $s = (w, (a,b))$ es una subsecuencia conocida, con $b=-1$, $s$ induce una distribución condicional en un espacio futuro (DCF) del tipo $P(\cdot | s) = P(\cdot | A_s)$. Esta DCF condensa todo nuestro conocimiento sobre las posibilidades futuras del proceso $Q$, por lo que al concer esta distribución, en cierto sentido, podemos olvidar todo lo acontecido en el proceso anteriormente. Esta es la base con la que decimos que  $P(\cdot | s)$ es un estado.
 
 Ahora ampliaremos esta noción. Primero definimos $\mathbb{X}^+=\{ x^+ = x_0 x_1, \ldots | \forall i \geq 0, x_i \in X \}$, y respectivamente $\mathbb{X}^-=\{ x^+ = \ldots x_-2, x_-1 | \forall i \leq 0, x_i \in X \}$.  Los campos $\sigma$ generados por $\mathbb{X}^+$ y $\mathbb{X}^-$ son  $\mathbb{F}$ y $\mathbb{H}$, respectivamente. Las DCF están condicionadas por secuencias $s = (w, (a,b))$ con $w$ palabra y $w \in \mathbb{X}^-$, por lo que estas subsecuencias pueden o no acabar en la última observación conocida (también conocidas como  \textit{historias}), pero nos centraremos únicamente en este último caso.
+
+Además, para lo que veremos a continuación necesitamos definir una serie de $\sigma$-álgebras $(\mathbb{H}_l \in (0, 1, \ldots))$, donde $\mathbb{H}_l$ es la $\sigma$-álgebra en $X^{\mathbb{Z}}$ generada por todas las historias de longitud $l$. En definitiva, un evento en $\mathbb{H}_l$ es el conjunto de series bi-infinitas $x$ que, eso sí, cumplen $x_{-l}, \ldots, x_{-1}$. Además, de forma trivial $\forall l \leq 0, \mathbb{H}_l \subset \mathbb{H}_{l+1}$. A la unión infinita de todas las $\mathbb{H}_l$ la denominamos $\mathbb{H}$.   
 
 Si dos historias, $z$ e $y$ acaban determinando la misma DCF $P(\cdot|z)=P(\cdot|y)$, entonces decimos que $y \thicksim z$ son equivalentes, es decir podemos definir la clase de equivalencia $\thicksim$ y $\overline{z} = \{y \in X^*| y \thicksim z\}$.
 
@@ -556,7 +552,7 @@ Además, diremos que dos estados del proceso $B$ y $c$ son $k-equivalentes$ si, 
 \textbf{Demostración} Para cada natural $l$ y palabra $w$, y para cada historia $x^-$, definimos:
 
 $$
-f_{l}^{w}(x-)=P(w|x_{-l} \ldots x_{-1})
+f_{l}^{w}(x^-)=P(w|x_{-l} \ldots x_{-1})
 $$
 y
 $$
@@ -575,7 +571,39 @@ $\{A(w)\}$ es un conjunto medible y $f^w$ es una función medible, así que su l
 
 La idea central es que un estado es una predicción basada en lo sabido sobre el pasado del proceso. En la siguiente sección clasificaremos los diferentes tipos de estados que podemos encontrar.
 
-##Martingales
+##Martingalas
+
+En esta sección presentamos los resultados relativos a convergencia de martingalas necesarios para el apartado anterior.
+
+Sea $X$ una variable aleatoria en un espacio de probabilidad $(\Omega, F, P)$. Sea $E$ una sub $\sigma$-álgebra de $F$, o sea, $E$ una $\sigma$-álgebra y $E \subset F$.
+
+**Definición.** La esperanza condicional de $X$ respecto a $E$ es cualquier variable aleatoria $Y$ que satisfaga
+
+1. $Y$ es medible respecto a $E$
+2. $\forall A \in E$,
+
+$$
+\int_A X dP = \int_A YdP
+$$
+
+Notar que las esperanzas condicionales que cumplen esta definición son únicas en conjuntos de probabilidad no nula.
+
+Si $Z$ es una variable aleatoria en $(\Omega, F, P)$, entonces $Z$ induce una $\sigma$-álgebra $\sigma(Z)$ en $\Omega$, en concreto la menos $\sigma$-álgebra que contiene conjuntos de la forma $Z^{-1}(B)$,para conjuntos de Borel $B$. Sea $A$ un conjunto en $F$ con función característica $1_A$, tal y como hemos definido previamente. Si fijamos $a \in \mathbb{R}$ y evaluamos en $x \in Z^{-1}(a)$ la esperanza condicional $E(1_A|\sigma(Z))$, encontramos que
+
+$$
+E(1_A|\sigma(Z))(x)= P(x \in A| Z=a)
+$$
+
+Una filtración es un conjunto incremental de $\sigma$-álgebras $\{F\}= F_1 \subset F_2 \subset \ldots$. Por ejemplo, los conjuntos $\mathbb{H}_l$ en $(X^{\mathbb{Z}}, \mathbb{X}, P)$ son filtraciones.
+
+**Definición.** Una secuencia $\{X\}=X_1, X_2 \ldots$ es una martingala respecto a la filtración $\{F\}$ si
+
+1. $\forall i, X_i$ es medible respecto a $F_i$.
+2. $\forall s, t \in \mathbb{N}$ tal que $t>s$, $X_s=E(X_t|F)$.
+
+
+
+¡¡¡ COMPLETAR APARTADO !!!
 
 --------
 
@@ -708,15 +736,13 @@ Esta identidad es la denominada _propiedad de  Márkov_.
 
 #2. Modelos Ocultos de Markov (HMM)
 
-##Introducción
-
 En los Modelos ocultos de Markov (HMM) la MC subyace tras las observaciones. Los estados del HMM solo pueden ser inferidos a partir de los símbolos registrados. Correlacionando las observaciones y las transiciones de estado lo que se busca  es encontrar el estado de secuencias más probable.
 
-Un HMM pertenece a los mecanismos de *Machine Learning*, puede ser entendido como una especie de doble proceso estocástico:
+Un HMM pertenece a los mecanismos de *Machine Learning*, y puede ser entendido como una especie de doble proceso estocástico:
 
 * El primer proceso estocástico es un conjunto finito de estados, cada uno de ellos generalmente asociado a una distribución de probabilidad multidimensional. Mediante la denominada matriz de transición se controla las transiciones entre estados.
 
-* El segundo proceso estocástico es aquel en que cualquier estado puede ser observado, es decir, analizaremos lo observado sin ver en qué estado está ocurriendo, de aquí el epíteto de _oculto_ que define a este modelo.          
+* El segundo proceso estocástico es aquel en que cualquier estado puede ser observado, es decir, analizaremos lo observado sin ver en qué estado está ocurriendo, de aquí el epíteto _oculto_ que define a este modelo.          
 
 ##Componentes de un HMM
 
@@ -724,7 +750,7 @@ Para definir completamente un HMM, se necesitan cinco elementos:
 
 1. Los $N$ estados del modelo $S=\{S_1, \ldots, S_n \}$
 
-2. Las $M$ observaciones de los diferentes símbolos por estado  $v=\{V_1, \ldots, V_M\}$. Si las observaciones son contínuas, obviamente $M$ es infinito.
+2. Las $M$ observaciones de los diferentes símbolos por estado  $V=\{V_1, \ldots, V_M\}$. Si las observaciones son contínuas, obviamente $M$ es infinito.
 
 3. La matriz de transición $A=\{a_{ij} \}$, donde $a_{ij}=P(q_{t+1}=j|q_t=i)$, siendo $q_t$ el estado actual. Esta matriz es equivalente a la vista en la definición de las MC. Hay que obserar que si uno de los $a_{ij}$ es definido cero, permanecerá cero durante todo el proceso de entrenamiento.
 
@@ -795,6 +821,270 @@ Dada la secuencia de observaciones $O=\{o_1, \ldots, o_m\}$, ¿Cuál es la secue
 Dada la secuencia de observaciones $O=\{o_1, \ldots, o_m\}$, ¿Cómo debemos ajustar los parámetros de $\lambda$ para maximiazar $P(O|\lambda)$?
 
 El problema de evaluación es la piedra angular en muchos estudios de reconocimiento de voz. El problema de decodificación resulta útil a la hora de segmentar, y el problema de aprendizaje debe ser resuelto si queremos entrenar un HMM para su uso en labores de reconocimiento.
+
+
+
+## Problema de Evaluación: Forward Algorithm
+
+Dada una secuencia de observaciones $O=\{o_1, \ldots, o_T\}$ y un modelo $\lambda = (A,B, \pi)$, se trata de averiguar $P(O|\lambda)$. Lo primero que uno se plantea es que este cálculo se puede realizar directamente mediante la fórmula de Bayes: $\displaystyle P(O|\lambda) = \frac{P(\lambda | O) P(O)}{P(\lambda)}$. Sin embargo, el número de operaciones requeridas es del orden de $N^T$, lo que no resula efectivo computacionalmente. Existe sin embargo un método de menos complejidad que involucra la utilización de una variable auxiliar *forward* ($\alpha$) de la forma
+
+$$
+\alpha_t(i)= P(o_1, o_2, \ldots, o_t, q_t = i | \lambda)
+$$
+
+Para el cálculo de esta variable podemos definir una relación recursiva de la forma
+
+$$
+\begin{cases}
+\alpha_1(j)=\pi_j b_j(o_1), \forall j \in \{1, \ldots, N\}\\
+\alpha_{t+1}(j)=b_j(o_{t+1})\sum\limits_{i=1}^{N}\alpha_t(i)a_{ij};\forall j \in \{1, \ldots, N\}, \forall t \in \{1, \ldots, T+1\}
+\end{cases}
+$$
+
+Las $\alpha_T$'s se pueden calcular utilizando la recursión. Así que la probabilidad requerida es dada por
+
+$$
+P(O| \lambda)= \sum_{i=1}^{N}\alpha_T(i)
+$$
+
+Este método es conocido comúnmente como *forward algorithm*.
+
+De forma similar podemos definir una variable *backward* $\beta_t(i)$
+
+$$
+\beta_t(i)= P(o_{t+1}, o_{t+2}, \ldots, o_T|q_T=i, \lambda)
+$$
+
+Como el estado actual es $i$, $\beta_t(i)$ es la probabilidad de tener en $t$ el estado $i$ sabiendo la historia futura parcial $o_{t+1}, o_{t+2}, \ldots, o_T$.
+
+Igual que antes, planteamos la fórmula recursiva que nos dará la variable *backward*
+
+$$
+\begin{cases}
+\beta_t(i)=\sum_{j=1}^{N}\beta_{t+1}(j)a_{ij}b_j(o_{t+1}); \forall i \in \{1, \ldots, N\}, \forall t \in \{1, \ldots, T-1\}\\
+\beta_T(i)=1, \forall i \in \{1, \ldots, N \}
+\end{cases}
+$$
+
+Combinando ambas obtenemos
+
+$$
+\alpha_t(i)\beta_t(i)=P(O, q_t=i|\lambda)\quad \forall i \in \{1, \ldots, N\}, \forall t \in \{1, \ldots, T\}
+$$
+
+Finalmente, obtenemos que
+
+$$
+P(O|\lambda)=\sum_{i=1}^{N}P(O, q_t=i|\lambda)=\sum_{i=1}^{N}\alpha_t(i)\beta_t(i)
+$$
+
+Más adelante desarrollaremos de forma detallada esta combinación *forward-backward* para resolver el *Problema de Aprendizaje* mediante el algoritmo *Baum-Welch*.
+
+*Nota: en cada caso, tanto en las variables backward como forward hay que realizar una normalización en cada tiempo t.*
+
+## Problema de Decodificación: Algoritmo de Viterbi
+
+El problema de decodificación gira en torno a saber cuál es la secuencia de estados más probable dada una secuencia de observaciones $O=o_1, o_2, \ldots, o_T$ y un modelo $\lambda=(A,B,\pi)$.
+
+El problema de buscar esta secuancia más probables es que, muchas veces, quedarnos solo con las secuencias de $q_t$'s más probables resulta en una secuencia de estados poco significativa. 
+
+Por ello introducimos el denominado *Algoritmo de Viterbi*, que nos permite encontrar el estado de secuencias que tiene mayor verosimilitud.
+
+Definimos primero
+
+$$
+\delta_t(i)= \underset{q_1,q_2, \ldots, q_{t-1}}{max}P(q_1, q_2, \ldots, q_{t-1}, q_t=i, o_1, o_2, \ldots, o_{t-1}|\lambda),
+$$
+
+Es decir, la probabilidad más alta de la secuencia parcial de estados y observaciones hasta $t$, dado el estado actual $i$.
+
+A partir de aquí, siendo $\delta_1(j)=\pi_jb_j(o_1), \forall j \in \{1, \ldots, N\}$, definimos la fórmula de recursividad
+
+$$
+\delta_{t+1}(j)=b_j(o_{t+1})\big[\underset{1\leq i \leq N}{max}\delta_t(i)a_{ij}\big]\quad \forall i \in \{1, \ldots, N\}, \forall t \in \{1, \ldots, T-1\}
+$$
+
+Esto significa que empezamos nuestro cálculo desde $\delta_T(j), \forall j \in \{1,\ldots, N\}$. Mantenemos un puntero al estado "ganador", que será $j*=arg \underset{1\leq i \leq N}{max} \delta_T(j)$. A partir de aquí realizamos un *back-track* en la secuencia redefiniendo $j*$ en cada paso, obteniendo de esta manera el conjunto de estados que se pide.
+
+## Problema de Aprendizaje: Algoritmo Baum-Welch
+
+El problema de aprendizaje se centra en cómo podemos ajustar los parámetros del HMM para que se ajusten de la mejor forma a las observaciones.
+
+Uno de los criterios más utilizados es el de máxima verosimilitud.Dado el HMM de parámetros $\lambda$ y las observaciones $O$. La verosimilitud puede ser expresada como
+
+$$
+L=P(O|\lambda)
+$$
+
+Conocer el modelo que maximiza $\lambda=(A, B, \pi)$ es una operación que no puede ser resuelta analíticamente. Existen métodos iterativos, como *Baum-Welch* o métodos basados en gradientes, para localizar localmente máximos apropiados para ser parámetros del modelo.
+
+## Algoritmo Baum-Welch
+
+El algoritmo Baum-Welch, también conocido como *Forward-Backward*, ya que utiliza estas variables que definimos previamente al tratar el problema de evaluación, utiliza una cantidad auxiliar $Q(\lambda, \lambda')$ para comparar dos modelos $\lambda$ y $\lambda'$.
+
+$$
+Q(\lambda, \lambda')=\sum_q P(q | O, \lambda)log\big[P(O,q,\lambda')\big]
+$$
+
+También definimos unas nuevas variable a partir de las *backward* y *forward*.
+
+La primera, referida habitualmente en la literatura como probabilidades *smoothed*, es la probabilidad de estar en el estado $i$ en el instante $t$ dadas las observaciones $O$ y el modelo $\lambda$. Se obtiene combinando $\alpha$ y $\beta$ de acuerdo al Teorema de Bayes.
+
+$$
+\gamma_t(i) = P(q_t(i)| O, \gamma)= \frac{\alpha_t(i)\beta_t(i)}{\sum\limits_{i=1}^{N}\alpha_t(i)\beta_t(i)}
+$$ 
+
+Observamos que, si sumamos cada $\gamma_t(i)$ en todos los instantes de tiempo, obtenemos el número de transiciones que se realizan desde $i$: $\sum\limits_{t=1}^{T-1} \gamma_t(i)$. 
+
+La segunda variable nueva, también combina las variables *backward* y *forward* para definir la probabilidad de estar en el estado $i$ en el instante $t$, y en el estado $j$ en el instante $t+1$; dadas las observaciones $O$ y el modelo $\gamma$.
+
+$$
+\xi_t(i, j)=\frac{P(q_t=i, q_{t+1}=j, O|\lambda)}{P(O|\lambda)}=\frac{\displaystyle\ \alpha_i(t)a_{ij}\beta_j(t+1)b_j(y_{t+1})}{_{\displaystyle\ \sum_{k=1}^{N}\sum_{l=1}^{N} \alpha_k(t) a_{kl}\beta_l(t+1)b_l(y_{t+1})}}
+$$
+
+Si hacemos igual que antes y sumamos cada $\xi_t(i,j)$ para cada instante de tiempo, obtenemos el número esperado de transiciones desde el estado $i$ al estado $j$ en las observaciones $O$: $\sum\limits_{t=1}^{T-1}\xi_t(i,j).$
+
+Por lo tanto la relación entre $\gamma_t(i)$ y $\xi_t(i)$ viene dada por
+
+$$
+\gamma_t(i)=\sum\limits_{j=1}^{N} \xi_t(i, j)\quad \forall i \in \{1, \ldots, N\}, \forall t \in \{1, \ldots, M\}
+$$
+
+Una vez calculadas estas variables, para resolver el problema de aprendizaje, se definen los nuevos parámetros $\lambda'=(A, B', \pi')$ del HMM utilizando las *smoothed* de acuerdo a las siguiente fórmulas 
+
+
+Probabilidades iniciales: probabilidades de estar en el estado $i$ en $t=1$: 
+$$
+\pi' = \gamma_1(i) \quad \forall i \in \{1, \ldots, N\}
+$$
+Matriz de transición: cada $a_{ij}$ viene representado por el cociente entre el número esperado de transiciones entre $i$ y $j$, entre el número total de transiciones desde $i$:
+$$
+a'_{ij}=\frac{\sum\limits_{t=1}^{T-1}\xi_t(i, j)}{\sum\limits_{t=1}^{T-1}\gamma_t(i)}\quad \forall i \in \{1, \ldots, N\}, \forall j \in \{1, \ldots, N\}
+$$
+Probabilidades de emisión: cociente entre el número de veces que se tiene el estado $j$ y se oberva $o_k$, y el número esperado de veces que se pasa por el estado $j$
+$$
+b'_j(o_k) \frac{\sum\limits_{t=1; o_t=o_k}^{T} \gamma_t(i)}{\sum\limits_{t=1}^{T}\gamma_t(j)} \quad  \forall i \in \{1, \ldots, N\}, \forall j \in \{1, \ldots, N\}
+$$
+
+En resumen, el algoritmo Baum-Welch se divide en tres fases:
+
+1. Se determina un modelo inicial, que aunque en teoría se puede seleccionar aleatoriamente, es conveniente hacerlo con una cierta aproximación realista para facilitar la convergencia del algoritmo.
+
+2. Se realiza el cálculo de transiciones y símbolos de emisión más probables del modelo inicial, determinando las $\alpha's, \beta's, \gamma's$ y $\chi's$.
+
+3. Se redefinen los parámetros a partir de lo calculado en el punto 2. para crear un nuevo modelo que mejore en verosimilitud al modelo inicial.
+
+## Modelo Gaussiano Oculto de Markov: GHMM
+
+
+En este apartado describiremos un HMM cuyas observaciones tienen una distribución Gaussiana multivariante de dimensión $L$, diferente para cada estado.  Esto quere decir que, si tenemos $K$ estados diferentes, cada uno de estos estará asociado a una distribución de parámetros $(\mu_i, \Sigma_i) \quad \forall i \in \{1, \ldots, K\}$, con $\mu_i$ el vector de medias y $\Sigma_i$ la matriz de covariancia del estado $i$. 
+
+Al ser un modelo contínuo, existen infinitos símbolos (de hecho, $V=\mathbb{R}$). Usaremos la notación para los modelos continuos de $b_j(o_t)=P(o_t|q_t=i), \quad \forall j \in \{1, \ldots, N\} \quad \forall t \in \{1, \ldots, M \}$; que nos indicará la verosimilitud de la observación $o_t$ respecto $i$.
+
+Tenemos en cuenta que la función de densidad asociada al estado $i$ será: $\\ N(x, \mu_i, \Sigma_i)= \frac{1}{\big(2 \pi\sigma_i^2\big)^L} e^{(x-\mu_i)\Sigma_i^{-1}(x-\mu_i)^t}$, y por lo tanto $b_j(o(t)) = \sum\limits_{k=1}^K c_{jk}N(x, \mu_j, \Sigma_j)$.
+
+## Aplicación de un GHMM 
+
+
+Vemos a continuación cómo podemos emplear un GHMM para modelizar un sistema estocástico como es el de la Bolsa. 
+
+Nuestro punto de partida será suponer que los retornos pueden pertenecer a dos estados $X=\{1,2\}$, uno cuando el mercado tiende al alza (1), y otro cuando tiende a la baja (2), en este caso como las observaciones son escalares nuestros estados tendrán parámetros $(\mu_i, \sigma_i)$, con $\mu_1>\mu_2$.
+
+*Nota: nosotros suponemos que las observaciones que el HMM clasifique como estado 1 serán las correspondientes al estado alcista porque corresponden a una $\mu$ positiva, sin embargo, por lo general las $\sigma'$'s de este estado son mayores que las del estado 2, y cabe la posibilidad de que en observaciones muy negativas, aunque sean las menos probables, encajen mejor con la distribución del estado 1 que con la del estado 2, en contra de lo intuitivo.*
+
+
+Nuestro caso de estudio será el correspondiente a los valores diarios de apertura del IBEX35 entre el 19/10/1990 y 12/08/1991. 
+
+```{r xtable, echo=FALSE}
+df=read.csv("C:/Users/Tornero/Documents/Uni/TFGMates/Ibex35.csv", header = T)[1:200,]
+source("C:/Users/Tornero/Documents/Uni/TFGMates/Baum-Welch.R")
+
+returns=double()
+for (i in 1:199){returns[i]=(df$APERTURA[i+1]-df$APERTURA[i])/df$APERTURA[i]}
+df$RETORNOS[2:nrow(df)]=paste0(round(100*returns,1),"%")
+df$RETORNOS[1]=0
+# tab<-df[1:5,c(2,3,ncol(df))]
+# tab$FECHA=as.Date(tab$FECHA. st)
+# colnames(tab)=c("Fecha", "Valor", "Retornos")
+# 
+# library(xtable)
+# options(xtable.caption.placement = 'top',xtable.comment = FALSE)
+# tabla_1 <- xtable(tab,caption=c("IBEX 35: Valores de Apertura"), digits=c(0,0,2,1), label = "")
+#print(tabla_1,include.rownames=T, table.placement = "h")
+```
+
+Trabajaremos con los retornos (R), y estableceremos como condiciones iniciales $\mu_1= \overline{R_+}$, donde $R_+=\{R | R>0\}$, y $\mu_2= \overline{R_-}$, con $R_-=\{R | R<0\}$
+De la misma manera $\sigma_1=\sigma(R_+)$ y $\sigma_2=\sigma(R_-)$. En cuanto a la matriz de transición y a la probabilidad inicial,los suponemos de la siguiente manera:
+$$A= \{a_{ij}\} = \{P(X_t = j | X_{t-1} = i)\} = \begin{pmatrix} a_{11} & a_{12} \\ a_{21}& a_{22} \end{pmatrix} = \begin{pmatrix} 0.9 & 0.1 \\ 0.1 & 0.9 \end{pmatrix}
+$$
+$$
+\left\{
+ \pi_1 = 0.5 \atop
+ \pi_2 = 1-\pi_1 = 0.5
+ \right.
+$$
+
+Tras aplicar el algoritmo de BaumWelch, obtenemos la estimación de los parámetros:
+
+$$
+ \mu= \begin{pmatrix} 5.8 \cdot 10^{-3} \\ -3.6 \cdot 10^{-3} \end{pmatrix} 
+$$ 
+$$  
+  \sigma = \begin{pmatrix} 9.43 \cdot 10^{-5} \\ 4.17 \cdot 10^{-5} \end{pmatrix}
+$$
+
+La nueva matriz de transición y probabilidad inicial son:
+
+$$
+A= \begin{pmatrix} 0.802 & 0.198 \\ 0.196 & 0.804 \end{pmatrix}
+$$
+$$
+\left\{ \pi_1 = 1 \atop
+        \pi_2 = 0
+\right.
+$$
+
+Para ilustrar la capacidad clasificadora del HMM, mostramos un gráfico que de la evolución de los valores del IBEX35 en el periodo estudiado, junto a la clasificación que ha hecho el algoritmo de Viterbi de la secuencia de estados más probables.
+
+```{r, echo=F, fig.height=4, fig.width=8,warning=FALSE}
+library(ggplot2)
+
+
+mu=c(mean(returns[which(returns>0)]), mean(returns[which(returns<0)]))
+sigma=c(var(returns[which(returns>0)]), var(returns[which(returns>0)]))
+var=BaumWelch(returns = returns, mu=mu, sigma=sigma, n_states = 2)
+smoothed= var$smoothed
+names(smoothed)=c("1","2")
+B=double()
+for (i in 1:nrow(smoothed)) {
+  B[i]=as.double(names(smoothed)[which(t(smoothed[i,])==max(t(smoothed[i,])))])
+}
+df$smoothed=as.double(c(round(var$p[1]), B))
+ggplot(df, aes(x=FECHA, y=APERTURA, group=1, colour=factor(smoothed)))+geom_line(size=0.2) +
+  scale_x_discrete(limits=df[-1,]$FECHA,breaks=df[-1,]$FECHA[seq(1,191,10)])+
+  scale_colour_manual(labels=c("1","2"), 
+                      values=c("green", "red"), guide=F)+
+  theme(axis.text.x=element_text(angle=30), panel.background = element_blank())
+
+
+```
+**Gráfica 1.** *Gráfico del IBEX 35 entre el 19/10/1990 y 12/08/1991, en verde se han indicado los retornos clasificados como alcistas, y en rojo los bajistas.*
+
+Vemos cómo nuestra clasificación de los retornos se aproxima de manera muy efectiva al comportamiento que muestra la gráfica. Aunque hay retornos positivos y negativos en ambos estados, la distribución a la que se atribuye cada retorno se hace en función del régimen alcista/bajista en que se encuentre la serie.
+
+```{r, echo=FALSE, warning=FALSE,fig.height=4, fig.width=8}
+
+smoothed=var$smoothed[,1]
+df=data.frame(x=returns, y=round(smoothed))
+ggplot(df, aes(x=x, group=y, colour=y, fill=y))+geom_density(alpha=0.2)+
+      stat_function(fun = dnorm, colour = "green",args =list(mean=var$mu[1,],sd=100*var$sigma[1,]))+
+      stat_function(fun = dnorm, colour = "red", args = list(mean=var$mu[2,], sd=100*var$sigma[2,]))+
+      xlim(c(-0.05,0.035))+scale_fill_continuous(guide=F)+scale_color_continuous(guide=F)+xlab("")+ylab("")+
+      theme(panel.background = element_blank())
+
+```
+**Gráfica 2.** *Distribución de los retornos pertenecientes a cada estado, junto con el gráfico de la Gaussiana asociada.*
+
 
 
 
