@@ -38,7 +38,7 @@ El conjunto $X^*$ denotará el de todas las palabras.
 
 ## Procesos
 
-Un proceso *Q* es una espacio de probabilidad estacionaria en un espacio de secuencias.
+Un proceso *Q* es un espacio de probabilidad estacionaria en un espacio de secuencias.
 
 Una medida de probabilidad es una función que asigna probabilidades a conjuntos (el espacio medible de probabilidades), en este caso a conjuntos de secuencias $\mathbb{X}$, definida como la menor colección de subconjuntos de $X^{\mathbb{Z}}$ tq:
 
@@ -83,7 +83,7 @@ Este resultado deriva del Teorema de Extensión de Kolmogorov (TEK). Usando las 
 \textbf{Teorema de Extensión de Kolmogorov}. Suponemos que nos dan un conjunto de medidas de probabilidad $\mu_n$ consitentes en $(\mathbb{R}^n, R^n)$, es decir que cumplen:
 
 $$
-\mu_{n+1} ((a_1,b_1] \times \ldots \times (a_n, b_n] x \mathbb{R}) = \mu_n((a_1,b_1] \times \ldots \times (a_n, b_n]).
+\mu_{n+1} ((a_1,b_1] \times \ldots \times (a_n, b_n] \times \mathbb{R}) = \mu_n((a_1,b_1] \times \ldots \times (a_n, b_n]).
 $$
 Entonces existe una única medida de probabilidad $P'$ en $(\mathbb{R}^\mathbb{N}, R^\mathbb{N})$, con 
 $$
@@ -93,7 +93,7 @@ No demostraremos el TEK directamente, sino que lo usaremos para demostrar una va
 
 1. $\mathbb{R^N}$ es producto de copias de números reales, mientras que $X^\mathbb{Z}$ es producto de copias de un conjunto finito $X$. Para resolver esta diferencia utilizaremos un mapeado inyectivo $g: X \rightarrow \mathbb{R}$.
 
-2. Los elementos de $\mathbb{R^N}$ son secuencias semi-infinitas mientras que los de $X^\mathbb{Z}$ son, de hecho, secuencias bi-infinitas. Utilizaremos de nuevo un mapeado, esta vez biyectivo $h: \mathbb{N} \rightarrow \mathbb{Z}$. Corsideraremos los dígitos en el orden $0, 1 , -1, 2, -2, \ldots$.
+2. Los elementos de $\mathbb{R^N}$ son secuencias semi-infinitas mientras que los de $X^\mathbb{Z}$ son, de hecho, secuencias bi-infinitas. Utilizaremos de nuevo un mapeado, esta vez biyectivo $h: \mathbb{N} \rightarrow \mathbb{Z}$. Consideraremos los dígitos en el orden $0, 1 , -1, 2, -2, \ldots$.
 
 3. Por último, $P'$ no necesita ser estacionario, así que usaremos el TEK para provar que $P$ existe, y luego veremos que es estacionario.
 
@@ -118,7 +118,7 @@ h^{-1}(y)=
 1-2y & \quad y \leq 0.
 \end{cases}
 $$
-Vemos como $h$ envía $1,2,3,4,5$ a $0,1,-1,2,-2$ respectivamente, y viceversa $h^{-1}$. Definiremos el conjunto $J(n)=\{y \in \mathbb{Z}| h^{-1}(y) \leq\}$, y los valores $d(n)$ y $c(n)$ como los mayores y menores de $J(n)$ respectivamente, caracterizadas de la siguiente manera:
+Vemos como $h$ envía $1,2,3,4,5$ a $0,1,-1,2,-2$ respectivamente, y viceversa $h^{-1}$. Definiremos el conjunto $J(n)=\{y \in \mathbb{Z}| h^{-1}(y) \leq n \}$, y los valores $d(n)$ y $c(n)$ como los mayores y menores de $J(n)$ respectivamente, caracterizadas de la siguiente manera:
 
 $$
 c(n)=min(h(n), h(n-1)) = 
@@ -207,19 +207,19 @@ $\quad \quad$  Si $n$ es par:
  $$
  
  Ahora definimos la función $H$ que envía subsecuencias en $X^{J(n)}$ a subsecuencias en $\mathbb{R}^n$, en el caso que $n=\infty$, $H$ enviará secuencias bi-infinitas en $X^{\mathbb{Z}}$ a secuencias semi-infinitas en $\mathbb{R}^{\mathbb{N}}$.
-El objetivos de esta función es reordenar los argumentos de las coordenadas y enviarlas a $\mathbb{R}$. Si $x \in X^{J(n)}$, entonces hay una subsecuencia $v \in \mathbb{R}^n$ que satisface $v_i = g(x_{h(i)}), \forall i \in \{1, \ldots, n \}$. Recordamos que $g$ es una función a la que solo imponemos que sea inyectiva, por lo tanto no es invertible. Definimos $H: X^{J(n)} \rightarrow \mathbb{R}^n$ como $H(x)=v$. Si $x=x_{c(n)}, \ldots, x_{d(n)} \in X^{J(n)}$, entonces:
+El objetivo de esta función es reordenar los argumentos de las coordenadas y enviarlas a $\mathbb{R}$. Si $x \in X^{J(n)}$, entonces hay una subsecuencia $v \in \mathbb{R}^n$ que satisface $v_i = g(x_{h(i)}), \forall i \in \{1, \ldots, n \}$. Recordamos que $g$ es una función a la que solo imponemos que sea inyectiva, por lo tanto no es invertible. Definimos $H: X^{J(n)} \rightarrow \mathbb{R}^n$ como $H(x)=v$. Si $x=x_{c(n)}, \ldots, x_{d(n)} \in X^{J(n)}$, entonces:
 
 $$
-H(x_{c(n)}x_{c_n+1} \ldots x_{d(n)}) = g(x_0)g(x_1) \ldots g(x_{c(n)}+d(n)+1)
+H(x_{c(n)}x_{c_n+1} \ldots x_{d(n)}) = g(x_0)g(x_1) \ldots g(x_{|c(n)|+d(n)+1})
 $$
 
-Esta función puede ser igualmente definida para el caso $x \in X^{\mathbb{Z}}$. Y aunque $H$ no es invertible, porque $g$ no es invertible. Sí que tiene conjuntos inversos. Por ejemplo, si $A \subset \mathbb{R}^n$, entonces:
+Esta función puede ser igualmente definida para el caso $x \in X^{\mathbb{Z}}$. Y aunque $H$ no es invertible, porque $g$ no es invertible, sí que tiene conjuntos inversos. Por ejemplo, si $A \subset \mathbb{R}^n$, entonces:
 
 $$
 H^{-1}(A)=\{x \in X^{J(n)}| H(x) \in A \}
 $$
 
-Finalemte, definimos el conjunto producto $S$ MCo el subconjunto de $X^{[a,b]}$ de la siguiente forma $S=S_a \times \ldots \times S_b$, donde $S_i \subset X$. Si $S' \subset X$, entonces $S \times S'$ es un producto contenido en $X^{[a,b+1]}$. De forma natural definimos el cilindro $C(S)$ de la siguiente manera:
+Finalmente, definimos el conjunto producto $S$ como un subconjunto de $X^{[a,b]}$ de la siguiente forma $S=S_a \times \ldots \times S_b$, donde $S_i \subset X$. Si $S' \subset X$, entonces $S \times S'$ es un producto contenido en $X^{[a,b+1]}$. De forma natural definimos el cilindro $C(S)$ de la siguiente manera:
 
 $$
 C(S)=\{x \in X^{\mathbb{Z}}|x_i \in S_i, i \in [a,b]\}
@@ -252,7 +252,7 @@ C(S)=\{x \in X^{\mathbb{Z}}|x_i \in S_i, i \in [a,b]\} = \{x \in X^{\mathbb{Z}}|
 $$ 
 2. Tenemos en cuenta $S \times X \subset X^{[a, b+1]}$:
 $$
-D(S \times X) =\{x \in X^{[a-1, b]} | x_b+1 \in X \text{ y } x_i \in S_{i+1}, i+1 \in [a,b]\} 
+D(S \times X) =\{x \in X^{[a-1, b]} | x_{b+1} \in X \text{ y } x_i \in S_{i+1}, i+1 \in [a,b]\} 
 $$
 $$
 =\{x \in X^{[a-1, b-1]} | x_i \in S_{i+1}, i+1 \in [a,b]\} \times X
@@ -300,7 +300,9 @@ $$
 y si $n$ es par,
 
 $$
-v_n(S)=v_{n+1}(X \times S) \quad \quad \text{(T.2)}\\
+v_n(S)=v_{n+1}(X \times S) \quad \quad \text{(T.2)}
+$$
+$$
 v_n(S)=v_{n+1}(D(S) \times X), \quad \quad \text{(T.3)}
 $$
 
@@ -312,7 +314,7 @@ $$
 
 La demostración la haremos en dos partes: primero demostraremos que $P$ existe y, posteriormente comprobaremos que $P$ es estacionario.
 
-\textbf{Demostración. } Definimos una secuencia de medidas $\mu_n$ rn $\mathbb{R}^{\mathbb{N}}$ de la siguiente manera: Si $A \subset \mathbb{R}^{\mathbb{N}}$, entonces definimos $\mu_n(A)=v_n(H^{-1}(A))=v_n\{x \in X^{J(n)}|H(x) \in A\}$, por la definición de anticonjuntos que establece $H$.
+\textbf{Demostración. } Definimos una secuencia de medidas $\mu_n$ en $\mathbb{R}^{\mathbb{N}}$ de la siguiente manera: Si $A \subset \mathbb{R}^{\mathbb{N}}$, entonces definimos $\mu_n(A)=v_n(H^{-1}(A))=v_n\{x \in X^{J(n)}|H(x) \in A\}$, por la definición de anticonjuntos que establece $H$.
 
 
 La consistencia de estas $\mu$'s se puede comprobar:
@@ -344,9 +346,9 @@ $$
 \mu_{n+1}(A \times \mathbb{R}) = v_n(H^{-1}(A))=\mu_n(A).
 $$
 
-Aplicando TEK sobre las $\mu_n$'s, obtenemos una única $P'$ en $(\mathbb{R}^{\mathbb{N}}, R^{\mathbb{N}})$ que concuerda con $\mu_n$. Por lo tanto, si $A_i$ es una $\sigma$-álgebra $\forall i \in \{1, \ldots, n \}$ y $A = A_1 \times \ldots \times A_n$, entonces
+Aplicando TEK sobre las $\mu_n$'s, obtenemos una única $P'$ en $(\mathbb{R}^{\mathbb{N}}, R^{\mathbb{N}})$ que concuerda con $\mu_n$. Por lo tanto, si $A_i$ es una $\sigma$-álgebra, $\forall i \in \{1, \ldots, n \}$ y $A = A_1 \times \ldots \times A_n$, entonces existe una única probabilidad $P'$ que concuerda con $\mu_n$ 
 $$
-P'(x| x_i \in A_i, i \in \{1, \ldots, n \})
+P'(x| x_i \in A_i, i \in \{1, \ldots, n \})=\mu_n(A)
 $$
 
 Ahora pasamos a demostrar la segunda parte del Teorema. Definimos $P$ tq $\forall S \in \mathbb{X}$,
@@ -357,7 +359,7 @@ $$
 Probamos primero que $P$ existe. Sea $S \in X^{J(n)}$, tenemos
 
 $$
-v_n(S)= \mu_n(H(S)) = P' \big(a \in \mathbb{R}^{\mathbb{N}}| a_i \ldots a_n \in H(S))= P(x \in X^{\mathbb{Z}}| x_{c(n)} \ldots x_{d(n)} \in S ) = P(C(S)) \big)
+v_n(S)= \mu_n(H(S)) = P' \big(a \in \mathbb{R}^{\mathbb{N}}| a_i \ldots a_n \in H(S)\big)= P\big(x \in X^{\mathbb{Z}}| x_{c(n)} \ldots x_{d(n)} \in S \big) = P(C(S))
 $$
 
 Por lo tanto, esta $P$ es en realidad una extensión de las $\mu_n$'s y existe. 
@@ -734,6 +736,8 @@ $$
 
 Esta identidad es la denominada _propiedad de  Márkov_.
 
+\newpage
+
 #2. Modelos Ocultos de Markov (HMM)
 
 En los Modelos ocultos de Markov (HMM) la MC subyace tras las observaciones. Los estados del HMM solo pueden ser inferidos a partir de los símbolos registrados. Correlacionando las observaciones y las transiciones de estado lo que se busca  es encontrar el estado de secuencias más probable.
@@ -990,7 +994,7 @@ Vemos a continuación cómo podemos emplear un GHMM para modelizar un sistema es
 
 Nuestro punto de partida será suponer que los retornos pueden pertenecer a dos estados $X=\{1,2\}$, uno cuando el mercado tiende al alza (1), y otro cuando tiende a la baja (2), en este caso como las observaciones son escalares nuestros estados tendrán parámetros $(\mu_i, \sigma_i)$, con $\mu_1>\mu_2$.
 
-*Nota: nosotros suponemos que las observaciones que el HMM clasifique como estado 1 serán las correspondientes al estado alcista porque corresponden a una $\mu$ positiva, sin embargo, por lo general las $\sigma'$'s de este estado son mayores que las del estado 2, y cabe la posibilidad de que en observaciones muy negativas, aunque sean las menos probables, encajen mejor con la distribución del estado 1 que con la del estado 2, en contra de lo intuitivo.*
+*Nota: nosotros suponemos que las observaciones que el HMM clasifique como estado 1 serán las correspondientes al estado alcista porque corresponden a una $\mu$ positiva, sin embargo, por lo general las $\sigma'$'s de este estado son mayores que las del estado 2, y cabe la posibilidad de que en observaciones muy negativas, aunque sean las menos probables, encajen mejor con la distribución del estado 1 que con la del estado 2 en contra de lo intuitivo.*
 
 
 Nuestro caso de estudio será el correspondiente a los valores diarios de apertura del IBEX35 entre el 19/10/1990 y 12/08/1991. 
@@ -1085,10 +1089,32 @@ ggplot(df, aes(x=x, group=y, colour=y, fill=y))+geom_density(alpha=0.2)+
 ```
 **Gráfica 2.** *Distribución de los retornos pertenecientes a cada estado, junto con el gráfico de la Gaussiana asociada.*
 
+\newpage
 
+#3. Redes Neuronales Artificiales
 
+## Introducción
 
+El cerebro humano es un complicado mecanismo capaz de resolver problemas de gran complejidad. Estamos aún lejos de entender completamente cómo funciona, mucho menos de poder replicarlos artificialmente; sin embargo, sí que tenemos un buen conocimiento para explicar las operaciones básicas que realiza un cerebro.
 
+Para entender cuál es el fundamento de una Red Neuronal Artificial (ANN), primero tenemos que tener un conocimiento básico de los mecanismos internos del cerebro. El cerebro es la parte central del sistema nervioso y está formado por una extensa red neuronal, consistente en aproximadamente $10^11$ neuronas interconectadas. 
+
+El centro de cada neurona se llama núcleo. El núcleo está conectado a otros núcleos mediante las dendritas y los axones. Esta conexión es la denominada conexión sináptica.
+
+Las neuronas pueden disparar pulsos eléctricos a través de las conexiones sinápticas, los cuales son recibidos a través de las dendritas de otras neuronas. Cuando una neurona recibe suficiente impulso eléctrico, envía asimismo un pulso eléctrico a través de sus axones, y así sucesivamente. Este proceso permite propagar información a través de la red neuronal.
+
+La cuestión es que esta conexión sináptica cambia durante la vida de las neuronas, fortaleciéndose o debilitándose dependiendo del uso. Esta plasticidad de la sinapsis es lo que permite al cerebro aprender, y es el principio que se aplica en las ANN's para poder entrenar una red neuronal artificial para tareas específicas a través de grandes muestras de ejemplos.
+
+## Definición de Red Neuronal Artificial (ANN)
+
+Una neurona artificial puede ser implementada de muchas maneras. La definición matemática general es la siguiente:
+
+$$
+y(x)=g \big(\sum_{i=0}^n w_i x_i\big)
+$$
+donde $x$ es una neurona con $n$ inputs $x=(x_0, \ldots, x_n)$ y un axón de output $y(x)$. Los términos $w=w_0, \ldots, x_n$ son los pesos, y determinan cómo deben ser de intensificados los inputs.
+
+$g$ es una función de activación que balancea cómo de potentes debe ser el output (si existe) de la neurona, basado en la suma de los input. En el caso de neuronas reales, $g$ es una función $\delta$ de Kronecker que determina una relación binaria de todo o nada para el output. Sin embargo, no se suele implementar de esa manera una neurona artificiales, ya que como veremos luego, los algoritmos para entrenarlas suelen venir determinados por funciones diferenciables. 
 
 
 
