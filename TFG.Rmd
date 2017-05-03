@@ -577,12 +577,12 @@ La idea central es que un estado es una predicción basada en lo sabido sobre el
 
 En esta sección presentamos los resultados relativos a convergencia de martingalas necesarios para el apartado anterior.
 
-Sea $X$ una variable aleatoria en un espacio de probabilidad $(\Omega, F, P)$. Sea $E$ una sub $\sigma$-álgebra de $F$, o sea, $E$ una $\sigma$-álgebra y $E \subset F$.
+Sea $X$ una variable aleatoria en un espacio de probabilidad $(\Omega, \mathcal{F}, P)$. Sea $\mathcal{E}$ una sub $\sigma$-álgebra de $\mathcal{F}$, o sea, $\mathcal{E}$ una $\sigma$-álgebra y $\mathcal{E} \subset \mathcal{F}$.
 
-**Definición.** La esperanza condicional de $X$ respecto a $E$ es cualquier variable aleatoria $Y$ que satisfaga
+**Definición.** La esperanza condicional de $X$ respecto a $\mathcal{E}$ es cualquier variable aleatoria $Y$ que satisfaga
 
-1. $Y$ es medible respecto a $E$
-2. $\forall A \in E$,
+1. $Y$ es medible respecto a $\mathcal{E}$
+2. $\forall A \in \mathcal{E}$,
 
 $$
 \int_A X dP = \int_A YdP
@@ -590,18 +590,18 @@ $$
 
 Notar que las esperanzas condicionales que cumplen esta definición son únicas en conjuntos de probabilidad no nula.
 
-Si $Z$ es una variable aleatoria en $(\Omega, F, P)$, entonces $Z$ induce una $\sigma$-álgebra $\sigma(Z)$ en $\Omega$, en concreto la menos $\sigma$-álgebra que contiene conjuntos de la forma $Z^{-1}(B)$,para conjuntos de Borel $B$. Sea $A$ un conjunto en $F$ con función característica $1_A$, tal y como hemos definido previamente. Si fijamos $a \in \mathbb{R}$ y evaluamos en $x \in Z^{-1}(a)$ la esperanza condicional $E(1_A|\sigma(Z))$, encontramos que
+Si $Z$ es una variable aleatoria en $(\Omega, \mathcal{F}, P)$, entonces $Z$ induce una $\sigma$-álgebra $\sigma(Z)$ en $\Omega$, en concreto la menos $\sigma$-álgebra que contiene conjuntos de la forma $Z^{-1}(B)$,para conjuntos de Borel $B$. Sea $A$ un conjunto en $F$ con función característica $1_A$, tal y como hemos definido previamente. Si fijamos $a \in \mathbb{R}$ y evaluamos en $x \in Z^{-1}(a)$ la esperanza condicional $\mathbb{E}(1_A|\sigma(Z))$, encontramos que
 
 $$
-E(1_A|\sigma(Z))(x)= P(x \in A| Z=a)
+\mathbb{E}(1_A|\sigma(Z))(x)= P(x \in A| Z=a)
 $$
 
-Una filtración es un conjunto incremental de $\sigma$-álgebras $\{F\}= F_1 \subset F_2 \subset \ldots$. Por ejemplo, los conjuntos $\mathbb{H}_l$ en $(X^{\mathbb{Z}}, \mathbb{X}, P)$ son filtraciones.
+Una filtración es un conjunto incremental de $\sigma$-álgebras $\{\mathcal{F}\}= \mathcal{F}_1 \subset \mathcal{F}_2 \subset \ldots$. Por ejemplo, los conjuntos $\mathbb{H}_l$ en $(X^{\mathbb{Z}}, \mathbb{X}, P)$ son filtraciones.
 
-**Definición.** Una secuencia $\{X\}=X_1, X_2 \ldots$ es una martingala respecto a la filtración $\{F\}$ si
+**Definición.** Una secuencia $\{X\}=X_1, X_2 \ldots$ es una martingala respecto a la filtración $\{\mathcal{F}\}$ si
 
-1. $\forall i, X_i$ es medible respecto a $F_i$.
-2. $\forall s, t \in \mathbb{N}$ tal que $t>s$, $X_s=E(X_t|F)$.
+1. $\forall i, X_i$ es medible respecto a $\mathcal{F}_i$.
+2. $\forall s, t \in \mathbb{N}$ tal que $t>s$, $X_s=\mathbb{E}(X_t|\mathcal{F})$.
 
 
 
