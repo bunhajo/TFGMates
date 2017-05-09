@@ -8,93 +8,42 @@ output: pdf_document
 ---
 
 
-#Aplicación del HMM
+#Backpropagation
 
-Vemos a continuación cómo podemos emplear un HMM para modelizar un sistema estocástico como es el de la Bolsa. 
+Entre las ANN's existentes, una de las más empleadas por su alta eficiencia es el Perceptrón Multicapa (MLP) mediante el uso del algoritmo de *Back-Propagation*. A diferencia del Perceptrón de una única capa, el MLP puede implementar gran variedad de funciones complejas, incluída la función XOR, que no puede ser realizada por el de una única capa como demostraron Minsky y Papert^{ojo} (Perceptrons: an introduction to computational geometry is a book written by Marvin Minsky and Seymour Papert and published in 1969).
 
-Nuestro punto de partida será suponer que los retornos pueden pertenecer a dos estados $X=\{1,2\}$, uno cuando el mercado tiende al alza (1), y otro cuando tiende a la baja (2), y que ambos estados tienen una distribución Gaussiana, con $\mu_1>\mu_2$ y $\sigma_1>\sigma_2$.
-
-Nota: nosotros suponemos que las observaciones que el HMM clasifique como estado 1 serán las correspondientes al estado alcista porque corresponden a una $\mu$ positiva, sin embargo, como por lo general la $\sigma'$'s de este estado son mayores que las del estado 2, cabe la posibilidad de que en observaciones muy negativas, aunque sean las menos probables, encajen mejor con la distribución del estado 1 que con la del estado 2, en contra de lo intuitivo.
-
-
-Nuestro caso de estudio será el correspondiente a los valores diarios de apertura del IBEX35 entre el 19/10/1990 y 12/08/1991. 
-
-```{r, echo=FALSE}
-df=read.csv("C:/Users/Tornero/Documents/Uni/TFGMates/Ibex35.csv", header = T)[1:200,]
-source("C:/Users/Tornero/Documents/Uni/TFGMates/Baum-Welch.R")
-
-returns=double()
-for (i in 1:199){returns[i]=(df$APERTURA[i+1]-df$APERTURA[i])/df$APERTURA[i]}
-df$RETORNOS[2:nrow(df)]=paste0(round(100*returns,1),"%")
-print(head(df[,c(2:3,ncol(df))]))
-
-```
-
-Trabajaremos con los retornos (R), y estableceremos como condiciones iniciales $\mu_1= \overline{R_+}$, donde $R_+=\{R | R>0\}$, y $\mu_2= \overline{R_-}$, con $R_-=\{R | R<0\}$
-De la misma manera $\sigma_1=\sigma(R_+)$ y $\sigma_2=\sigma(R_-)$. En cuanto a la matriz de transición y a la probabilidad inicial,los suponemos de la siguiente manera:
-$$A= \{a_{ij}\} = \{P(X_t = j | X_{t-1} = i)\} = \begin{pmatrix} a_{11} & a_{12} \\ a_{21}& a_{22} \end{pmatrix} = \begin{pmatrix} 0.9 & 0.1 \\ 0.1 & 0.9 \end{pmatrix}
+En un MLP una unidad solo puede conectarse a la capa adyacente siguiente, no permitiéndose conexiones recurrentes ni en la misma capa. Sea $K$ el número de capas, $M$ el número de inputs y $N$ el número de outputs.  El input en una unidad (siempre que no sea en la capa de entrada) es la suma de los outputs de unidades conectadas en la capa anterior. Sea $x_i^j$ el input de la unidad $i$ en la capa $j$, $w_{ij}^k$ el peso de la conexión entre la unidad $i$ en la capa $k$ y la unidad $j$ de la capa $k+1$, $y_i^j$ el output de la unidad $i$ en la capa $j$ y, por último, $\theta_i^j$ el umbral (o sesgo) de la unidad $i$ en la capa $j$. Entonces tenemos
+que los input de la capa $k+1$ son:
 $$
+x_j^{k+1}=\sum_i w_{ij}^k y_i^k
 $$
-\left\{
- \pi_1 = 0.5 \atop
- \pi_2 = 1-\pi_1 = 0.5
- \right.
+donde
 $$
-
-Tras aplicar el algoritmo de BaumWelch, obtenemos la estimación de los parámetros:
+y_i^j=f(x_i^j) \quad (1)
+$$
+siendo $f$ la función de activación. Nosotros utilizaremos como $f$ la función sigmoide
 
 $$
- \mu= \begin{pmatrix} 5.8 \cdot 10^{-3} \\ -3.6 \cdot 10^{-3} \end{pmatrix} 
-$$ 
-$$  
-  \sigma = \begin{pmatrix} 9.43 \cdot 10^{-5} \\ 4.17 \cdot 10^{-5} \end{pmatrix}
+f(x_i^j)= \frac{1}{1+e^{-\frac{x_i^j-\theta_i^j}{T}}}.
 $$
 
-La nueva matriz de transición y probabilidad inicial son:
+Dependiendo de las aplicaciones un output que tome valores negativos es necesario, y podemos utilizar entonces la función
 
 $$
-A= \begin{pmatrix} 0.802 & 0.198 \\ 0.196 & 0.804 \end{pmatrix}
-$$
-$$
-\left\{ \pi_1 = 1 \atop
-        \pi_2 = 0
-\right.
+f(x_i^j)= \frac{1-e^{-\frac{x_i^j-\theta_i^j}{T}}}{1+e^{-\frac{x_i^j-\theta_i^j}{T}}}.
 $$
 
-Para ilustrar la capacidad clasificadora del HMM, mostramos un gráfico que de la evolución de los valores del IBEX35 en el periodo estudiado, junto a la clasificación que ha hecho las smoothed del estado alcista de los retornos generados.
+Hay dos fases en el algoritmo de *Back-Propagation*, la primera es computar el cálculo a través de las capas utilizando (1). La segunda fase es actualizar los pesos, operación que se realiza computando el error entre el valor esperado y el valor real calculado en la primera fase. Este proceso clasifica el algoritmo de *Back-Propagation* dentro de la categoría de los algoritmos de aprendizaje supervisado. Básicamente el algoritmo de *Back-Propagation* es un algoritmo de gradiente descendente. 
 
-```{r, echo=F, fig.height=4, fig.width=8,warning=FALSE}
-library(ggplot2)
+A continuación explicaremos cómo se realiza la actualización de los pesos, una vez obtenido el output a través de (1). Primero definiremos una función de error $\mathcal{E}$ que nos dará cuenta de la discrepancia entre el valor calculado y el real. Sea $N$ el número de outputs, $d_i$ el output deseado y $y_i$ el obtenido, con $i \in \{1, \ldots, N\}$. Entonces
 
+$$
+\mathcal{E} = \frac{1}{2}\sum_j (d_j - y_j)^2, \quad (2)
+$$
 
-mu=c(mean(returns[which(returns>0)]), mean(returns[which(returns<0)]))
-sigma=c(var(returns[which(returns>0)]), var(returns[which(returns>0)]))
-var=BaumWelch(returns = returns, mu=mu, sigma=sigma, n_states = 2)
-smoothed= var$smoothed
-names(smoothed)=c("1","2")
-B=double()
-for (i in 1:nrow(smoothed)) {
-  B[i]=as.double(names(smoothed)[which(t(smoothed[i,])==max(t(smoothed[i,])))])
-}
-df$smoothed=as.double(c(round(var$p[1]), B))
-ggplot(df, aes(x=FECHA, y=APERTURA, group=1, colour=factor(smoothed)))+geom_line(size=0.2) +
-  scale_x_discrete(limits=df[-1,]$FECHA,breaks=df[-1,]$FECHA[seq(1,191,10)])+
-  scale_colour_manual(labels=c("1","2"), 
-                      values=c("green", "red"), guide=F)+
-  theme(axis.text.x=element_text(angle=30))
+El error total será simplemente $E_{total}=\sum\limits_{k=1}^N E_k$
 
 
-```
 
-Vemos cómo nuestra clasificación de los retornos se aproxima de manera muy efectiva al comportamiento que muestra la gráfica.
 
-```{r, echo=FALSE, warning=FALSE,fig.height=4, fig.width=8}
 
-smoothed=var$smoothed[,1]
-df=data.frame(x=returns, y=round(smoothed))
-ggplot(df, aes(x=x, group=y, colour=y, fill=y))+geom_density(alpha=0.2)+
-      stat_function(fun = dnorm, colour = "green",args =list(mean=var$mu[1,],sd=100*var$sigma[1,]))+
-      stat_function(fun = dnorm, colour = "red", args = list(mean=var$mu[2,], sd=100*var$sigma[2,]))+
-      xlim(c(-0.05,0.035))+scale_fill_continuous(guide=F)+scale_color_continuous(guide=F)+xlab("")
-
-```
