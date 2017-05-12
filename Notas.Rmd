@@ -35,13 +35,106 @@ $$
 
 Hay dos fases en el algoritmo de *Back-Propagation*, la primera es computar el cálculo a través de las capas utilizando (1). La segunda fase es actualizar los pesos, operación que se realiza computando el error entre el valor esperado y el valor real calculado en la primera fase. Este proceso clasifica el algoritmo de *Back-Propagation* dentro de la categoría de los algoritmos de aprendizaje supervisado. Básicamente el algoritmo de *Back-Propagation* es un algoritmo de gradiente descendente. 
 
-A continuación explicaremos cómo se realiza la actualización de los pesos, una vez obtenido el output a través de (1). Primero definiremos una función de error $\mathcal{E}$ que nos dará cuenta de la discrepancia entre el valor calculado y el real. Sea $N$ el número de outputs, $d_i$ el output deseado y $y_i$ el obtenido, con $i \in \{1, \ldots, N\}$. Entonces
+A continuación explicaremos cómo se realiza la actualización de los pesos, una vez obtenido el output a través de (1). Primero definiremos una función de error $\mathcal{E}$ que nos dará cuenta de la discrepancia entre el valor calculado y el real. Sea $N$ el número de outputs, $d_i$ el output deseado y $y_i$ el obtenido, con $i \in \{1, \ldots, N\}$. Entonces para un perceptrón simple
 
 $$
 \mathcal{E} = \frac{1}{2}\sum_j (d_j - y_j)^2, \quad (2)
 $$
 
-El error total será simplemente $E_{total}=\sum\limits_{k=1}^N E_k$
+El error total será simplemente $\mathcal{E}_{total}=\sum\limits_{k=1}^N \mathcal{E}_k$. Nuestro objetivo será minimizar este error total, para ello utilizamos un algoritmo de gradiente descendente. Este tipo de algoritmo busca un mínimo en la función (la función error en nuestro caso) dando pasos proporcionales al negativo del gradiente. Es por ello que es tan importante que la función que usamos como función de activación sea derivable.
+
+Así, el ajuste de los pesos es proporcional a la derivada
+
+$$
+\Delta w_{ij}^k = - \eta \frac{\partial \mathcal{E}}{\partial w_{ij}^k} \quad (3)
+$$
+
+donde $\eta$ es el tamaño del paso, importante para asegurar la convergencia. También se puede añadir un término de inercia, mediante una dependencia de recursividad, que nos ayudará a mejorar la convergencia evitando rápidos cambios en $\Delta w_{ij}^k$.
+
+$$
+\Delta w_{ij}^k(t)=  - \eta \frac{\partial \mathcal{E}}{\partial w_{ij}^k(t)} + \alpha \Delta w_{ij}^k(t-1)  \quad (4)
+$$
+
+donde $\alpha$ es un positivo real pequeño.
+
+Estrictamente hablando, la $\mathcal{E}$ que se utiliza en (3) debería ser $\mathcal{E}_{total}$. Sin embargo es mucho más práctico actualizar pesos con cada input de una muestra de entrenamiento, en vez de usar toda la muestra al completo. Estos dos casos se denominan batch y online, respectivamente. En este caso puede utilizarse el $\mathcal{E}$ definido en (2).
+
+Así, para cada capa de un perceptrón simple, tendríamos el output dado por 
+
+$$
+y_j=f(\sum_{i=1}^{n-1} w_iI_i + \theta_j)=f(s) \quad 
+$$
+
+El sesgo $\theta_j$ puede añadirse como input siempre activo ($I_n=1$) con peso $w_n=\theta_j$
+
+
+$$
+y_j=f(\sum_{i=1}^{n} w_iI_i)=f(s)
+$$
+
+Si el ouput deseado es $d_j$, entonces de (2) tenemos
+$$
+\frac{\partial \mathcal{E}}{\partial w_i} = \frac{\partial \mathcal{E}}{\partial y_j}\frac{\partial y_j}{\partial w_i}
+$$
+$$
+=-(d_j - y_j)f'(s)I_i
+$$
+
+Sea 
+
+$$
+\delta_j = (d_j - y_j)
+$$
+Entonces el ajuste de pesos viene dado por 
+
+$$
+\Delta w_i = - \eta \frac{\partial \mathcal{E}}{\partial w_i} = \eta \delta_j f'(s) I_i \quad 
+$$
+
+
+Este esquema de ajuste de pesos es denominado la regla Delta. El algoritmo de Back-Propagation en realidad es una generalización de la regla Delta.
+
+Sea una red MLP, con $N$ capas y suponemos que nuestra función de activación $f$ es la sigmoide logística, entonces
+
+$$
+\frac{\partial \mathcal{E}}{\partial y_j^N} = -(d_j - y_j^N)
+$$
+
+Donde el superíndice $N$ indica que el output es de la capa  $N$ y de (1) obtenemos
+
+$$
+\frac{\partial y_j^N}{\partial x_j^N} = f'(x_j^N) = y_j^N(1 - y_j^N).
+$$
+
+Como $x_j^{k+1}=\sum_i w_{ij}^k y_i^k$, entonces
+
+$$
+\frac{\partial x_j^N}{\partial w_{ij}^{N-1}} = y_i^{N-1}
+$$
+
+Y por lo tanto, podemos escribir la parcial del error respecto de los pesos como
+
+$$
+\frac{\partial \mathcal{E}}{ \partial w_{ij}^{N-1}} = \frac{\partial \mathcal{E}}{\partial y_j^N}\frac{\partial y_j^N}{\partial x_j^N}\frac{\partial x_j^N}{\partial w_{ij}^N}
+$$
+$$
+= - (d_j - y_j^N)y_j^N(1-y_j^N)y_i^{N-1}
+$$
+
+Sea 
+
+$$
+\delta_j^{N-1} = (d_j - y_j^N)y_j^N(1-y_j^N) \quad (5)
+$$
+
+Entonces, teniendo en cuenta (4) y (5) tenemos que en la iteración $t+1$ los pesos serán
+
+$$
+w_{ij}^{N-1}(t+1) = w_{ij}^{N-1}(t) + \eta \delta_j^{N-1} y_i^{N-1} + \alpha[w_{ij}^{N-1}(t) - w_{ij}^{N-1}(t-1)] \quad (6)
+$$
+
+
+
 
 
 
