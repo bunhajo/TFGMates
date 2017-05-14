@@ -1,7 +1,4 @@
 ---
-title: "Notas TFG"
-author: "Juan Tornero Lucas"
-date: "21 de marzo de 2017"
 header-include:
   - \usepackage{bbm} 
   - \usepackage{fancyhdr}
@@ -14,6 +11,65 @@ output: pdf_document
 fontsize: 12pt
 ---
 
+\bibstyle{plain}
+
+\thispagestyle{empty}
+
+\begin{titlepage}
+\begin{center}
+\begin{figure}[htb]
+\begin{center}
+\includegraphics[width=6cm]{ub.png}
+\end{center}
+\end{figure}
+
+\textbf{\LARGE Treball final de grau} \\
+\vspace*{.5cm}
+\textbf{\LARGE GRAU DE MATEM\`{A}TIQUES } \\
+\vspace*{.5cm}
+\textbf{\LARGE Facultat de Matem\`atiques i Informàtica \\ Universitat de Barcelona} \\
+\vspace*{1.5cm}
+\rule{16cm}{0.1mm}\\
+\begin{Huge}
+\textbf{} \\
+\end{Huge}
+\rule{16cm}{0.1mm}\\
+
+\vspace{1cm}
+
+\begin{flushright}
+\textbf{\LARGE Autor: Juan Tornero Lucas}
+
+\vspace*{2cm}
+
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{ll}
+\textbf{\Large Director:} & \textbf{\Large Dr. Nom tutor } \\
+\textbf{\Large Realitzat a:} & \textbf{\Large  Departament....   } \\
+ & \textbf{\Large (nom del departament)} \\
+\\
+\textbf{\Large Barcelona,} & \textbf{\Large \today }
+\end{tabular}
+
+\end{flushright}
+
+\end{center}
+
+
+
+
+
+
+
+
+
+
+\end{titlepage}
+
+
+\newpage
+\pagenumbering{roman} 
+
 
 
 ```{r setup, include=FALSE}
@@ -22,42 +78,43 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # 1.  Marco Teórico de las Cadenas de Markov 
 
-En este primer capítulo desarrollaremos toda la teoría que involucra a las Cadenas de Markov. Empezaremos viendo qué son las secuencias y, a continuación, los espacios de probabilidad conocidos como *Procesos*. Además, mediante una versión adaptada del *Teorema de Extensión de Kolmogorov* veremos cómo estos procesos están definidos de forma única. A continuación definiremos los estados de un proceso, para lo cuál necesitaremos un par de resultados relacionados con los procesos estocásticos de martingala.
+En este primer capítulo desarrollaremos toda la teoría que involucra a las Cadenas de Markov. Empezaremos viendo qué son las secuencias y, a continuación, los tipos de espacio de probabilidad conocidos como *Procesos*. Además, mediante una versión adaptada del *Teorema de Extensión de Kolmogorov* veremos cómo estos procesos están definidos de forma única. A continuación definiremos los estados de un proceso, para lo cuál necesitaremos un par de resultados relacionados con los procesos que cumplen la propiedad de martingala.
 
-Finalmente, veremos la definición de una Cadena de Markov y demostraremos que se tratan de *procesos*.
+Finalmente, veremos la definición de una Cadena de Markov y demostraremos que se trata de un *proceso*.
 
 ## Secuencias
 
 Comenzamos definiendo el conjunto canónico $X=\{0,1,\ldots, m-1\}$ con $m \in \mathbb{N}$ llamado *alfabeto*, cuyos elementos se denominan *símbolos*, los cuales no tienen por qué ser necesariamente números naturales.   Si $x \in X^{\mathbb{Z}}$, entonces $x=\cdots x_{-1} x_{0} x_{1} \cdots$  es una secuencia numerable bi-infinita, donde los índices $i<0$ denotan el pasado de la secuencia, y los $i \geq 0$ el futuro, particularmente el índice $i=0$ es el primer símbolo desconocido de la secuencia. 
 
-En estos términos definimos una palabra $w \in X^l$ de longitud $l$, como una $l$-tupla de $X$. $\emptyset$ denotará la palabra vacía de longitud 0. Una subsecuencia $s$ es una estructura $s = (w, (a,b))$, donde $w$ es una palabra y $a,b \in \mathbb{Z}$ tq $|w|=b-a+1$. Así, $s$ puede también escribirse $s=s_a \cdots s_b$, y $a$ representaría el tiempo inicial, y $b$ el tiempo final. Una secuencia $x$  contendrá a la subsecuencia $s$ si $\forall t \in [a,b], s_t=x_t$. 
+En estos términos definimos una palabra $w \in X^l$ de longitud $l$, como una $l$-tupla de $X$. $\emptyset$ denotará la palabra vacía de longitud 0. Una subsecuencia $s$ es una estructura $s = (w,a,b)$, donde $w$ es una palabra y $a,b \in \mathbb{Z}$ tq $|w|=b-a+1$. Así, $s$ puede también escribirse $s=s_a \cdots s_b$, y $a$ representaría el tiempo inicial, y $b$ el tiempo final. Una secuencia $x$  contendrá a la subsecuencia $s$ si $\forall t \in [a,b], s_t=x_t$. En muchas ocasiones identificaremos $s$ y $w$ indistintamente, ya que lo único que las diferencia es el contexto temporal que le da a $w$ la subsecuencia $s$.
 
 El conjunto $A_s = \{x \in X^{\mathbb{Z}} | x_i=s_i \forall i \in [a,b]\}$ es el conjunto de las secuencias de $X^{\mathbb{Z}}$ que contienen a $s$. Si por ejemplo $s=(\emptyset,(a, a-1))$, entonces $A_s=X^{\mathbb{Z}}$.
 
-El conjunto $X^*$ denotará el de todas las palabras.
+Por último, el conjunto $X^*$ denotará el de todas las palabras.
 
 ## Procesos
 
-Un proceso *Q* es un espacio de probabilidad estacionaria en un espacio de secuencias.
+Un proceso *Q* es un espacio de probabilidad estacionario en un espacio de secuencias.
 
-Una medida de probabilidad es una función que asigna probabilidades a conjuntos (el espacio medible de probabilidades), en este caso a conjuntos de secuencias $\mathbb{X}$, definida como la menor colección de subconjuntos de $X^{\mathbb{Z}}$ tq:
+Una medida de probabilidad es una función que asigna probabilidades a conjuntos del espacio medible de probabilidades $(X^{\mathbb{Z}}, \mathbb{X})$, donde $\mathbb{X}$ es el conjunto definido como la menor colección de subconjuntos de $X^{\mathbb{Z}}$ tal que:
 
 1. Para toda secuencia $s, A_s \in \mathbb{X}$.
 2. $\mathbb{X}$ es cerrado bajo complementos y uniones contables. Es decir, $\mathbb{X}$ es una $\sigma$-álgebra.
 
-El par $(X^{\mathbb{Z}}, \mathbb{X})$ asigna probabilidades a los conjuntos $A_s$ fijados por las subsecuencias $s$.
-Definiremos entonces $P(s)=P(A_s)$, tenemos en particular:
+En definitiva, $\mathbb{X}$ es la menor $\sigma$-álgebra que contiene $A_s$ fijado por $s$, y el par $(X^{\mathbb{Z}}, \mathbb{X})$ asigna probabilidades a estos conjuntos $A_s$.
+
+Definiremos $P$ la medida de probabilidad sobre $X^{\mathbb{Z}}$ tal que $P(s)=P(A_s)$, tenemos en particular:
 $$
 P(\emptyset)=P(X^{\mathbb{Z}})
 $$  
 
 En nuestra definición de proceso nos referíamos también a ellos como estacionarios. Sea $D$ la función desplazamiento $D:X^{\mathbb{Z}}  \rightarrow X^{\mathbb{Z}}$, que actúa sobre todo $x \in X^{\mathbb{Z}}$ de manera que $D(x_t)=x_{t+1}$, es decir desplaza el tiempo de origen.
 
-Decimos que $P$ es una medida de probabilidad estacionaria si $\forall A \in \mathbb{X}, P(D(A))=P(A)$, como $D$ es de hecho un automorfismo sobre $X^{\mathbb{Z}}$, entonces $P(D^{-1}(A))=P(D^{-1}(D(A)))=P(A)$ 
+Decimos que $P$ es una medida de probabilidad estacionaria si $\forall A \in \mathbb{X}, P(D(A))=P(A)$, como $D$ es de hecho un automorfismo sobre $X^{\mathbb{Z}}$, entonces $P(D^{-1}(A))=P(D^{-1}(D(A)))=P(A)$ . Esto en particular nos permitirá tener bien definido $P(w)$.
 
 Finalmente podemos definir de forma más formal un proceso \textit{Q} como el espacio de probabilidades estacionario $\displaystyle (X^{\mathbb{Z}}, \mathbb{X}, P)$.
 
-Sea $w$ una palabra y $s = (w, (a,b))$, entonces si $P$ estacionario $P(w)=P(s)$. Además de manera trivial podemos obtener que, si $W_l$ es el conjunto de las palabras de longitud $l>0$:
+Sea $w$ una palabra y $s = (w,a,b)$, entonces si $P$ estacionario $P(w)=P(s)$. Además de manera trivial podemos obtener que, si $W_l$ es el conjunto de las palabras de longitud $l>0$:
 $$
 \sum_{z \in W_l}P(wz)=\sum_{z \in W_l}P(zw)= P(w) \quad \quad (1) 
 $$
@@ -78,22 +135,22 @@ Este apartado estará dedicado a demostrar la unicidad de los procesos mediante 
 existe un único proceso $Q=(X^{\mathbb{Z}}, \mathbb{X}, P)$ tq $\forall w \in X^*, P(w)=f(w)$.
 
 
-Este resultado deriva del Teorema de Extensión de Kolmogorov (TEK). Usando las notaciones $R^n$ y $R^{\mathbb{N}}$ para referirnos a las $\sigma$-álgebras en $\mathbb{R}^n$ y $\mathbb{R}\mathbb{^N}$ respectivamente.
+Este resultado deriva del Teorema de Extensión de Kolmogorov (TEK). Usando las notaciones $\mathcal{B}(\mathbb{R}^{n})$ y $\mathcal{B}(\mathbb{R}^{\mathbb{N}})$ para referirnos a las $\sigma$-álgebras en $\mathbb{R}^n$ y $\mathbb{R}\mathbb{^N}$ respectivamente.
 
-\textbf{Teorema de Extensión de Kolmogorov}. Suponemos que nos dan un conjunto de medidas de probabilidad $\mu_n$ consitentes en $(\mathbb{R}^n, R^n)$, es decir que cumplen:
+\textbf{Teorema de Extensión de Kolmogorov}. Suponemos que nos dan un conjunto de medidas de probabilidad $\mu_n$ consitentes en $(\mathbb{R}^n, \mathcal{B}(\mathbb{R}^{n}))$, es decir que cumplen:
 
 $$
-\mu_{n+1} ((a_1,b_1] \times \ldots \times (a_n, b_n] \times \mathbb{R}) = \mu_n((a_1,b_1] \times \ldots \times (a_n, b_n]).
+\mu_{n+1} ( \prod_{i=1}^n(a_i,b_i] \times \mathbb{R}) = \mu_n(\prod_{i=1}^n(a_i,b_i]).
 $$
 Entonces existe una única medida de probabilidad $P'$ en $(\mathbb{R}^\mathbb{N}, R^\mathbb{N})$, con 
 $$
-P'(x|x \in (a_i, b_i], i \in \{1, \ldots, n\})=\mu_n((a_1,b_1] \times \ldots \times (a_n, b_n])).
+P'(x|x \in  \prod_{i=1}^n(a_i,b_i])=\mu_n( \prod_{i=1}^n(a_i,b_i] ).
 $$
-No demostraremos el TEK directamente, sino que lo usaremos para demostrar una variante del mismo que se adapte a nuestras necesidades, teniendo en cuenta las diferencias que existen entre el espacio de probabilidad $(\mathbb{R}^{\mathbb{N}}, R^n, P')$ y el de un proceso estacionario $(X^\mathbb{Z}, \mathbb{X}, P)$
+No demostraremos el TEK directamente, sino que lo usaremos para demostrar una variante del mismo que se adapte a nuestras necesidades, teniendo en cuenta las diferencias que existen entre el espacio de probabilidad $(\mathbb{R}^{\mathbb{N}}, \mathcal{B}(\mathbb{R}^{\mathbb{N}}), P')$ y el de un proceso estacionario $(X^\mathbb{Z}, \mathbb{X}, P)$
 
-1. $\mathbb{R^N}$ es producto de copias de números reales, mientras que $X^\mathbb{Z}$ es producto de copias de un conjunto finito $X$. Para resolver esta diferencia utilizaremos un mapeado inyectivo $g: X \rightarrow \mathbb{R}$.
+1. $\mathbb{R^N}$ es producto de copias de $\mathbb{R}$, mientras que $X^\mathbb{Z}$ es producto de copias de un conjunto finito $X$. Para resolver esta diferencia utilizaremos una aplicación inyectiva $g: X \rightarrow \mathbb{R}$.
 
-2. Los elementos de $\mathbb{R^N}$ son secuencias semi-infinitas mientras que los de $X^\mathbb{Z}$ son, de hecho, secuencias bi-infinitas. Utilizaremos de nuevo un mapeado, esta vez biyectivo $h: \mathbb{N} \rightarrow \mathbb{Z}$. Consideraremos los dígitos en el orden $0, 1 , -1, 2, -2, \ldots$.
+2. Los elementos de $\mathbb{R^N}$ son secuencias infinitas mientras que los de $X^\mathbb{Z}$ son, de hecho, secuencias bi-infinitas. Utilizaremos de nuevo un mapeado, esta vez biyectivo $h: \mathbb{N} \rightarrow \mathbb{Z}$. Consideraremos los dígitos en el orden $0, 1 , -1, 2, -2, \ldots$.
 
 3. Por último, $P'$ no necesita ser estacionario, así que usaremos el TEK para provar que $P$ existe, y luego veremos que es estacionario.
 
@@ -166,7 +223,7 @@ d(n+1) \overbrace{=}^{n+1 \text{ impar}} \frac{(2i+1)-1}{2}=i
  Luego $d(n+1)=d(n)$.
  
  
-P2. Si $n$ impar, entonces $n=2i +1$, para algún $i \in \mathbb{N} \textbackslash \{0\}$, y:
+P2. Si $n$ impar, entonces $n=2i +1$, para algún $i \in \mathbb{N} \backslash \{ 0 \}$, y:
 
 $$
 h(n+1)\overbrace{=}^{n+1 \text{ par}} \frac{2i+2}{2}=i+1>0
@@ -184,13 +241,13 @@ d(n) \overbrace{=}^{n \text{ impar}} \frac{(2i+1)-1}{2}=i\\
 d(n+1) \overbrace{=}^{n+1 \text{ par}} \frac{2i+2}{2}=i+1
  \end{cases}
  $$
- Y finalmente $d(n+1)=d(n)+1$
+ Y finalmente $d(n+1)=d(n)+1$.
  
- Necesitaremos también definir una serie de conjuntos de subsecuencias, una función para mapear esos conjuntos y, finalmente, un conjunto producto.
+ Necesitaremos también definir una serie de conjuntos de subsecuencias, una función que nos aplique esos conjuntos y, finalmente, un conjunto producto.
  
  Empezamos definiendo estos conjuntos de subsecuencias:
  
- 1. $X^{[a,b]} \subset X^*$ el conjunto de todas las subsecuencias $s=(w, (a,b))$ que empiezan en el tiempo $a$ y terminan en el tiempo $b$.
+ 1.$X^{[a,b]} \subset X^{*}$ el conjunto de todas las subsecuencias $s=(w,a,b)$ que empiezan en el tiempo $a$ y terminan en el tiempo $b$. Vemos cómo incluimos a $s$ en el conjunto $X^*$ de las palabras, por la identificación que hacemos de $s$ y $w$.
  
  2. De forma similar $X^{J(n)} \subset X^*$ denotará el conjunto de todas las subsecuencias $s=(w, (c(n), d(n)))$ que empiezan en $c(n)$ y terminan en $d(n)$. Como $|J(n)|=n$, $X^{J(n)}$ es un producto de $n$ copias de $X$. La diferencia entre $X^n$ y $X^{J(n)}$ es cómo están etiquetadas las coordenadas, en el primer caso el orden es $1,2,\ldots, n$ mientras que el segundo lo hace como $c(n), \ldots, d(n)$. Por las propiedades P1 y P2 demostradas anteriormente, tenemos que:
  
@@ -206,7 +263,7 @@ $\quad \quad$  Si $n$ es par:
  X^{J(n+1)}= X \times X^{J(n)} 
  $$
  
- Ahora definimos la función $H$ que envía subsecuencias en $X^{J(n)}$ a subsecuencias en $\mathbb{R}^n$, en el caso que $n=\infty$, $H$ enviará secuencias bi-infinitas en $X^{\mathbb{Z}}$ a secuencias semi-infinitas en $\mathbb{R}^{\mathbb{N}}$.
+ Ahora definimos la función $H$ que envía subsecuencias en $X^{J(n)}$ a subsecuencias en $\mathbb{R}^n$. En el caso que $n=\infty$, $H$ enviará secuencias bi-infinitas de $X^{\mathbb{Z}}$ a secuencias infinitas de $\mathbb{R}^{\mathbb{N}}$.
 El objetivo de esta función es reordenar los argumentos de las coordenadas y enviarlas a $\mathbb{R}$. Si $x \in X^{J(n)}$, entonces hay una subsecuencia $v \in \mathbb{R}^n$ que satisface $v_i = g(x_{h(i)}), \forall i \in \{1, \ldots, n \}$. Recordamos que $g$ es una función a la que solo imponemos que sea inyectiva, por lo tanto no es invertible. Definimos $H: X^{J(n)} \rightarrow \mathbb{R}^n$ como $H(x)=v$. Si $x=x_{c(n)}, \ldots, x_{d(n)} \in X^{J(n)}$, entonces:
 
 $$
@@ -232,7 +289,7 @@ $$
 D(S)=\{x \in X^{[a-1, b-1]} | x_i \in S_{i+1}, i+1 \in [a,b]\}.
 $$
 
-\textbf{Lema.} Los cilindros $C$ y $T$ verifican:
+\textbf{Lema.} Los cilindros $C$ y $D$ verifican:
 
 1. $C(S) = C(S  \times X) = C(X \times S)$
 2. $D(S \times X) = D(S) \times X = X \times D(S)$
@@ -250,7 +307,7 @@ De la misma manera:
 $$
 C(S)=\{x \in X^{\mathbb{Z}}|x_i \in S_i, i \in [a,b]\} = \{x \in X^{\mathbb{Z}}|x_{b+1} \in X \text{ y } x_i \in S_i, i \in [a,b]\} = C(S \times X) 
 $$ 
-2. Tenemos en cuenta $S \times X \subset X^{[a, b+1]}$:
+2. Teniendo en cuenta $S \times X \subset X^{[a, b+1]}$:
 $$
 D(S \times X) =\{x \in X^{[a-1, b]} | x_{b+1} \in X \text{ y } x_i \in S_{i+1}, i+1 \in [a,b]\} 
 $$
@@ -292,7 +349,7 @@ Finalmente, observamos que para cada $S \in X^{[a,b]}$ existe un conjunto $S' \i
 
 Finalmente, ya estamos en disposición de demostrar nuestra variante del TEK.
 
-\textbf{Teorema. } Suponemos que tenemos una secuencia de medidas  $v_n$ en $X^{J(n)}$ que satisfacen que $\forall n$ y para todo $S \subset X^{(J_n)}$, si $n$ es impar,
+\textbf{Teorema. } Suponemos que tenemos una secuencia de medidas  $v_n$ en $X^{J(n)}$ que satisfacen que $\forall n$ y para todo $S \subset X^{J_n}$, si $n$ es impar,
 
 $$
 v_n(S)=v_{n+1}(S \times X) \quad \quad \text{(T.1)}
@@ -314,7 +371,7 @@ $$
 
 La demostración la haremos en dos partes: primero demostraremos que $P$ existe y, posteriormente comprobaremos que $P$ es estacionario.
 
-\textbf{Demostración. } Definimos una secuencia de medidas $\mu_n$ en $\mathbb{R}^{\mathbb{N}}$ de la siguiente manera: Si $A \subset \mathbb{R}^{\mathbb{N}}$, entonces definimos $\mu_n(A)=v_n(H^{-1}(A))=v_n\{x \in X^{J(n)}|H(x) \in A\}$, por la definición de anticonjuntos que establece $H$.
+\textbf{Demostración. } Definimos una secuencia de medidas $\mu_n$ en $\mathbb{R}^{\mathbb{N}}$ de la siguiente manera: si $A \subset \mathbb{R}^{\mathbb{N}}$, entonces definimos $\mu_n(A)=v_n(H^{-1}(A))=v_n\{x \in X^{J(n)}|H(x) \in A\}$, por la definición de anticonjuntos que establece $H$.
 
 
 La consistencia de estas $\mu$'s se puede comprobar:
@@ -346,7 +403,8 @@ $$
 \mu_{n+1}(A \times \mathbb{R}) = v_n(H^{-1}(A))=\mu_n(A).
 $$
 
-Aplicando TEK sobre las $\mu_n$'s, obtenemos una única $P'$ en $(\mathbb{R}^{\mathbb{N}}, R^{\mathbb{N}})$ que concuerda con $\mu_n$. Por lo tanto, si $A_i$ es una $\sigma$-álgebra, $\forall i \in \{1, \ldots, n \}$ y $A = A_1 \times \ldots \times A_n$, entonces existe una única probabilidad $P'$ que concuerda con $\mu_n$ 
+Aplicando TEK sobre las $\mu_n$'s, obtenemos una única $P'$ en $(\mathbb{R}^{\mathbb{N}}, \mathcal{B}(\mathbb{R}^{\mathbb{N}}))$ que concuerda con $\mu_n$. Por lo tanto, si $A = A_1 \times \ldots \times A_n, \quad \forall i \in \{1, \ldots, n \}$, entonces existe una única probabilidad $P'$ que concuerda con $\mu_n$ 
+
 $$
 P'(x| x_i \in A_i, i \in \{1, \ldots, n \})=\mu_n(A)
 $$
@@ -480,10 +538,7 @@ $$
 Recordamos que, mientras que $X \times S \subset X^{J(n)}$, no ocurre lo mismo con $S \times X \nsubseteq X^{J(n)}$, sin embargo sí sabemos $D(S \times X) = D(S) \times X \subset X^{J(n)}$, y $f$ no depende del ínidce temporal, así que
 
 $$
-v_n(S) = \sum_{z \in (S \times X)} f(z) = \sum_{z \in (T(S) \times X)} f(z =
-$$
-$$
-v_{n+1} (D(S) \times X).
+v_n(S) = \sum_{z \in (S \times X)} f(z) = \sum_{z \in (T(S) \times X)} f(z) = v_{n+1} (D(S) \times X).
 $$
 
 Ya podemos aplicar el Teorema anterior para ver que $\exists ! \text{ proceso } Q=(X^{\mathbb{Z}}, \mathbb{X}, P)$ tal que, $\forall n, S \in X^{J(n)}$, tenemos que $P(C(S))=v_n(S)$. Por lo tanto, si definimos $S=\{w\}$ para cualquier longitud $n$ y palabra $w$, se cumple
@@ -495,20 +550,20 @@ $$
 
 ##Ejemplo de Proceso
 
-Para ilustrar el concepto de proceso, pondremos un pequeño ejemplo basado en un dado 'ideal' de seis caras, $X=\{1,2,3,4,5,6\}$ y cualquier palabra de longitud $l$ tendrá asociada una probabilidad de $P(w)=\frac{1}{6}^l$. En particular, si la palabra es de longitud $l=0$, entonces $\displaystyle P(w)=\frac{1}{6}^0=1$. Si además tenemos otra palabra $z \in X$ entonces, a partir de (1) vemos que $\displaystyle f(wz)=f(zw)=\frac{1}{6}^l( \sum_{i = 1}^{6} \frac{1}{6})=\frac{1}{6}=f(w)$. Por lo tanto cumple tanto (1) como (2) y es un proceso. \textit{cqd}
+Para ilustrar el concepto de proceso, pondremos un pequeño ejemplo basado en un dado 'ideal' de seis caras, $X=\{1,2,3,4,5,6\}$ y cualquier palabra de longitud $l$ tendrá asociada una probabilidad de $P(w)=\big(\frac{1}{6}\big)^l$. En particular, si la palabra es de longitud $l=0$, entonces $\displaystyle P(w)=\big(\frac{1}{6}\big)^0=1$. Si además tenemos otra palabra $z \in X$ entonces, a partir de (1) vemos que $\displaystyle f(wz)=f(zw)=\big(\frac{1}{6}\big)^l \sum_{i = 1}^{6} \frac{1}{6}=\big(\frac{1}{6}\big)=f(w)$. Por lo tanto cumple tanto (1) como (2) y es un proceso. \textit{cqd}
 
 
 ## Estados de un Proceso
 
-Supongamos que tenemos un proceso $Q = (X^{\mathbb{Z}}, \mathbb{X}, P)$ del que conocemos algunos símbolos recientes. Si $s = (w, (a,b))$ es una subsecuencia conocida, con $b=-1$, $s$ induce una distribución condicional en un espacio futuro (DCF) del tipo $P(\cdot | s) = P(\cdot | A_s)$. Esta DCF condensa todo nuestro conocimiento sobre las posibilidades futuras del proceso $Q$, por lo que al concer esta distribución, en cierto sentido, podemos olvidar todo lo acontecido en el proceso anteriormente. Esta es la base con la que decimos que  $P(\cdot | s)$ es un estado.
+Supongamos que tenemos un proceso $Q = (X^{\mathbb{Z}}, \mathbb{X}, P)$ del que conocemos algunos símbolos recientes. Si $s = (w,a,b)$ es una subsecuencia conocida, con $b=-1$, $s$ induce una distribución condicional en un espacio futuro (DCF) del tipo $P(\cdot | s) = P(\cdot | A_s)$. Esta DCF condensa todo nuestro conocimiento sobre las posibilidades futuras del proceso $Q$, por lo que al concer esta distribución, en cierto sentido, podemos olvidar todo lo acontecido en el proceso anteriormente. Esta es la base con la que decimos que  $P(\cdot | s)$ es un estado.
 
-Ahora ampliaremos esta noción. Primero definimos $\mathbb{X}^+=\{ x^+ = x_0 x_1, \ldots | \forall i \geq 0, x_i \in X \}$, y respectivamente $\mathbb{X}^-=\{ x^+ = \ldots x_-2, x_-1 | \forall i \leq 0, x_i \in X \}$.  Los campos $\sigma$ generados por $\mathbb{X}^+$ y $\mathbb{X}^-$ son  $\mathbb{F}$ y $\mathbb{H}$, respectivamente. Las DCF están condicionadas por secuencias $s = (w, (a,b))$ con $w$ palabra y $w \in \mathbb{X}^-$, por lo que estas subsecuencias pueden o no acabar en la última observación conocida (también conocidas como  \textit{historias}), pero nos centraremos únicamente en este último caso.
+Ahora ampliaremos esta noción. Primero definimos $\mathbb{X}^+=\{ x^+ = x_0, x_1, \ldots | \forall i \geq 0, x_i \in X \}$, y respectivamente $\mathbb{X}^-=\{ x^- = \ldots x_{-2}, x_{-1} | \forall i \leq 0, x_i \in X \}$.  Los campos $\sigma$ generados por $\mathbb{X}^+$ y $\mathbb{X}^-$ son  $\mathbb{F}$ y $\mathbb{H}$, respectivamente. Las DCF están condicionadas por secuencias $s = (w,a,b)$ con $w$ palabra y $w \in \mathbb{X}^-$, por lo que estas subsecuencias pueden o no acabar en la última observación conocida (también conocidas como  \textit{historias}), pero nos centraremos únicamente en este último caso.
 
-Además, para lo que veremos a continuación necesitamos definir una serie de $\sigma$-álgebras $(\mathbb{H}_l \in (0, 1, \ldots))$, donde $\mathbb{H}_l$ es la $\sigma$-álgebra en $X^{\mathbb{Z}}$ generada por todas las historias de longitud $l$. En definitiva, un evento en $\mathbb{H}_l$ es el conjunto de series bi-infinitas $x$ que, eso sí, cumplen $x_{-l}, \ldots, x_{-1}$. Además, de forma trivial $\forall l \leq 0, \mathbb{H}_l \subset \mathbb{H}_{l+1}$. A la unión infinita de todas las $\mathbb{H}_l$ la denominamos $\mathbb{H}$.   
+Además, para lo que veremos a continuación necesitamos definir una serie de $\sigma$-álgebras $\mathbb{H}_l, l \in (0, 1, \ldots)$, donde $\mathbb{H}_l$ es la $\sigma$-álgebra en $X^{\mathbb{Z}}$ generada por todas las historias de longitud $l$. En definitiva, un evento en $\mathbb{H}_l$ es el conjunto de series infinitas $x$ condicionadas por $x_{-l}, \ldots, x_{-1}$. Además, de forma trivial $\forall l \leq 0, \mathbb{H}_l \subset \mathbb{H}_{l+1}$. A la unión infinita de todas las $\mathbb{H}_l$ la denominamos $\mathbb{H}$.   
 
 Si dos historias, $z$ e $y$ acaban determinando la misma DCF $P(\cdot|z)=P(\cdot|y)$, entonces decimos que $y \thicksim z$ son equivalentes, es decir podemos definir la clase de equivalencia $\thicksim$ y $\overline{z} = \{y \in X^*| y \thicksim z\}$.
 
-Sea $\pi$ la función proyección sobre las clases de equivalencia de $\mathbb{X}^{-}$, es decir $\pi(z)=\overline{z}$. Para toda palabra futura $w$ se cumplirá entonces $P(s|z)=P(s|\overline{z})$.
+Sea $\pi$ la función proyección sobre las clases de equivalencia de $\mathbb{X}^{-}$, es decir $\pi(z)=\overline{z}$. Para toda palabra futura $w$ se cumplirá entonces $P(w|z)=P(w|\overline{z})$.
 
 Utilizando las clases de equivalencia podemos olvidarnos de la historia concreta que ha generado la DCF. Así, imaginemos la historia $w$, cuya clase de equivalencia $\overline{w}$ induce una DCF sobre $x_0$. Así, si escogemos un símbolo $k$ adecuado para $x_0$, tenemos la nueva palabra $z=wk$, y tenemos entonces de nuevo una clase de equivalencia $\overline{z}$ que inducirá una DCF sobre $x_1$, a las diferentes clases de equivalencia $\overline{z}$ que se obtienen a partir de las $DCF$ inducidas por $\overline{w}$ las llamamos \textit{estados del proceso}.
 
@@ -528,28 +583,28 @@ Si definimos:
 $$
 1_A =
 \begin{cases}
-    1       & \quad \text{if }  \text{si} x \in A\\
+    1       & \quad \text{if }  \text{si } x \in A\\
     0  & \quad \text{en caso contrario, } \\
   \end{cases}
 $$
 
-$P(A|w_l)$ es la esperanza condicional $E(1_A)|\mathbb{H})(x)$ para cualquier secuencia $x$ que coincide con $w$. Por lo tanto podemos escribir (1) como $\displaystyle \lim_{l \rightarrow \infty} E(1_A|\mathbb{H})$. Este límite converge casi seguramente a $E(1_A|H)(x)$, mediante el Teorema de convergencia de Martingale, el cual demostramos al final del capítulo, para no entorpecer la lectura. De esta manera tendremos que (1)=$P(\cdot|x^-)$.
+$P(A|s_l)$ es la esperanza condicional $E(1_A|\mathbb{H})(x)$ para cualquier secuencia $x$ que coincide con $w$. Por lo tanto podemos escribir (1) como $\displaystyle \lim_{l \rightarrow \infty} E(1_A|\mathbb{H})$. Este límite converge casi seguramente a $E(1_A|\mathbb{H})(x)$, mediante el Teorema de convergencia de Martingalas, el cual demostramos al final del capítulo, para no entorpecer la lectura. De esta manera tendremos que (1)=$P(\cdot|x^-)$.
 
 Si $x^-$ tiene una historia $s_l$ con probabilidad nula, entonces $P(A|x^-)=0$. Denominaremos al conjunto de historias con probabilidad nula $N=\{x^- \in X^{\mathbb{Z}} | P(x^-)=0 \}$.
 
-Un estado del proceso es un DCF que se da al condicionar en una historia de probabilidad no nula. El conjunto de todos los estados del proceso para un proceso dado es:
+Un estado del proceso es un DCF que se da al condicionar en una historia de probabilidad no nula. Si $R= \bigcup\limits_{l=0}^{\infty} R_l$, entonces el conjunto de todos los estados del proceso para un proceso dado es:
 
 $$
-PS= \{ P(\cdot|w)| w \in R\} \cup \{P(\cdot|x^-) \in \mathbb{X}^{-}\textbackslash N) \}
+PS= \{ P(\cdot|w)| w \in R\} \cup \{P(\cdot|x^-) \in \mathbb{X}^{-}\backslash N) \}
 $$
 
 Además, definimos la función $G: \mathbb{X}^- \rightarrow PS$ que envía historias no nulas al DCF que inducen, $G(x^-)=P(\cdot|x^-)$. El conjunto inducido de historias de un estado del proceso $A$ es un conjunto que particuliza $G$ mediante $G^{-1}(A)$, y que resulta en todas las historias que induce $A$. 
 
-\textbf{Proposición} Para cualquier estado del proceso $A$, $G^{-1}(A) \times \mathbb{X}^+$ es la intersección de un conjunto medible y de un conjunto de medida completa (complementario de medida nula)
+\textbf{Proposición.} Para cualquier estado del proceso $A$, $G^{-1}(A) \times \mathbb{X}^+$ es la intersección de un conjunto medible y de un conjunto de medida completa (complementario de medida nula)
 
-Usaremos $l$ para las longitudes de las historias y $k$ para longitudes futuras. Además diremos que $A(w)$ s la probabilidad que asigna $A$ a la palabra $w$.
+Usaremos $l$ para las longitudes de las historias y $k$ para longitudes futuras. Además diremos que $A(w)$ es la probabilidad que asigna $A$ a la palabra $w$.
 
-Además, diremos que dos estados del proceso $B$ y $c$ son $k-equivalentes$ si, para todas palabras $w$ tq $|w| \leq k$, B(w)=C(w) 
+Además, diremos que dos estados del proceso $B$ y $C$ son $k-equivalentes$ si, para todas palabras $w$ tq $|w| \leq k$, $B(w)=C(w)$. 
 
 \textbf{Demostración} Para cada natural $l$ y palabra $w$, y para cada historia $x^-$, definimos:
 
@@ -563,13 +618,13 @@ $$
 
 Por el \textit{Teorema de Convergencia de Martingalas} $\displaystyle \lim_{l \rightarrow \infty} f_{l}^{w}(x-) = f^w(x^-)$ \textit{casi seguramente}. Como $f_l^w$ es medible, su límite también lo será.
 
-Sea $A$ un estado del proceso y $J_k(A)$ el conjunto de historias $x^-$ que inducen estados del proceso $G(x^-)$ que son $k$-equivalentes a $A$, $J_k(A)=\{x^- \text{ tq } \forall w \text{ tq } |w| \leq k, P(w|x^-) = A(w) \}$. Es decir:
+Sea $A$ un estado del proceso y $J_k(A)$ el conjunto de historias $x^-$ que inducen estados del proceso $G(x^-)$ que son $k$-equivalentes a $A$, $J_k(A)=\{x^- \text{ : } \forall w \text{ tq } |w| \leq k, P(w|x^-) = A(w) \}$. Es decir:
 
 $$
-J_k(A) = \bigcap_{w:|w|=k} \{x^- \text{ tq } P(w|x^-)=A(w)\}= \bigcap_{w:|w|=k} (f^w)^-1(A(w)).
+J_k(A) = \bigcap_{w:|w|=k} \{x^- \text{ : } P(w|x^-)=A(w)\}= \bigcap_{w:|w|=k} (f^w)^{-1}(A(w)).
 $$
 
-$\{A(w)\}$ es un conjunto medible y $f^w$ es una función medible, así que su la antiimagen $(f^w)^-1(A)$ ha de ser medible. Por lo que $J_k(A)$ es intersección finita de conjuntos medibles y por lo tanto medible. Sea $\displaystyle J(A)= \bigcap_{k=1}^{\infty} J_k(A)$, $J(A)$ es intersección contable de conjuntos medibles, por lo que es medible. Ahora, cada historia $\displaystyle J(A) \cap (X^{\mathbb{Z}} \backslash N)$ induce un estado $A$, con $X^{\mathbb{Z}} \backslash N$ un conjunto demedida completa,  y no hay ninguna historia que no esté en $J(A)$ que induzca $A$. Por lo tanto $\displaystyle J(A)= \bigcap_{k=1}^{\infty} J_k(A) = G^{-1}(A)$. \textit{cqd}
+$\{A(w)\}$ es un conjunto medible y $f^w$ es una función medible, así que su la antiimagen $(f^w)^{-1}(A)$ ha de ser medible. Por lo que $J_k(A)$ es intersección finita de conjuntos medibles y por lo tanto medible. Sea $\displaystyle J(A)= \bigcap_{k=1}^{\infty} J_k(A)$, $J(A)$ es intersección numerable de conjuntos medibles, por lo que es medible. Ahora, cada historia $\displaystyle J(A) \cap (X^{\mathbb{Z}} \backslash N)$ induce un estado $A$, con $X^{\mathbb{Z}} \backslash N$ un conjunto de medida completa,  y no hay ninguna historia que no esté en $J(A)$ que induzca $A$. Por lo tanto $\displaystyle J(A)= \bigcap_{k=1}^{\infty} J_k(A) = G^{-1}(A)$. \textit{cqd}
 
 La idea central es que un estado es una predicción basada en lo sabido sobre el pasado del proceso. En la siguiente sección clasificaremos los diferentes tipos de estados que podemos encontrar.
 
@@ -577,7 +632,7 @@ La idea central es que un estado es una predicción basada en lo sabido sobre el
 
 En esta sección presentamos los resultados relativos a convergencia de martingalas necesarios para el apartado anterior.
 
-Sea $X$ una variable aleatoria en un espacio de probabilidad $(\Omega, \mathcal{F}, P)$. Sea $\mathcal{E}$ una sub $\sigma$-álgebra de $\mathcal{F}$, o sea, $\mathcal{E}$ una $\sigma$-álgebra y $\mathcal{E} \subset \mathcal{F}$.
+Sea $X$ una variable aleatoria en un espacio de probabilidad $(\Omega, \mathcal{F}, P)$. Sea $\mathcal{E}$ una sub $\sigma$-álgebra de $\mathcal{F}$.
 
 **Definición.** La esperanza condicional de $X$ respecto a $\mathcal{E}$ es cualquier variable aleatoria $Y$ que satisfaga
 
@@ -616,9 +671,9 @@ Una filtración es un conjunto incremental de $\sigma$-álgebras $\{\mathcal{F}\
 
 ##Tipos de Estado
 
-La definición del conjunto de estados de un proceso nos indica que estos están inducidos por historias, ya sean finitas o semi-infinitas. 
+La definición del conjunto de estados de un proceso nos indica que estos están inducidos por historias, ya sean finitas o infinitas. 
 
-Definimos antes de describir la tipología de estados, y algunas de sus propiedades, una propiedad asociada a los estados. Consideramos por ejemplo un estado del proceso $A \in PS$, y consideramos $G^{-1}(A)$, el conjunto de historias que induce $A$. Podemos asignar a este conjunto una probabilidad $P(A)=P(G^{-1}(A))$. En particulas, ante la historia $w$, $P(A)$ será la probabilidad de que $s$ induzca el estado del proceso $A$.
+Definimos antes de describir la tipología de estados, y algunas de sus características, una propiedad asociada a los estados. Consideramos por ejemplo un estado del proceso $A \in PS$, y consideramos $G^{-1}(A)$, el conjunto de historias que induce $A$. Podemos asignar a este conjunto una probabilidad $P(A)=P(G^{-1}(A))$. En particular, ante la historia $w$, $P(A)$ será la probabilidad de que $s$ induzca el estado del proceso $A$.
 
 Un estado del proceso está \textit{infinitamente precedido} si la historia $w$ que lo genera es de longitud infinita, $|w|= \infty$ y $P(w)>0$. 
 
@@ -645,13 +700,13 @@ A partir de esta proposición podemos asegurar que tres tipos de estado no ocurr
 
 * Estado alcanzables recurrentes que no están infinitamente precedidos.
 
-* Estados inalcanzables que no son recurrentes ni infinitmanete precedidos.
+* Estados inalcanzables que no son recurrentes ni infinitamente precedidos.
 
 Nos quedan por definir dos tipos de estado.
 
 Un estado del proceso es \textit{transitivo} si es alcanzable pero no recurrente, y si además no está infinitamente precedido se dice que \textit{estrictemente transitivo}.
 
-Un estado del proceso es \textit{elusivo} si es inalcanzable y no recurrente. Este tipo de estado con frecuencia puede ser ignorado, ya que únicamente pueden ser inducidos por eventos de probabilidad nula, y por lo tanto un conjunto medible de estados elusivos pueden obviarse sin cambiar la medida de probabilidad del proceso. Sin embargo, hay procesos cuyos estados elusivos vienen inducidos por los estados recurrentes, o procesos en los que estos estados elusivos son incontables y tienen probabilidad positiva. En estos casos tenemos que tenerlos en cuenta.
+Un estado del proceso es \textit{elusivo} si es inalcanzable y no recurrente. Este tipo de estado con frecuencia puede ser ignorado, ya que únicamente pueden ser inducidos por eventos de probabilidad nula, y por lo tanto un conjunto medible de estados elusivos pueden obviarse sin cambiar la medida de probabilidad del proceso. Sin embargo, hay procesos cuyos estados elusivos vienen inducidos por los estados recurrentes, o procesos en los que estos estados elusivos son no numerables y tienen probabilidad positiva. En estos casos tenemos que tenerlos en cuenta.
 
 Incluir tabla de estados
 
@@ -664,14 +719,14 @@ Una palabra $w$ es una \textit{palabra sincronizante} si toda historia de probab
 \textbf{Demostración.} Sea $A$ este estado del proceso inducido por $w$. Como $A$ es inducido por una historia con probabilidad no nula, entonces es alcanzable.  $w$ es en sí misma una historia que termina en $w$, y $A$ es el estado del proceso inducido por todas las historias que terminan en $w$. Además, como $w$ es una palabra no nula, y en conjunto de historias que contienen $w$ es un subconjunto de $G^{-1}(A)$, tenemos:
 
 $$
-P(A) \geq P(\text{historias que terminan en w}) \geq P(w) > 0.
+P(A) \geq P(\text{historias que terminan en } w) \geq P(w) > 0.
 $$
 Por lo tanto $A$ es recurrente. \textit{cqd}
 
 
 ## Cadenas de Markov.
 
-Una \textit{Cadena de Markov} de $n$-estados es un triplete $(S, A, \pi)$, donde $S$ es un conjunto de orden $n$, $A$ es una matriz cuadrada de dimensión $n$, y $\pi$ es un vector de longitud $n$. Y cumplen las siguientes propiedades:
+Una \textit{Cadena de Markov (MC)} de $n$-estados es un triplete $(S, A, \pi)$, donde $S$ es un conjunto de orden $n$, $A$ es una matriz cuadrada de dimensión $n$, y $\pi = \{\pi_1, \ldots, \pi_n\}$ es un vector de longitud $n$, y cumplen las siguientes propiedades:
 
 1. Cada columna de $A$ tiene suma $1$.
 2. $\displaystyle \sum_{i} \pi_i = 1$.
@@ -679,7 +734,7 @@ Una \textit{Cadena de Markov} de $n$-estados es un triplete $(S, A, \pi)$, donde
 
 Los elementos de $S$ son los estados, $A$ es la matriz de transición y $\pi$ es la distribución estacionaria sobre los estados $S$.
 
-Si $\mathbb{S}$ es el campo definido por el conjunto de los subconjuntos de $S^{\mathbb{Z}}$, entonces $(\mathbb{S}^{\mathbb{Z}}, S)$ será nuestro espacio medible, y definimos nuestra medida de probabilidades $P$ de manera que si $v=v_0v_1\ldots v_{l-1}$, con $v_i \in S$,
+Si $\mathbb{S}$ es la $\sigma$-álgebra definida por el conjunto de los subconjuntos de $S^{\mathbb{Z}}$, entonces $(S^{\mathbb{Z}}, \mathbb{S})$ será nuestro espacio medible, y definimos nuestra medida de probabilidades $P$ de manera que si $v=v_0v_1\ldots v_{l-1}$, con $v_i \in S$,
 
 $$
 P(v)=\pi_{v_0} a_{v_0 v_1} \ldots a_{v_{l-2} v_{l-1}},
@@ -1091,6 +1146,7 @@ ggplot(df, aes(x=x, group=y, colour=y, fill=y))+geom_density(alpha=0.2)+
 
 \newpage
 
+
 #3. Redes Neuronales Artificiales
 
 ## Introducción
@@ -1105,17 +1161,229 @@ Las neuronas pueden disparar pulsos eléctricos a través de las conexiones sin�
 
 La cuestión es que esta conexión sináptica cambia durante la vida de las neuronas, fortaleciéndose o debilitándose dependiendo del uso. Esta plasticidad de la sinapsis es lo que permite al cerebro aprender, y es el principio que se aplica en las ANN's para poder entrenar una red neuronal artificial para tareas específicas a través de grandes muestras de ejemplos.
 
+
 ## Definición de Red Neuronal Artificial (ANN)
 
 Una neurona artificial puede ser implementada de muchas maneras. La definición matemática general es la siguiente:
 
 $$
-y(x)=g \big(\sum_{i=0}^n w_i x_i\big)
+y(x)=g \big(\sum_{i=0}^n w_i x_i -\theta_i \big)
 $$
-donde $x$ es una neurona con $n$ inputs $x=(x_0, \ldots, x_n)$ y un axón de output $y(x)$. Los términos $w=w_0, \ldots, x_n$ son los pesos, y determinan cómo deben ser de intensificados los inputs.
+donde $x$ es una neurona con $n$ inputs $x=(x_1, \ldots, x_n)$ y un axón de output $y(x)$. Los términos $w=w_0, \ldots, x_n$ son los pesos, y determinan cómo deben ser de intensificados los inputs. $\theta_i$ es el umbral o sesgo del input $i$.
 
-$g$ es una función de activación que balancea cómo de potentes debe ser el output (si existe) de la neurona, basado en la suma de los input. En el caso de neuronas reales, $g$ es una función $\delta$ de Kronecker que determina una relación binaria de todo o nada para el output. Sin embargo, no se suele implementar de esa manera una neurona artificiales, ya que como veremos luego, los algoritmos para entrenarlas suelen venir determinados por funciones diferenciables. 
+$g$ es una función de activación que balancea cómo de potentes debe ser el output (si existe) de la neurona, basado en la suma de los input. En el caso de neuronas reales, $g$ es una función $\delta$ de Kronecker que determina una relación binaria de todo o nada para el output. Sin embargo, no se suele implementar de esa manera una neurona artificiales, ya que como veremos luego, los algoritmos para entrenarlas suelen venir determinados por funciones diferenciables.
 
+Entre los tipos de funciones de activación más habituales están:
+
+$$
+f_1(x) = \alpha x, \alpha \in \mathbb{R} \text{ la función lineal}
+$$
+
+$$
+f_2(x) =
+\begin{cases}
+S, \quad \text{si } x > S; \\
+x, \quad \text{si } |x| \leq S; \\
+-S, \quad \text{ en cualquier otro caso}.
+\end{cases}
+$$
+
+Donde $S$ es el output saturado. Por último están las funciones sigmoidales, que son de las funciones más utilizadas, particularmente la logística (y que será la que nosotros usaremos por defecto).
+
+$$
+f_3(x) =  \frac{m}{1 + e^{-x}}
+$$
+con $m$ el coeficiente de magnitud. Esta función es diferenciable y con un dominio $D(f_3(x))=(0, m)$.
+
+La función sigmoidal es una función real de variable real diferenciable. Si $y(x)=f_3(x)$,
+
+$$
+\frac{dy(x)}{dx} = \frac{e^{-x}}{(1+e^{-x})^2} = y(x)(1-y(x))
+$$
+
+por lo que $y(x)$ tiene una derivada simple
+
+
+## Backpropagation
+
+Entre las ANN's existentes, una de las más empleadas por su alta eficiencia es el Perceptrón Multicapa (MLP) mediante el uso del algoritmo de *Back-Propagation* descrito por Jian-Rong Chen . A diferencia del Perceptrón de una única capa, el MLP puede implementar gran variedad de funciones complejas, incluída la función XOR, que no puede ser realizada por el de una única capa como demostraron Minsky y Papert^{ojo} (Perceptrons: an introduction to computational geometry is a book written by Marvin Minsky and Seymour Papert and published in 1969).
+
+En un MLP una unidad solo puede conectarse a la capa adyacente siguiente, no permitiéndose conexiones recurrentes ni en la misma capa. Sea $K$ el número de capas, $M$ el número de inputs y $N$ el número de outputs.  El input en una unidad (siempre que no sea en la capa de entrada) es la suma de los outputs de unidades conectadas en la capa anterior. Sea $x_i^j$ el input de la unidad $i$ en la capa $j$, $w_{ij}^k$ el peso de la conexión entre la unidad $i$ en la capa $k$ y la unidad $j$ de la capa $k+1$, $y_i^j$ el output de la unidad $i$ en la capa $j$ y, por último, $\theta_i^j$ el umbral (o sesgo) de la unidad $i$ en la capa $j$. Entonces tenemos
+que los input de la capa $k+1$ son:
+$$
+x_j^{k+1}=\sum_i w_{ij}^k y_i^k
+$$
+donde
+$$
+y_i^j=f(x_i^j) \quad (1)
+$$
+siendo $f$ la función de activación. Nosotros utilizaremos como $f$ la función sigmoide
+
+$$
+f(x_i^j)= \frac{1}{1+e^{-\frac{x_i^j-\theta_i^j}{T}}}.
+$$
+
+Dependiendo de las aplicaciones un output que tome valores negativos es necesario, y podemos utilizar entonces la función
+
+$$
+f(x_i^j)= \frac{1-e^{-\frac{x_i^j-\theta_i^j}{T}}}{1+e^{-\frac{x_i^j-\theta_i^j}{T}}}.
+$$
+
+Hay dos fases en el algoritmo de *Back-Propagation*, la primera es computar el cálculo a través de las capas utilizando (1). La segunda fase es actualizar los pesos, operación que se realiza computando el error entre el valor esperado y el valor real calculado en la primera fase. Este proceso clasifica el algoritmo de *Back-Propagation* dentro de la categoría de los algoritmos de aprendizaje supervisado. Básicamente el algoritmo de *Back-Propagation* es un algoritmo de gradiente descendente. 
+
+A continuación explicaremos cómo se realiza la actualización de los pesos, una vez obtenido el output a través de (1). Primero definiremos una función de error $\mathcal{E}$ que nos dará cuenta de la discrepancia entre el valor calculado y el real. Sea $N$ el número de outputs, $d_i$ el output deseado y $y_i$ el obtenido, con $i \in \{1, \ldots, N\}$. Entonces
+
+$$
+\mathcal{E} = \frac{1}{2}\sum_j (d_j - y_j)^2, \quad (2)
+$$
+
+El error total será simplemente $\mathcal{E}_{total}=\sum\limits_{k=1}^N \mathcal{E}_k$. Nuestro objetivo será minimizar este error total, para ello utilizamos un algoritmo de gradiente descendente. Este tipo de algoritmo busca un mínimo en la función (la función error en nuestro caso) dando pasos proporcionales al negativo del gradiente. Es por ello que es tan importante que la función que usamos como función de activación sea derivable.
+
+Así, el ajuste de los pesos es proporcional a la derivada
+
+$$
+\Delta w_{ij}^k = - \eta \frac{\partial \mathcal{E}}{\partial w_{ij}^k} \quad (3)
+$$
+
+donde $\eta$ es el tamaño del paso, importante para asegurar la convergencia. También se puede añadir un término de inercia, mediante una dependencia de recursividad, que nos ayudará a mejorar la convergencia evitando rápidos cambios en $\Delta w_{ij}^k$.
+
+$$
+\Delta w_{ij}^k(t)=  - \eta \frac{\partial \mathcal{E}}{\partial w_{ij}^k(t)} + \alpha \Delta w_{ij}^k(t-1)  \quad (4)
+$$
+
+donde $\alpha$ es un positivo real pequeño.
+
+Estrictamente hablando, la $\mathcal{E}$ que se utiliza en (3) debería ser $\mathcal{E}_{total}$. Sin embargo es mucho más práctico actualizar pesos con cada input de una muestra de entrenamiento, en vez de usar toda la muestra al completo. Estos dos casos se denominan batch y online, respectivamente. En este caso puede utilizarse el $\mathcal{E}$ definido en (2).
+
+Así, para cada capa de un perceptrón simple, tendríamos el output dado por 
+
+$$
+y_j=f(\sum_{i=1}^{n-1} w_iI_i + \theta_j)=f(s) \quad 
+$$
+
+El sesgo $\theta_j$ puede añadirse como input siempre activo ($I_n=1$) con peso $w_n=\theta_j$
+
+
+$$
+y_j=f(\sum_{i=1}^{n} w_iI_i)=f(s)
+$$
+
+Si el ouput deseado es $d_j$, entonces de (2) tenemos
+$$
+\frac{\partial \mathcal{E}}{\partial w_i} = \frac{\partial \mathcal{E}}{\partial y_j}\frac{\partial y_j}{\partial w_i}
+$$
+$$
+=-(d_j - y_j)f'(s)I_i
+$$
+
+Sea 
+
+$$
+\delta_j = (d_j - y_j)
+$$
+Entonces el ajuste de pesos viene dado por 
+
+$$
+\Delta w_i = - \eta \frac{\partial \mathcal{E}}{\partial w_i} = \eta \delta_j f'(s) I_i \quad 
+$$
+
+
+Este esquema de ajuste de pesos es denominado la regla Delta. El algoritmo de Back-Propagation en realidad es una generalización de la regla Delta.
+
+Sea una red MLP, con $N$ capas y suponemos que nuestra función de activación $f$ es la sigmoide logística, entonces
+
+$$
+\frac{\partial \mathcal{E}}{\partial y_j^N} = -(d_j - y_j^N)
+$$
+
+Donde el superíndice $N$ indica que el output es de la capa  $N$ y de (1) obtenemos
+
+$$
+\frac{\partial y_j^N}{\partial x_j^N} = f'(x_j^N) = y_j^N(1 - y_j^N).
+$$
+
+Como $x_j^{k+1}=\sum_i w_{ij}^k y_i^k$, entonces
+
+$$
+\frac{\partial x_j^N}{\partial w_{ij}^{N-1}} = y_i^{N-1}
+$$
+
+Y por lo tanto, podemos escribir la parcial del error respecto de los pesos como
+
+$$
+\frac{\partial \mathcal{E}}{ \partial w_{ij}^{N-1}} = \frac{\partial \mathcal{E}}{\partial y_j^N}\frac{\partial y_j^N}{\partial x_j^N}\frac{\partial x_j^N}{\partial w_{ij}^N}
+$$
+$$
+= - (d_j - y_j^N)y_j^N(1-y_j^N)y_i^{N-1}
+$$
+
+Sea 
+
+$$
+\delta_j^{N-1} = (d_j - y_j^N)y_j^N(1-y_j^N) \quad (5)
+$$
+Luego
+
+$$
+\frac{\partial \mathcal{E}}{\partial w_{ij}^{N-1}}= -\delta_j^N y_i^{N-1} \quad (6)
+$$
+
+Entonces, teniendo en cuenta (4) y (5) tenemos que en la iteración $t+1$ los pesos serán
+
+$$
+w_{ij}^{N-1}(t+1) = w_{ij}^{N-1}(t) + \eta \delta_j^{N-1} y_i^{N-1} + \alpha[w_{ij}^{N-1}(t) - w_{ij}^{N-1}(t-1)] \quad (7)
+$$
+
+
+Obviamente, esta es la actualización de los pesos para la capa del output. Pero como la delta la podemos definir así
+
+$$
+\delta_j^{N-1} = -\frac{\partial \mathcal{E}}{\partial y_j^N} \frac{y_j^N}{\partial x_j^N} = - \frac{\partial \mathcal{E}}{\partial x_j^N}
+$$
+Podemos tener una fórmula general para $w_{ij}^k, \forall k \in \{1, \ldots, N-1\}$ de la siguiente manera
+
+$$
+\frac{\partial \mathcal{E}}{\partial w_{ij}^k} = \frac{\partial \mathcal{E}}{\partial  y_j^{k+1}}\frac{\partial y_j^{k+1}}{\partial   x_j^{k+1}} \frac{\partial x_j^{k+1}}{\partial w_{ij}^k} 
+$$ 
+
+$$
+= \frac{\partial \mathcal{E}}{ \partial y_j^{k+1}}y_j^{k+1}(1-y_j^{k+1})y_i^k 
+$$
+
+$$
+= y_j^{k+1}(1-y_j^{k+1})y_i^k \sum_l \frac{\partial \mathcal{E}}{\partial x_l^{k+2}}\frac{\partial x_l^{k+2}}{ \partial y_j^{k+1}}
+$$
+$$
+y_i^k y_j^{k+1}(1-y_j^{k+1})\frac{\partial \mathcal{E}}{\partial x_l^{k+2}}w_{jl}^{k+1} = -y_i^k y_j^{k+1}(1-y_j^{k+1})\sum_l w_{jl}^{k+1}\delta_l^{k+1}
+$$
+
+Sea 
+
+$$
+\delta_j^k = y_j^{k+1}(1-y_j^{k+1})\sum_l w_{jl}^{k+1}\delta_l^{k+1} \quad (8) 
+$$
+
+Entonces tenemos que 
+
+$$
+\frac{\partial \mathcal{E}}{\partial w_{ij}^k} = -\delta_i^k y_i^k,
+$$
+
+esta ecuación es similar a (6). Finalmente obtenemos el algoritmo de Back-Propagation combinando (7) y (8), llamado así porque las $\delta$'s se propagan hacia atrás, comenzando por (5).
+
+En general, la manera de ejecutar este algoritmo es:
+
+1. Asignar valores pequeños y aleatorios a los pesos y sesgos del MLP. 
+
+2. Dependiendo de si el algoritmo se ha programado según el método batch u online, se le pasa un input de la muestra de entrenamiento, o la muestra entera y determinar las $\delta$'s.
+
+3. Actualizar pesos según el algoritmo de Back-propagation.
+
+4. Iterar hasta alcanzar la tolerancia de error deseado.
+
+El problema del algoritmo de Back-propagation, como ocurre en todos los que poseen ciertas características geométricas, es que resulta lento en su convergencia, ya que $\eta$ depende mucho de la topología local y curvatura de las superfícies del error $\mathcal{E}$. Así, si introducimos una $\eta$ pequeña el algoritmo convergerá de forma extremadamente lenta, mientras que si $\eta$ es muy grande, provocaremos que el algoritmo vaya saltando de un lado a otro de los valles de $\mathcal{E}$, en vez de seguir la curva que marca el camino a su mínimo.
+
+Por esta razón, daremos dos variantes del algoritmo de Back-propagation que se usan frecuentemente para acelerar su convergencia, la \textit{Técnica de $\eta$ Adaptable} y el \textit{Algoritmo de Resilient Back-propagation} de Martin Riedmiller (1994).
 
 
 
