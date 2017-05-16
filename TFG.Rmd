@@ -5,6 +5,8 @@ header-include:
   - \usepackage{amsmath}
   - \usepackage{stackrel}
   - \usepackage{booktabs}
+  - \usepackage{algorithm}
+  - \usepackage{algorithmic}
 
 
 output: pdf_document
@@ -1055,21 +1057,21 @@ Nuestro punto de partida será suponer que los retornos pueden pertenecer a dos 
 Nuestro caso de estudio será el correspondiente a los valores diarios de apertura del IBEX35 entre el 19/10/1990 y 12/08/1991. 
 
 ```{r xtable, echo=FALSE}
-df=read.csv("C:/Users/Tornero/Documents/Uni/TFGMates/Ibex35.csv", header = T)[1:200,]
-source("C:/Users/Tornero/Documents/Uni/TFGMates/Baum-Welch.R")
+df=read.csv("Ibex35.csv", header = T)[1:200,]
+source("Baum-Welch.R")
 
 returns=double()
 for (i in 1:199){returns[i]=(df$APERTURA[i+1]-df$APERTURA[i])/df$APERTURA[i]}
 df$RETORNOS[2:nrow(df)]=paste0(round(100*returns,1),"%")
 df$RETORNOS[1]=0
-# tab<-df[1:5,c(2,3,ncol(df))]
-# tab$FECHA=as.Date(tab$FECHA. st)
-# colnames(tab)=c("Fecha", "Valor", "Retornos")
-# 
-# library(xtable)
-# options(xtable.caption.placement = 'top',xtable.comment = FALSE)
-# tabla_1 <- xtable(tab,caption=c("IBEX 35: Valores de Apertura"), digits=c(0,0,2,1), label = "")
-#print(tabla_1,include.rownames=T, table.placement = "h")
+tab<-df[1:5,c(2,3,ncol(df))]
+tab$FECHA=as.Date(tab$FECHA)
+colnames(tab)=c("Fecha", "Valor", "Retornos")
+
+library(xtable)
+options(xtable.caption.placement = 'top',xtable.comment = FALSE)
+tabla_1 <- xtable(tab,caption=c("IBEX 35: Valores de Apertura"), digits=c(0,0,2,1), label = "")
+print(tabla_1,include.rownames=T, table.placement = "h")
 ```
 
 Trabajaremos con los retornos (R), y estableceremos como condiciones iniciales $\mu_1= \overline{R_+}$, donde $R_+=\{R | R>0\}$, y $\mu_2= \overline{R_-}$, con $R_-=\{R | R<0\}$
@@ -1121,7 +1123,7 @@ for (i in 1:nrow(smoothed)) {
 df$smoothed=as.double(c(round(var$p[1]), B))
 ggplot(df, aes(x=FECHA, y=APERTURA, group=1, colour=factor(smoothed)))+geom_line(size=0.2) +
   scale_x_discrete(limits=df[-1,]$FECHA,breaks=df[-1,]$FECHA[seq(1,191,10)])+
-  scale_colour_manual(labels=c("1","2"), 
+  scale_colour_manual(labels=c("1","2"),
                       values=c("green", "red"), guide=F)+
   theme(axis.text.x=element_text(angle=30), panel.background = element_blank())
 
@@ -1151,7 +1153,16 @@ ggplot(df, aes(x=x, group=y, colour=y, fill=y))+geom_density(alpha=0.2)+
 
 ## Introducción
 
-El cerebro humano es un complicado mecanismo capaz de resolver problemas de gran complejidad. Estamos aún lejos de entender completamente cómo funciona, mucho menos de poder replicarlos artificialmente; sin embargo, sí que tenemos un buen conocimiento para explicar las operaciones básicas que realiza un cerebro.
+En este capítulo estudiaremos otro de los métodos de Machine Learning más utilizados: redes neuronales artificiales (ANN por sus siglas en inglés). 
+
+Comentaremos brevemente cuál es la base biológica que incorporan, y a continuación explicaremos los elementos básicos que emplean estas implementaciones. 
+
+Luego nos meteremos de lleno a analizar el principal algoritmo que se utiliza a la hora de entrenar redes neuronales artificiales para que sean capaz de realizar tareas concretas de manera efectiva: el algoritmo de *Back-propagation*. Destacaremos el principal problema que implica su implementación: la dificultad de su convergencia; y daremos dos variantes de este algoritmo que tienen como objetivo minimizar este efecto: el Método de $\alpha$ Adaptable y el Algoritmo de *Resilient Back-propagation*.
+
+
+## Base Biológica
+
+El cerebro humano es un complicado mecanismo -o casi siempre lo es- capaz de resolver problemas de gran complejidad. Estamos aún lejos de entender completamente cómo funciona, mucho menos de poder replicarlos artificialmente; sin embargo, sí que tenemos un buen conocimiento para explicar las operaciones básicas que realiza un cerebro.
 
 Para entender cuál es el fundamento de una Red Neuronal Artificial (ANN), primero tenemos que tener un conocimiento básico de los mecanismos internos del cerebro. El cerebro es la parte central del sistema nervioso y está formado por una extensa red neuronal, consistente en aproximadamente $10^11$ neuronas interconectadas. 
 
@@ -1383,7 +1394,65 @@ En general, la manera de ejecutar este algoritmo es:
 
 El problema del algoritmo de Back-propagation, como ocurre en todos los que poseen ciertas características geométricas, es que resulta lento en su convergencia, ya que $\eta$ depende mucho de la topología local y curvatura de las superfícies del error $\mathcal{E}$. Así, si introducimos una $\eta$ pequeña el algoritmo convergerá de forma extremadamente lenta, mientras que si $\eta$ es muy grande, provocaremos que el algoritmo vaya saltando de un lado a otro de los valles de $\mathcal{E}$, en vez de seguir la curva que marca el camino a su mínimo.
 
-Por esta razón, daremos dos variantes del algoritmo de Back-propagation que se usan frecuentemente para acelerar su convergencia, la \textit{Técnica de $\eta$ Adaptable} y el \textit{Algoritmo de Resilient Back-propagation} de Martin Riedmiller (1994).
+Por esta razón, daremos dos variantes del algoritmo de Back-propagation que se usan frecuentemente para acelerar su convergencia, la \textit{Técnica de $\alpha$ Adaptable} y el \textit{Algoritmo de Resilient Back-propagation} de Martin Riedmiller (1994).
+
+## Técnica de $\alpha$ Adaptable
+
+En esta variante del algoritmo de Back-propagation se añade un término de inercia, siguiendo el modelo de (4). En esta técnica introducimos una dependencia de la $\alpha$ (tamaño de salto en el gradiente) que aparece en (4) respecto al número de iteración siguiendo este modelo:
+
+$$
+\alpha(t) = \alpha(t-1)(1-h(t)\sqrt{\mathcal{E}(t)}), \quad t \geq 2
+$$
+$$
+h(t) = a_1h(t-1) + a_2\Delta\mathcal{E}(t) \quad t \geq 2 \\
+$$
+$$
+\Delta \mathcal{E}(t) = \mathcal{E}(t) - \mathcal{E}(t-1) \quad t \geq 2
+$$
+
+$\alpha(t)$ es el tamaño de salto en el momento $t$. $\mathcal{E}(t)$ es la suma cuadrática de errores entre el output deseado y el obtenido en la iteración $t$
+
+$$
+\mathcal{E} = \frac{1}{2}\sum\limits_{k=1}^N\sum\limits_{i=1}^P(d_i^k - o_i^k)^2,
+$$
+con $N$ el número de capas del MLP y $P$ el número de outputs. Así, $\Delta \mathcal{E}(t), \quad t \geq 2$ sería el decremento de $\mathcal{E}(t)$, y $h(t)$ será un filtro recursivo de $\Delta \mathcal{E}(t)$: un filtro recursivo reutiliza uno o más de sus outputs como inputs, y permite controlar de esta manera que haya cambios bruscos en $\Delta \mathcal{E}(t)$, creando un versión del algoritmo más estable. 
+
+Los parámetros $a_1$ y $a_2$ del filtro recursivo $h(t)$ son los encargados de controlar está adaptación. Para una gran muestra de entrenamiento, un valor pequeño de $a_1$ y grande en $a_2$, combinado con una $\eta$ de gran tamaño también es lo que más favorece la convergencia **Tesauro, G . and Janssens, B. Scaling Relationships in Back Propagation LearningComplex System vol-2 No.l pp38-44 1988**.
+
+Un análisis del algoritmo nos permite ver que si $h(t)$ es positivo, entonces la tendencia de $\mathcal{E}(t)$ en el pasado inmediato es incrementar, por lo que $1 - h(t)\mathcal{E}(t) < 1$, y por lo tanto $\alpha$ decrecerá en este paso. De forma similar concluimos que si la tendencia de $\mathcal{E}(t)$ es decrecer, entonces $\alpha$ crecerá. Y finalmente, si $\mathcal{E}(t)$ es muy pequeño, significará que el MLP ya casi ha terminado de aprender, y la adaptación de muy baja magnitud, estabilizando el algoritmo.
+
+## Resilient Back-propagation
+
+Este algoritmo, desarrollado por Martin Riedmiller (1994) para MLP con método de aprendizaje batch, tiene como objetivo principal eliminar la influencia del tamaño de la derivada parcial en la actualización de los pesos. Por ello, se considera únicamente el signo de la derivada para indicar la dirección en que tiene que ir esta actualización. Consideramos la conexión de la unidad $i, \quad i \in \{1, \ldots, I\}$ de una capa con la unidad $j, j \in \{1, \ldots, J\}$ de la siguiente capa en la iteración $t$:
+
+$$
+ \Delta w_{ij}(t) := 
+ \begin{cases}
+ -\Delta_{ij}(t), \quad \text{si } \frac{\partial \mathcal{E}(t)}{\partial w_{ij}(t)} > 0\\
+ +\Delta_{ij}(t), \quad \text{si } \frac{\partial \mathcal{E}(t)}{\partial w_{ij}(t)} < 0\\
+0, \quad \text{si } \frac{\partial \mathcal{E}(t)}{\partial w_{ij}(t)} = 0\\
+\end{cases}
+$$
+
+Donde $\frac{\partial \mathcal{E}(t)}{\partial w_{ij}(t)}$ es la suma para cada componente de la muestra (batch learning).
+
+Si reemplazamos $\Delta_{ij}(t)$ por una constante se obtiene la regla de actualización de pesos de **Manhattan**.
+
+Para determinar los valores de $\Delta_{ij}(t)$, utilizamos también un filtro de recursivo de la forma
+
+$$
+\Delta_{ij}(t):=
+\begin{cases}
+\eta^+\Delta_{ij}(t-1), \quad \text{si } \frac{\partial \mathcal{E}(t-1)}{\partial w_{ij}}\frac{\partial \mathcal{E}(t)}{\partial w_{ij}} > 0 \\
+\eta^-\Delta_{ij}(t-1), \quad \text{si } \frac{\partial \mathcal{E}(t-1)}{\partial w_{ij}}\frac{\partial \mathcal{E}(t)}{\partial w_{ij}} < 0 \\
+\Delta_{ij}(t-1), \quad \text{si } \frac{\partial \mathcal{E}(t-1)}{\partial w_{ij}}\frac{\partial \mathcal{E}(t)}{\partial w_{ij}} = 0
+\end{cases}
+$$
+$$
+\text{donde } 0 < \eta^- < 1 < \eta^+
+$$
+
+Como ya comentamos antes, puede ocurrir que la actualización de pesos haya hecho que nos saltemos un mínimo, lo cual implica que el signo de la derivada parcial del correspondiente $w_{ij}$ cambie, así que disminuimos el valor de actualización $\Delta_{ij}(t)$ un factor $\eta^-$. En el caso contrario, para acelerar la convergencia, este valor de actualización es incrementado en $\eta^+ (>1 )$.
 
 
 
