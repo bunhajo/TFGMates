@@ -5,8 +5,7 @@ header-include:
   - \usepackage{amsmath}
   - \usepackage{stackrel}
   - \usepackage{booktabs}
-  - \usepackage{algorithm}
-  - \usepackage{algorithmic}
+  - \usepackage{algorithm} 
 
 
 output: pdf_document
@@ -71,6 +70,31 @@ fontsize: 12pt
 
 \newpage
 \pagenumbering{roman} 
+
+<!-- \floatname{algorithm}{Algoritmo} -->
+<!-- \renewcommand{\listalgorithmname}{Lista de algoritmos} -->
+<!-- \renewcommand{\algorithmicrequire}{\textbf{Entrada:}} -->
+<!-- \renewcommand{\algorithmicensure}{\textbf{Salida:}} -->
+<!-- \renewcommand{\algorithmicend}{\textbf{fin}} -->
+<!-- \renewcommand{\algorithmicif}{\textbf{si}} -->
+<!-- \renewcommand{\algorithmicthen}{\textbf{entonces}} -->
+<!-- \renewcommand{\algorithmicelse}{\textbf{si no}} -->
+<!-- \renewcommand{\algorithmicelsif}{\algorithmicelse,\ \algorithmicif} -->
+<!-- \renewcommand{\algorithmicendif}{\algorithmicend\ \algorithmicif} -->
+<!-- \renewcommand{\algorithmicfor}{\textbf{para}} -->
+<!-- \renewcommand{\algorithmicforall}{\textbf{para todo}} -->
+<!-- \renewcommand{\algorithmicdo}{\textbf{hacer}} -->
+<!-- \renewcommand{\algorithmicendfor}{\algorithmicend\ \algorithmicfor} -->
+<!-- \renewcommand{\algorithmicwhile}{\textbf{mientras}} -->
+<!-- \renewcommand{\algorithmicendwhile}{\algorithmicend\ \algorithmicwhile} -->
+<!-- \renewcommand{\algorithmicloop}{\textbf{repetir}} -->
+<!-- \renewcommand{\algorithmicendloop}{\algorithmicend\ \algorithmicloop} -->
+<!-- \renewcommand{\algorithmicrepeat}{\textbf{repetir}} -->
+<!-- \renewcommand{\algorithmicuntil}{\textbf{hasta que}} -->
+<!-- \renewcommand{\algorithmicprint}{\textbf{imprimir}}  -->
+<!-- \renewcommand{\algorithmicreturn}{\textbf{devolver}}  -->
+<!-- \renewcommand{\algorithmictrue}{\textbf{cierto }}  -->
+<!-- \renewcommand{\algorithmicfalse}{\textbf{falso }}  -->
 
 
 
@@ -1452,7 +1476,109 @@ $$
 \text{donde } 0 < \eta^- < 1 < \eta^+
 $$
 
-Como ya comentamos antes, puede ocurrir que la actualización de pesos haya hecho que nos saltemos un mínimo, lo cual implica que el signo de la derivada parcial del correspondiente $w_{ij}$ cambie, así que disminuimos el valor de actualización $\Delta_{ij}(t)$ un factor $\eta^-$. En el caso contrario, para acelerar la convergencia, este valor de actualización es incrementado en $\eta^+ (>1 )$.
+Como ya comentamos antes, puede ocurrir que la actualización de pesos haya hecho que nos saltemos un mínimo, lo cual implica que el signo de la derivada parcial del correspondiente $w_{ij}$ cambie, así que disminuimos el valor de actualización $\Delta_{ij}(t)$ un factor $\eta^-$. En el caso contrario, para acelerar la convergencia, este valor de actualización es incrementado en $\eta^+ (>1 )$. En caso de que hayamos alcanzado un mínimo, no hay ninguna actualización.
+
+En general, para evitar tener un gran número de parámetros libres, se escogen valores constantes de $\eta^+$ y $\eta^-$. Dos valores que, de acuerdo a las simulaciones realizadas por Riedmiller, parecen funcionar bien independientemente de la muestra, son $\eta^+=1.2$ y $\eta^-=0.5$. 
+
+Hay tres parámetros a considerar: $\Delta_0$, valor inicial de actualización de pesos, $\Delta_{max}$, que es el límite del tamaño del salto y $\Delta_{min}$, mínimo peso de actualización.
+
+Cuando inicializamos el algoritmo, todos los valores de actualización de pesos son $\Delta_0$, que debe ser escogido teniendo en cuenta también los valores iniciales de los pesos, si por ejemplo estos pesos están en el rango [-1,1] un buen valor será  $\Delta_0=0.1$.
+
+El valor de $\Delta_{max}$ no es de gran importancia en la mayoría de casos, pero conviene fijar uno para evitar posibles problemas de rebote alrededor de un mínimo. Por último, $\Delta_{min}$ sí que es un valor de importancia, ya que fijar un valor adecuado del mismo evitará que el algoritmo se quede atascado si se encuentra con algún mínimo local subóptimo. En su estudio Riedmiller fija un valor de $\Delta_{min} = 1 e^{-6}$.
+
+Así, el pseudo-código de implementacion del algoritmo de Resilient Back-propagation sería este:
+
+!!!!
+
+
+<!-- $$ -->
+<!-- \forall i, j:\Delta_{ij}(t) = \Delta_0 -->
+<!-- $$ -->
+<!-- $$ -->
+<!-- \forall i, j: \frac{\partial \mathcal{E}}{\partial w_{ij}(t-1)}=0 \newline -->
+<!-- $$ -->
+<!-- \textbf{Repetir}  -->
+<!-- \begin{flushleft} -->
+<!-- $\quad \textbf{Computar Gradiente } \frac{\partial \mathcal{E}}{\partial w_{ij}(t)}$ -->
+<!-- \newline -->
+<!-- $\quad \textbf{Para todos los pesos y sesgos}\{$ -->
+<!-- \newline -->
+<!-- $\quad \quad \textbf{si } \frac{\partial \mathcal{E}}{\partial w_{ij}(t)} \frac{\partial \mathcal{E}}{\partial w_{ij}(t-1)}>0 \textbf{ entonces} \{$ -->
+<!-- \newline -->
+<!-- $ -->
+<!-- \end{flushleft} -->
+<!-- \textbf{ Computar Gradiente } $\frac{\partial \mathcal{E}}{\partial w_{ij}(t)}$ -->
+<!--    \FOR{ \textbf{ todos los pesos y sesgos} -->
+<!--     \IF {$\frac{\partial \mathcal{E}}{\partial w_{ij}(t-1)}\frac{\partial \mathcal{E}}{\partial w_{ij}(t)}>0$}\THEN{ -->
+<!--     sdkfnslkdfnsdljf -->
+<!--     } -->
+<!--    } -->
+<!-- \end{algorithm} -->
+
+
+## Ejemplo Red Neuronal Artificial
+
+Veremos a continuación un par de aplicaciones de una ANN, usando el algoritmo de \textit{Resilient Backpropagation}.
+
+En el primer ejemplo entrenaremos una red neuronal para que sea capaz de calcular el cuadrado de un número.
+
+Usaremos una muestra aleatoria de 50 números entre el 0 y el 10 como inputs, y el cuadrado de estos números como output de una ANN con 10 neuronas ocultas y una tolerancia del error $\mathcal{E} = 0.01$.
+
+```{r, fig.width=20, echo=FALSE, warning=FALSE, fig.height=8, message=FALSE}
+
+library(neuralnet)
+library(nnet)
+#import the function from Github
+library(devtools)
+library(ggplot2)
+source_url('https://gist.githubusercontent.com/fawda123/7471137/raw/466c1474d0a505ff044412703516c34f1a4684a5/nnet_plot_update.r')
+ 
+
+Output <- runif(50, 0, 100) 
+df <- data.frame(Output, Input=sqrt(Output))
+net.sqrt <- neuralnet(Output~Input,  df, hidden=10, 
+                  threshold=0.01)
+
+plot.nnet(net.sqrt, node.labs = F)
+
+
+```
+\textit{En el gráfico se muestra un esquema de esta ANN, cuanto mayor es el peso de la conexión más oscuro es el color de la representación de esta conexión.}
+
+Veamos la precisión de esta ANN calculando el cuadrado de los naturales del 1 al 10.
+
+```{r xtable1, results="asis",message=FALSE,echo=FALSE,warning=FALSE}
+tab<-as.data.frame(cbind(c(1:10),compute(net.sqrt, c(1:10))$net.result,abs(compute(net.sqrt, (1:10))$net.result-c(1:10)^2)))
+colnames(tab)<-c("Input","Output","Error")
+
+library(xtable)
+options(xtable.caption.placement = 'top',xtable.comment = FALSE)
+tabla_1 <- xtable(tab,caption=c("Resultados ANN"), label = "")
+print(tabla_1, type="latex", include.rownames=F)
+```
+
+El otro ejemplo que veremos será una ANN entrenada para deducir la relación entre la temperatura (ºC) y la presión de vapor de mercurio en milímetros (de mercurio), a partir de 19 observaciones.
+
+```{r xtable2, results='asis',message=FALSE,echo=FALSE,warning=FALSE, fig.width=20, fig.height=8}
+tab<-datasets::pressure
+
+library(xtable)
+options(xtable.caption.placement = 'top',xtable.comment = FALSE)
+tabla_1 <- xtable(tab,caption=c("Observaciones"), digits=c(0,0,4), align = rep("c",3))
+print(tabla_1, type="latex", include.rownames=F, table.placement = "h")
+
+net=neuralnet(pressure ~ temperature, tab, threshold = 5, hidden = 5, stepmax = 1000000)
+
+plot.nnet(net, node.labs = F)
+
+ggplot(tab, aes(x=temperature, y=pressure))+geom_line(color="blue")+
+  geom_point(data=data.frame(temperature=tab$temperature, pressure=as.data.frame(net$net.result)[,1]),
+            aes(x=temperature, y=pressure), color="red")
+
+
+```
+*En azul la curva original, y en rojo los puntos determinados por la ANN*
+
 
 
 

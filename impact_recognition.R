@@ -8,6 +8,10 @@ source(paste(getwd(), "/","Baum-Welch.R", sep=""))
 source(paste(getwd(), "/","GHMM-ANN.R", sep=""))
 
 df  = read.delim("DesigualB2C_ANN.txt")
+n_inputs=10 # múltiplo de n_var
+n_neurons=10
+n_states=2
+
 df_1=df[1:365,]
 df_2=df[c(-1:-365),]
 
@@ -51,10 +55,15 @@ net_1=neuralnet( ~ round(sessions), df,
   
   w=rbind(as.data.frame(net_st_3$weights[[1]][[1]])[-1,] , as.data.frame(net_st_4$weights[[1]][[1]])[-1,])
   p=rbind(as.data.frame(net_st_3$weights[[1]][[1]])[1,] , as.data.frame(net_st_4$weights[[1]][[1]])[1,])
-  w=matrix(ncol = n_neurons, nrow = n_inputs*n_states)
+  
+  
+  
+  
+  #################################################
+  w=matrix(ncol = n_inputs, nrow = n_neurons*n_states)
   for(i in 1:nrow(w)){w[i,]=runif(ncol(w))}
-  p=matrix(nrow = n_states, ncol = n_neurons)
-  for(i in 1:nrow(p)){w[i,]=runif(ncol(p))}
+  p=matrix(nrow = n_neurons*n_states, ncol = 1)
+  for(i in 1:nrow(p)){p[i,]=runif(ncol(p))}
   source(paste(getwd(), "/","GHMM-ANN.R", sep=""))
   
   results=BaumWelch_ANN(returns = df_retornos[,c(2,3,5,7,8)], w=w,p=p,n_states = 2, n_neurons=10, stdp=stdp)
