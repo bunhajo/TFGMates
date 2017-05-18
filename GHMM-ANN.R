@@ -1,26 +1,22 @@
-BaumWelch_ANN = function(returns, w, p, n_states=2, Tolerance=7*10^{-2}){
+GHMM-ANN = function(returns, w, p, n_states=2, Tolerance=7*10^{-2}){
   
-  change_likelihood=c(rep(Inf, n_states))
-  likelihood=data.frame()
-  
-  aux=returns
-  returns=returns[1:70,]
+  n_samples=10
+  samples= list()
+  returns=as.data.frame(returns)
+  L=length(returns)
+  for(i in 1:n_samples){samples[[i]]= returns[((i-1)*round(L/n_samples)+1):(i*round(L/n_samples)),]}
   w = as.data.frame(w)
-  A=data.frame(rep(1/n_states,n_states))
-  A[1:n_states]=rep(1/n_states,n_states)
-  pi=c(0.6,0.4)
+  pi=rep(1/n_states, n_states)
+  #pi=c(0.6,0.4)
   
   
-  #n_inputs=ncol(returns)
-  
-  L=nrow(returns)
-  B=list(as.data.frame(m), as.data.frame(m))
-  B[1:n_states]=list(data.frame(c(rep(0,L))))
-  R=B
+  m=matrix(nrow = n_neurons, ncol = L)
+  R=list(as.data.frame(m), as.data.frame(m))
+  R[1:n_states]=list(data.frame(c(rep(0,L))))
   iteration=1
   
   #Generate Poisson Train
-  n_trains=n_inputs*n_states
+  n_trains=n_neurons*n_states
   high_freq=n_trains*.75
   low_freq=n_trains/10
   df=1/n_trains
@@ -30,6 +26,28 @@ BaumWelch_ANN = function(returns, w, p, n_states=2, Tolerance=7*10^{-2}){
   }
   eta=apply(m, 1, function(x)sum(x))
   
+  
+  #SECCION A
+  for(i in 1:n_states){
+    for(j in 1:L){
+      aux=pi[i]*exp(p[seq(((i-1)*n_inputs+1),i*n_inputs),1])*exp(apply(w_new[[j]][seq(((i-1)*n_inputs+1),i*n_inputs),]*as.double(returns[j,]),
+                                                                       1,function(x)sum(x)))
+      
+      R[[i]][j,] = aux/sum(aux)
+    }
+  }
+  aux=returns
+  mu=list()
+  for(i in 1:n_states){
+    for(j in 1:L){
+      aux[j,] = R[[i]][j,]*returns[j,]   
+    }
+    mu[[i]]=sum(aux[j,])/sum(R[[i]])
+    pi[[i]]=sum(R[[i]])/nrow(R[[i]])
+    pi=pi/sum(pi)
+  }
+  
+  
     w=w_new
     w_new=list(data.frame())
     w_change = function(w,L, n_neurons, n_states, stdp){
@@ -38,7 +56,7 @@ BaumWelch_ANN = function(returns, w, p, n_states=2, Tolerance=7*10^{-2}){
         aux[[i_1]]=w
         if(i_1 %in% stdp[[1]]){poisson_train=m[,i_1]}else{poisson_train=rev(m[,i_1])}
         for(i_2 in 1:n_trains){
-          if(poisson_train[i_2]==1){aux[[i_1]][i_2,]=exp(-aux[[i_1]][i_2,]+1)-1}else{aux[[i_1]][i_2,]=rep(-1,n_neurons)}
+          if(poisson_train[i_2]==1){aux[[i_1]][i_2,]=exp(-aux[[i_1]][i_2,]+1)-1}else{aux[[i_1]][i_2,]=rep(-1,n_inputs)}
         }
       }
       return(aux)
@@ -50,25 +68,7 @@ BaumWelch_ANN = function(returns, w, p, n_states=2, Tolerance=7*10^{-2}){
     
     
     
-    #SECCION A
-    #w_new=w
-    #pi
-    for(i in 1:n_states){
-      for(j in 1:L){
-        aux=pi[i]*exp(p[seq(((i-1)*n_inputs+1),i*n_inputs),1])*exp(apply(w_new[[j]][seq(((i-1)*n_inputs+1),i*n_inputs),]*as.double(returns[j,]),1,function(x)sum(x)))
-        R[[i]][j,] = aux/sum(aux)
-      }
-    }
-    aux=returns
-    mu=list()
-    for(i in 1:n_states){
-      for(j in 1:L){
-      aux[j,] = R[[i]][j,]*returns[j,]   
-      }
-      mu[[i]]=apply(aux, 2, function(x)sum(x))/sum(R[[i]])
-      pi[[i]]=sum(R[[i]])/nrow(R[[i]])
-      pi=pi/sum(pi)
-    }
+
     
 
 
@@ -90,7 +90,6 @@ BaumWelch_ANN = function(returns, w, p, n_states=2, Tolerance=7*10^{-2}){
     
     
     #SECCION E
-    
     p[1]=sum(R[,1])/length(R[,1])
     p[2]=sum(R[,2])/length(R[,2])
     # 

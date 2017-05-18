@@ -1,5 +1,4 @@
 #ALGORITMO BAUM-WELCH
-
 BaumWelch = function(returns, mu, sigma, n_states=3, Tolerance=7*10^{-2}, maxstep=1000){
 
   change_likelihood=c(rep(Inf, n_states))
@@ -9,8 +8,11 @@ BaumWelch = function(returns, mu, sigma, n_states=3, Tolerance=7*10^{-2}, maxste
   mu = as.data.frame(mu)
   A=data.frame(rep(1/n_states,n_states))
   A[1:n_states]=rep(1/n_states,n_states)
-  #A=data.frame(c(0.9,0.1),c(0.1,0.9))
+  # Nuestra Matriz de transción incial
+  # A=data.frame(c(0.9,0.1),c(0.1,0.9))
   p=rep(1/n_states,n_states)
+  # Nuestras probabilidades iniciales
+  # p = c(0.6, 0.4)
   k=ncol(returns)
   if(k==1){sigma=as.data.frame(sigma)}
   L=nrow(returns)
@@ -26,8 +28,6 @@ BaumWelch = function(returns, mu, sigma, n_states=3, Tolerance=7*10^{-2}, maxste
   while(change_likelihood[1] > Tolerance & change_likelihood[2] > Tolerance & iteration<=maxstep){
   
   #SECCION A
-  
-  
   for(i in 1:n_states){
     if(k!=1){
     R=returns
@@ -40,15 +40,8 @@ BaumWelch = function(returns, mu, sigma, n_states=3, Tolerance=7*10^{-2}, maxste
       }
     }
     
-  # % for t=1:T
-  # %     B(t,1) =  exp(-.5*((returns(t)-mu(1))/sigma(1)).^2)/(sqrt(2*pi)*sigma(1));
-  # %     B(t,2) =  exp(-.5*((returns(t)-mu(2))/sigma(2)).^2)/(sqrt(2*pi)*sigma(2));
-  # % end
-  # 
-    
-    
-  # SSECCION B
   
+  # SECCION B
   forward[1,]=p*B[1,]
   forward[1,] = forward[1,]/sum(forward[1,])
   
@@ -78,8 +71,6 @@ BaumWelch = function(returns, mu, sigma, n_states=3, Tolerance=7*10^{-2}, maxste
   }               
                  
   #SECCION D
-                
-                   
   for (t in 1:L){
     smoothed[t,]= forward[t,]*backward[t,]
     smoothed[t,]= smoothed[t,]/sum(smoothed[t,])
@@ -99,8 +90,6 @@ BaumWelch = function(returns, mu, sigma, n_states=3, Tolerance=7*10^{-2}, maxste
   }
   
   #SECCION E
-  
-    
   p=smoothed[1,]
   
   exp_num_transitions=data.frame(c(rep(0,n_states)),c(rep(0,n_states)))
@@ -116,31 +105,16 @@ BaumWelch = function(returns, mu, sigma, n_states=3, Tolerance=7*10^{-2}, maxste
     }else{A[i,]=c(rep(0,n_states))}
   if(k!=1){
     for(j in 1:k){
-      #Mirar
       if(sum(smoothed[,i])!=0){mu[j,i]=sum(smoothed[,i]*returns[,j])/sum(smoothed[,i])}else{mu[i,j]=0}
-      
-      }
-    # if(sum(smoothed[,i])!=0){
-    #   aux_sigma=retornos
-    #   R=returns
-    #   for(j in 1:nrow(returns)){
-    #     R[j,]=returns[j,]-mu[,i]
-    #   }
-    #   for(l in 1:k){
-    #     aux_sigma[,l]=smoothed[,i]*as.matrix(R[,l])
-    #   }
-    #   sigma[[i]]=var(aux_sigma)
-    # }else{sigma[[i]][,j]=0}
-  }else{
-    mu[i,]=sum(smoothed[,i]*returns)/sum(smoothed[,i])
-    sigma[i,]=apply((smoothed[,i]*(returns-mu[i,])^2),2, function(x)sum(x)/sum(smoothed[,i]))
     }
-  
-  
+  }else{
+      if(sum(smoothed[,i])!=0){
+        mu[i,]=sum(smoothed[,i]*returns)/sum(smoothed[,i])
+        sigma[i,]=apply((smoothed[,i]*(returns-mu[i,])^2),2, function(x)sum(x)/sum(smoothed[,i]))
+      }
+  }
   
     #TOLERANCE
-
-   
     if(k!=1){
       R=returns
       for(j in 1:nrow(returns)){
