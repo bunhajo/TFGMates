@@ -6,6 +6,7 @@ header-include:
   - \usepackage{stackrel}
   - \usepackage{booktabs}
   - \usepackage{algorithm} 
+  - \usepackage{algorithmic}
   - \usepackage{floatrow}
   - \usepackage{blindtext}
 
@@ -98,6 +99,8 @@ fontsize: 12pt
 <!-- \renewcommand{\algorithmictrue}{\textbf{cierto }}  -->
 <!-- \renewcommand{\algorithmicfalse}{\textbf{falso }}  -->
 
+\begin{algorithm}
+\end{algorithm}
 
 
 ```{r setup, include=FALSE}
@@ -1490,34 +1493,33 @@ El valor de $\Delta_{max}$ no es de gran importancia en la mayoría de casos, pe
 
 Así, el pseudo-código de implementacion del algoritmo de Resilient Back-propagation sería este:
 
-!!!!
 
 
-<!-- $$ -->
-<!-- \forall i, j:\Delta_{ij}(t) = \Delta_0 -->
-<!-- $$ -->
-<!-- $$ -->
-<!-- \forall i, j: \frac{\partial \mathcal{E}}{\partial w_{ij}(t-1)}=0 \newline -->
-<!-- $$ -->
-<!-- \textbf{Repetir}  -->
-<!-- \begin{flushleft} -->
-<!-- $\quad \textbf{Computar Gradiente } \frac{\partial \mathcal{E}}{\partial w_{ij}(t)}$ -->
-<!-- \newline -->
-<!-- $\quad \textbf{Para todos los pesos y sesgos}\{$ -->
-<!-- \newline -->
-<!-- $\quad \quad \textbf{si } \frac{\partial \mathcal{E}}{\partial w_{ij}(t)} \frac{\partial \mathcal{E}}{\partial w_{ij}(t-1)}>0 \textbf{ entonces} \{$ -->
-<!-- \newline -->
-<!-- $ -->
-<!-- \end{flushleft} -->
-<!-- \textbf{ Computar Gradiente } $\frac{\partial \mathcal{E}}{\partial w_{ij}(t)}$ -->
-<!--    \FOR{ \textbf{ todos los pesos y sesgos} -->
-<!--     \IF {$\frac{\partial \mathcal{E}}{\partial w_{ij}(t-1)}\frac{\partial \mathcal{E}}{\partial w_{ij}(t)}>0$}\THEN{ -->
-<!--     sdkfnslkdfnsdljf -->
-<!--     } -->
-<!--    } -->
-<!-- \end{algorithm} -->
+$$
+\forall i, j:\Delta_{ij}(t) = \Delta_0
+$$
+$$
+\forall i, j: \frac{\partial \mathcal{E}}{\partial w_{ij}(t-1)}=0 \newline
+$$
+\textbf{Repetir}
+\begin{flushleft}
+$\quad \textbf{Computar Gradiente } \frac{\partial \mathcal{E}}{\partial w_{ij}(t)}$
+\newline
+$\quad \textbf{Para todos los pesos y sesgos}\{$
+\newline
+$\quad \quad \textbf{si } \frac{\partial \mathcal{E}}{\partial w_{ij}(t)} \frac{\partial \mathcal{E}}{\partial w_{ij}(t-1)}>0 \textbf{ entonces} \{$
+\newline
+$
+\end{flushleft}
+\textbf{ Computar Gradiente } $\frac{\partial \mathcal{E}}{\partial w_{ij}(t)}$
+   \FOR{ \textbf{ todos los pesos y sesgos}
+    \IF {$\frac{\partial \mathcal{E}}{\partial w_{ij}(t-1)}\frac{\partial \mathcal{E}}{\partial w_{ij}(t)}>0$}\THEN{
+    sdkfnslkdfnsdljf
+    }
+   }
+\end{algorithm}
 
- <!-- \newfloatcommand{capbtabbox}{table}[][\FBwidth] -->
+\newfloatcommand{capbtabbox}{table}[][\FBwidth]
 
 
 
@@ -1684,6 +1686,7 @@ BaumWelch = function(returns, mu, sigma,
     for(j in 1:nrow(returns)){
       R[j,]=returns[j,]-mu[,i]
     }
+    #Calculamos los valores de la proyección sobre las Gaussianas de los valores.
         B[,i] = exp(-.5*apply((as.matrix(R)%*%
                                 solve(as.matrix(sigma[[i]])))*
                                 as.matrix(R), 1,
@@ -1697,7 +1700,7 @@ BaumWelch = function(returns, mu, sigma,
     
   
   # SECCION B
-  forward[1,]=p*B[1,]
+  forward[1,]=p*B[1,] # Valores Forward 
   forward[1,] = forward[1,]/sum(forward[1,])
   
   for (t in 2:L){
@@ -1711,7 +1714,7 @@ BaumWelch = function(returns, mu, sigma,
   
   #SECCION C
   
-  backward[L,]=B[L,]
+  backward[L,]=B[L,] #Valores Backward
   backward[L,]=backward[L,]/sum(backward[L,])
   
   t=L-1
@@ -1726,7 +1729,7 @@ BaumWelch = function(returns, mu, sigma,
   }               
                  
   #SECCION D
-  for (t in 1:L){
+  for (t in 1:L){ #Probabilidades Smoothed 
     smoothed[t,]= forward[t,]*backward[t,]
     smoothed[t,]= smoothed[t,]/sum(smoothed[t,])
   }
@@ -1740,7 +1743,7 @@ BaumWelch = function(returns, mu, sigma,
   } 
   
   xi[[t]] = A*aux
-  xi[[t]]=xi[[t]]/sum(xi[[t]])
+  xi[[t]]=xi[[t]]/sum(xi[[t]]) 
   t=t+1
   }
   
@@ -1750,7 +1753,7 @@ BaumWelch = function(returns, mu, sigma,
   exp_num_transitions=data.frame(c(rep(0,n_states)),c(rep(0,n_states)))
   for(i in 1:n_states){
     for(j in 1:n_states){
-     exp_num_transitions[i,j]=
+     exp_num_transitions[i,j]= #Número total de transiciones
        sum(sapply(lapply(xi,
                 function(x)sum(x[i,j])), function(x)(sum(x))))  
     }
@@ -1758,7 +1761,8 @@ BaumWelch = function(returns, mu, sigma,
   
   for(i in 1:n_states){
     if(sum(sapply(lapply(xi, function(x)sum(x[i,])), function(x)(sum(x))))!=0){
-    A[i,] = exp_num_transitions[i,]/sum(sapply(lapply(xi,
+    #Redefinimos matriz de transición
+    A[i,] = exp_num_transitions[i,]/sum(sapply(lapply(xi, 
                                     function(x)sum(x[i,])), function(x)(sum(x))))
     }else{A[i,]=c(rep(0,n_states))}
   if(k!=1){
@@ -1768,6 +1772,7 @@ BaumWelch = function(returns, mu, sigma,
     }
   }else{
       if(sum(smoothed[,i])!=0){
+        #Redefinimos mu y sigma
         mu[i,]=sum(smoothed[,i]*returns)/sum(smoothed[,i])
         sigma[i,]=apply((smoothed[,i]*(returns-mu[i,])^2),2,
                         function(x)sum(x)/sum(smoothed[,i]))
@@ -1780,6 +1785,7 @@ BaumWelch = function(returns, mu, sigma,
       for(j in 1:nrow(returns)){
         R[j,]=returns[j,]-mu[,i]
       }
+    # Verosimilitud para determinar convergencia del algoritmo
     likelihood[iteration, i] = log(sum(smoothed[,i]/sum(smoothed[,i])*
                                          exp(-.5*apply((as.matrix(R)%*%
                                          solve(as.matrix(sigma[[i]])))*
