@@ -1,19 +1,26 @@
 ---
-header-include:
+header-includes:
   - \usepackage{bbm} 
   - \usepackage{fancyhdr}
   - \usepackage{amsmath}
   - \usepackage{stackrel}
   - \usepackage{booktabs}
-  - \usepackage{algorithm} 
   - \usepackage{floatrow}
   - \usepackage{blindtext}
+  - \usepackage{algorithm}
+  - \usepackage{algorithmic}
+
+
+
 
 
 
 output: pdf_document
+            
+
 fontsize: 12pt
 ---
+
 
 \bibstyle{plain}
 
@@ -71,38 +78,58 @@ fontsize: 12pt
 
 
 \newpage
+\floatname{algorithm}{Algoritmo}
+\renewcommand{\listalgorithmname}{Lista de algoritmos}
+\renewcommand{\algorithmicrequire}{\textbf{Entrada:}}
+\renewcommand{\algorithmicensure}{\textbf{Salida:}}
+\renewcommand{\algorithmicend}{\textbf{fin}}
+\renewcommand{\algorithmicif}{\textbf{si}}
+\renewcommand{\algorithmicthen}{\textbf{entonces}}
+\renewcommand{\algorithmicelse}{\textbf{si no}}
+\renewcommand{\algorithmicelsif}{\algorithmicelse,\ \algorithmicif}
+\renewcommand{\algorithmicendif}{\algorithmicend\ \algorithmicif}
+\renewcommand{\algorithmicfor}{\textbf{para}}
+\renewcommand{\algorithmicforall}{\textbf{para todo}}
+\renewcommand{\algorithmicdo}{\textbf{hacer}}
+\renewcommand{\algorithmicendfor}{\algorithmicend\ \algorithmicfor}
+\renewcommand{\algorithmicwhile}{\textbf{mientras}}
+\renewcommand{\algorithmicendwhile}{\algorithmicend\ \algorithmicwhile}
+\renewcommand{\algorithmicloop}{\textbf{repetir}}
+\renewcommand{\algorithmicendloop}{\algorithmicend\ \algorithmicloop}
+\renewcommand{\algorithmicrepeat}{\textbf{repetir}}
+\renewcommand{\algorithmicuntil}{\textbf{hasta que}}
+\renewcommand{\algorithmicprint}{\textbf{imprimir}} 
+\renewcommand{\algorithmicreturn}{\textbf{devolver}} 
+\renewcommand{\algorithmictrue}{\textbf{cierto }} 
+\renewcommand{\algorithmicfalse}{\textbf{falso }} 
+
+
 \pagenumbering{roman} 
-
-<!-- \floatname{algorithm}{Algoritmo} -->
-<!-- \renewcommand{\listalgorithmname}{Lista de algoritmos} -->
-<!-- \renewcommand{\algorithmicrequire}{\textbf{Entrada:}} -->
-<!-- \renewcommand{\algorithmicensure}{\textbf{Salida:}} -->
-<!-- \renewcommand{\algorithmicend}{\textbf{fin}} -->
-<!-- \renewcommand{\algorithmicif}{\textbf{si}} -->
-<!-- \renewcommand{\algorithmicthen}{\textbf{entonces}} -->
-<!-- \renewcommand{\algorithmicelse}{\textbf{si no}} -->
-<!-- \renewcommand{\algorithmicelsif}{\algorithmicelse,\ \algorithmicif} -->
-<!-- \renewcommand{\algorithmicendif}{\algorithmicend\ \algorithmicif} -->
-<!-- \renewcommand{\algorithmicfor}{\textbf{para}} -->
-<!-- \renewcommand{\algorithmicforall}{\textbf{para todo}} -->
-<!-- \renewcommand{\algorithmicdo}{\textbf{hacer}} -->
-<!-- \renewcommand{\algorithmicendfor}{\algorithmicend\ \algorithmicfor} -->
-<!-- \renewcommand{\algorithmicwhile}{\textbf{mientras}} -->
-<!-- \renewcommand{\algorithmicendwhile}{\algorithmicend\ \algorithmicwhile} -->
-<!-- \renewcommand{\algorithmicloop}{\textbf{repetir}} -->
-<!-- \renewcommand{\algorithmicendloop}{\algorithmicend\ \algorithmicloop} -->
-<!-- \renewcommand{\algorithmicrepeat}{\textbf{repetir}} -->
-<!-- \renewcommand{\algorithmicuntil}{\textbf{hasta que}} -->
-<!-- \renewcommand{\algorithmicprint}{\textbf{imprimir}}  -->
-<!-- \renewcommand{\algorithmicreturn}{\textbf{devolver}}  -->
-<!-- \renewcommand{\algorithmictrue}{\textbf{cierto }}  -->
-<!-- \renewcommand{\algorithmicfalse}{\textbf{falso }}  -->
-
 
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+
+# Introducción
+
+El comienzo del siglo XXI ha visto el nacimiento de una nueva revolución, la de la información. Sólo entre 2013 y 2015 la humanidad generó más datos que en toda su historia previa. Esta avalancha de bytes ha servido como catalizador para el desarrollo de herramientas capaces de clasificar grandes cantidades de información. Es en este marco donde los denominados algoritmos de Machine Learning han encontrado un terreno fértil donde prosperar. 
+
+Se define Machine Learning como la disciplina del ámbito de la Inteligencia Artificial que crea mecanismos capaces de aprender de forma autónoma. En general,la característica principal de todos los algoritmos de este tipo es que su comportamiento está determinado por una serie de parámetros, y mediante el empleo de grandes muestras de entrenamiento, se busca modificar estos parámetros de manera que el algoritmo sea capaz de llevar a cabo una tarea clasificatoria de manera eficaz.
+
+Dos de los mecanismos de Machine Learning más famosos son los Modelos Ocultos de Markov (HMM) y las Redes Neuronales Artificiales (ANN). 
+
+Los HMM se enmarcan dentro de la teoría de las Cadenas de Markov, y aunque estos procesos estocásticos son conocidos desde su introducción en 1907 por el matemático ruso Andréi Markov, la gran cantidad de aplicaciones prácticas que tienen los ha convertido en uno de los modelos estadísticos más empleados en la actualidad.
+
+Por otro lado, las Redes Neuronales Artificiales son un modelo computacional basado en el comportamiento de las neuronas en los cerebros biológicos. Ya en los años 50 se crearon los primero algoritmos de este tipo, pero en 1969 Minsky y Papert demostrarón que estos primeros ANN's eran incapaces de procesar el operador lógico XOR. Sin embargo, en 1975 este obstáculo fue superado por Paul Werbos con la creación del algoritmo de Back-Propagation, y hoy en día esta técnica está viviendo un renacimiento, con compañías como Google o Facebook usando ANN's de gran complejidad en muchos de sus algoritmos estrella.
+
+En este trabajo estudiamos primero sobre procesos en espacios de secuencias, que resultan importantes pues resultan son el marco teórico de las cadenas Markov, y daremos unos cuantos resultados importantes como la existencia y unicidad de estos procesos empleando una versión del Teorema de Extensión de Kolmogorov.
+
+En el segundo capítulo hablaremos propiamente sobre las cadenas de Markov y los Modelos Ocultos de Markov, y daremos algunos ejemplos que hemos utilizado en la realidad.
+
+El tercer capítulo estará dedicado a las Redes Neuronales Artificiales: definiciones básicas, componentes y principales algoritmos que se emplean, así como un par de ejemplos donde se aplican.
+
+Finalmente terminaremos dando las nociones de cómo sería un modelo que combinara ANN's y HMM's para poder explotar las principales ventajas de ambos. 
 
 # 1.  Marco Teórico de las Cadenas de Markov 
 
@@ -1068,7 +1095,16 @@ En este apartado describiremos un HMM cuyas observaciones tienen una distribuci�
 
 Al ser un modelo contínuo, existen infinitos símbolos (de hecho, $V=\mathbb{R}$). Usaremos la notación para los modelos continuos de $b_j(o_t)=P(o_t|q_t=i), \quad \forall j \in \{1, \ldots, N\} \quad \forall t \in \{1, \ldots, M \}$; que nos indicará la verosimilitud de la observación $o_t$ respecto $i$.
 
-Tenemos en cuenta que la función de densidad asociada al estado $i$ será: $\\ N(x, \mu_i, \Sigma_i)= \frac{1}{\big(2 \pi\sigma_i^2\big)^L} e^{(x-\mu_i)\Sigma_i^{-1}(x-\mu_i)^t}$, y por lo tanto $b_j(o(t)) = \sum\limits_{k=1}^K c_{jk}N(x, \mu_j, \Sigma_j)$.
+Tenemos en cuenta que la función de densidad asociada al estado $i$ será: 
+$$
+ N(x, \mu_i, \Sigma_i)= \frac{1}{\big(2 \pi\big)^{L/2}|\Sigma_i|^{1/2}}e^{(x-\mu_i)\Sigma_i^{-1}(x-\mu_i)^t},
+$$ 
+
+y por lo tanto 
+$$
+b_j(o(t)) = \sum\limits_{k=1}^K c_{jk}N(x, \mu_j, \Sigma_j).
+$$
+
 
 ## Aplicación de un GHMM 
 
@@ -1492,30 +1528,41 @@ Así, el pseudo-código de implementacion del algoritmo de Resilient Back-propag
 
 !!!!
 
+$$
+\forall i, j: \Delta_{ij}(t) = \Delta_0
+$$
+$$
+\forall i, j: \frac{\partial \mathcal{E}}{\partial w_{ij}} = 0
+$$
 
-<!-- $$ -->
-<!-- \forall i, j:\Delta_{ij}(t) = \Delta_0 -->
-<!-- $$ -->
-<!-- $$ -->
-<!-- \forall i, j: \frac{\partial \mathcal{E}}{\partial w_{ij}(t-1)}=0 \newline -->
-<!-- $$ -->
-<!-- \textbf{Repetir}  -->
-<!-- \begin{flushleft} -->
-<!-- $\quad \textbf{Computar Gradiente } \frac{\partial \mathcal{E}}{\partial w_{ij}(t)}$ -->
-<!-- \newline -->
-<!-- $\quad \textbf{Para todos los pesos y sesgos}\{$ -->
-<!-- \newline -->
-<!-- $\quad \quad \textbf{si } \frac{\partial \mathcal{E}}{\partial w_{ij}(t)} \frac{\partial \mathcal{E}}{\partial w_{ij}(t-1)}>0 \textbf{ entonces} \{$ -->
-<!-- \newline -->
-<!-- $ -->
-<!-- \end{flushleft} -->
-<!-- \textbf{ Computar Gradiente } $\frac{\partial \mathcal{E}}{\partial w_{ij}(t)}$ -->
-<!--    \FOR{ \textbf{ todos los pesos y sesgos} -->
-<!--     \IF {$\frac{\partial \mathcal{E}}{\partial w_{ij}(t-1)}\frac{\partial \mathcal{E}}{\partial w_{ij}(t)}>0$}\THEN{ -->
-<!--     sdkfnslkdfnsdljf -->
-<!--     } -->
-<!--    } -->
-<!-- \end{algorithm} -->
+
+<!-- https://rosapolis.net/2008/04/21/escribir-algoritmos-en-latex/ -->
+\begin{algorithm}
+\caption{Calculate $y = x^n$}
+\label{alg1}
+\begin{algorithmic}
+\REQUIRE $n \geq 0 \vee x \neq 0$
+\ENSURE $y = x^n$
+\STATE $y \leftarrow 1$
+\IF{$n < 0$}
+\STATE $X \leftarrow 1 / x$
+\STATE $N \leftarrow -n$
+\ELSE
+\STATE $X \leftarrow x$
+\STATE $N \leftarrow n$
+\ENDIF
+\WHILE{$N \neq 0$}
+\IF{$N$ is even}
+\STATE $X \leftarrow X \times X$
+\STATE $N \leftarrow N / 2$
+\ELSE[$N$ is odd]
+\STATE $y \leftarrow y \times X$
+\STATE $N \leftarrow N - 1$
+\ENDIF
+\ENDWHILE
+\end{algorithmic}
+\end{algorithm}
+
 
  <!-- \newfloatcommand{capbtabbox}{table}[][\FBwidth] -->
 
@@ -1544,16 +1591,20 @@ source_url('https://gist.githubusercontent.com/fawda123/7471137/raw/466c1474d0a5
 
 Output <- runif(50, 0, 100) 
 df <- data.frame(Output, Input=sqrt(Output))
-net.sqrt <- neuralnet(Output~Input,  df, hidden=10, 
-                  threshold=0.01)
+net.sqrt <- neuralnet(Output~Input,  df, hidden=10,
+                   threshold=0.01)
 
-plot.nnet(net.sqrt, node.labs = F)
+#plot.nnet(net.sqrt, node.labs = F)
 
 
 ```
 \textit{En el gráfico se muestra un esquema de esta ANN, cuanto mayor es el peso de la conexión más oscuro es el color de la representación de esta conexión.}
 
 Veamos la precisión de esta ANN calculando el cuadrado de los naturales del 1 al 10.
+
+\newpage
+
+
 
 ```{r xtable1, results="asis",message=FALSE,echo=FALSE,warning=FALSE}
 tab<-as.data.frame(cbind(c(1:10),compute(net.sqrt, c(1:10))$net.result,abs(compute(net.sqrt, (1:10))$net.result-c(1:10)^2)))
@@ -1568,9 +1619,8 @@ print(tabla_1, type="latex", include.rownames=F)
 El otro ejemplo que veremos será una ANN entrenada para deducir la relación entre la temperatura (ºC) y la presión de vapor de mercurio en milímetros (de mercurio), a partir de 19 observaciones.
 
 
-\begin{table}%
+\begin{table}[h]
 \centering
-\caption{Observaciones}
 \parbox{0.4\textwidth}{
 \begin{footnotesize}
 \begin{tabular}{cc}
@@ -1604,12 +1654,11 @@ Temperature & Pressure \\
 \qquad
 \begin{minipage}[c]{0.53\textwidth}%
 \centering
-    \includegraphics[width=1\textwidth]{plot_01.png}
+    \includegraphics[width=1\textwidth]{ub.png}
 \label{fig:figure}
 \end{minipage}
 \end{table}
 
-\newpage
 
 Graficamos los resultados de la ANN entrenada:
 
@@ -1633,12 +1682,107 @@ ggplot(tab, aes(x=temperature, y=pressure))+geom_line(color="blue")+
 ```
 *En azul la curva original, y en rojo los puntos determinados por la ANN*
 
+\newpage
+
+#4. Modelo Mixto HMM-ANN
+
+La característica  de los HMM es su capacidad de discernir los diferentes estados aún cambiando el paradigma del modelo, es decir, es capaz de adaptarse a lo largo del tiempo. Sin embargo, los HMM están limitados en el número de diferentes estados que son capaces de distinguir, ya que si no están bien diferenciados, sus distribuciones de probabilidad acaban solapándose. En este sentido las ANN resultan mucho más eficaces, con una muestra de entrenamiento lo suficientemente grande estos mecanismos son capaces de distinguir una gran cantidad de outputs diferentes. Sin embargo, las ANN no disponen de esa habilidad de adaptación temporal. 
+
+Uno de los ejemplos más interesantes hoy en día es el reconocimiento de voz. Podemos decir que los HMM son mejores a la hora de seguir un discurso y las ANN en lo que sería la distinción de las diferentes sílabas que lo componen.
+
+Por esta razón han surgido estudios que tratan de crear modelos mixtos para explotar las ventajas de ambos métodos. En este capítulo explicamos cómo podría ser un modelo de este tipo, basándonos en *Training a Hidden Markov Model with a Bayesian Spiking Neural Network Amirhossein Tavanaei and Anthony S. Maida*
+
+##4.1 Redes Neuronales con Plasticidad Temporal
+
+Un fenómeno que ocurre en el cerebro es la plasticidad temporal (STDP), donde la conexión de la sinapsis modula la probabilidad de que un evento pre-sináptico (acción sobre las dendritas) cause un evento post-sináptico (acción sobre los axones). En otras palabra, la conexión sináptica influencia a la hora de que un input sea o no procesado. De la misma forma en una ANN los pesos pueden ser modificados a partir de reglas que incorporen información de la sinapsis mediantes reglas como la STDP.
+
+Básicamente, la regla de STDP dicta que si un evento presinaptico se lanza justo antes que uno postsináptico, entonces el peso de la sinapsis es reforzado. Si es al revés, esta conexión se debilita.
+*Nessler et al.* desarrollaron una versión de STDP para computar el algoritmo de Maximización de la Esperanza en un circuito neuronal.
+
+En este modelo, se usa una red neuronal de $N$ inputs de una sola capa (totalmente conectada) con $K$ unidades, y se utiliza de función de activación la exponencial. El output que genera entonces es $y_k(t)=e^{g_k(t)}$, con 
+
+$$
+g_k(t)=w_{k0}+\sum\limits_{i=1}^{N}\delta_i^k(t)w_{ki}(t)
+$$
+
+Si nos fijamos, respecto a la definición habitual lo que cambia es el término de la $\delta_i^k$, que depende de si el input estaba activo o no.
+
+$$
+\delta_i^k(t) =
+\begin{cases}
+1 \quad \text{ si el input }i \text{ se activó en el intervalo }[t - \sigma, t]\\
+0 \quad \text{ en caso contrario}
+\end{cases}
+$$
+
+El valor de $\sigma$ dependerá del caso.
+ 
+
+##4.2 Planteamiento Modelo HMM-ANN
+
+La idea de este modelo mixto es utilizar ANN's entrenadas específicamente para cada uno de los estados del HMM, que será de tipo Gaussiano, de manera que la verosimilitud de cada estado para las observaciones vendrá determinado por los pesos de las redes neuronales.
+
+**Dibujo**
+
+En particular emplearemos para entrenar las ANN's una versión de las reglas STDP. Primero recordamos que sobre una muestra $y$ de dimensi, definimos las función de distribución de una Gaussiana como:
+
+$$
+ N(x, \mu_i, \Sigma_i)= \frac{1}{\big(2 \pi\big)^{N/2}|\Sigma_i|^{1/2}}e^{(x-\mu_i)\Sigma_i^{-1}(x-\mu_i)^t},
+$$ 
+
+Por lo tanto, en un modelo mixto tendríamos $K$ mezclas $z_1, z_2, \ldots, z_K$ con $\sum z_k = 1$ y
+
+$$
+P(y|z_k=1) = N(y|\mu_k, \Sigma_k)
+$$
+$$
+P(y|z)=\prod_{k=1}^K N(y|\mu_k, \Sigma_k)^z_k,
+$$
+Y la probabilidad de $Pr(y)$ será
+
+$$
+P(y)=\sum_{z}P(z)P(y|z)=\sum_{k=1}^K \pi_k N(y|\mu_k, \Sigma_k)\\
+\text{donde } \sum_k \pi_k=1, 0\leq\pi_k\leq1
+$$
+
+Sea una muestra $y_r$ de $y$, definimos ahora $R(z_{kr})$ como
+
+$$
+P(z_k=1|y) = R(z_{kr})= \frac{\pi_k N(y_r|\mu_k,\Sigma_k)}{\sum\limits_{j=1}^K\pi_j N(y_r|\mu_j, \Sigma_j)}
+$$
+Para simplificar, supongamos que las muestras son independientes ($\Sigma=I$). 
+
+$$
+R(z_{kr})= \frac{\pi_k e^{-0.5(x-\mu_k)(x-\mu_k)^t}}{\sum\limits_{j=1}^K \pi_j e^{-0.5(x-\mu_j)(x-\mu_j)^t}}, \quad (1)
+$$
+
+Tendremos que $R(z_{kr})$ alcanza el máximo cuando $y_r=\mu_k$. Como hemos comentado antes, lo que hacemos es sustituir las distribuciones de los estados por Redes Neuronales, así que suponemos que para la neurona $k$, su peso $w_{ki}, i\in \{1, \ldots, N\}$ aproxima $\mu_k$ y, por lo tanto, podemos sustituir el componente $-0.5(x-\mu_k)(x-\mu_k)^t$ por el producto escalar entre $w$ e $y$, $w^ty$ de manera que, con esta reformulación, obtenemos
+
+$$
+R(z_{kr})=C\frac{\pi_k e^{w_k^ty_r}}{\sum\limits_{j=1}^K \pi_j e^{w_j^t y_r}} \quad (2)
+$$
+
+Con $C$ una constante de normalización. En este punto usamos las reglas del Algoritmo de Baum Welch para recalcular la $\mu_k$, o  la $w_k$ bajo la suposición con la que trabajamos, y también las $\pi_k$
+
+$$
+\mu_k=w_k = \frac{\sum\limits_{s=1}^M R(z_{ks}y_s)}{\sum_{s=1}^M R(z_{ks})}, \quad (3)
+$$
+
+
+$$
+\pi_k = \frac{\sum_{s=1}^M R(z_{ks})}{M} \quad (4)
+$$
+
+Donde $M$ es el número de muestras de entrenamiento.
+
+
 
 # Adjunto
 
 ## Algoritmo de Baum-Welch
 
 Este código es la implementación del algoritmo Baum-Welch, es una generalización del desarrollado por **LO DEL BANCO** que únicamente usa una variable (los retornos), en este caso podemos añadir múltiples inputs:
+
 
 ```{r,eval=FALSE, size = 'tiny' }
 
@@ -1814,8 +1958,6 @@ return(list(mu=mu, sigma=sigma, p = p, A=A, forward=forward, backward=backward,
 ```
 
  
-
-
 
 
 
