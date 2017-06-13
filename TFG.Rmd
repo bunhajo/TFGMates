@@ -6,6 +6,8 @@ header-includes:
   - \usepackage{stackrel}
   - \usepackage{booktabs}
   - \usepackage{floatrow}
+  - \usepackage{algorithm} 
+  - \usepackage{algorithmic}
   - \usepackage{blindtext}
   - \usepackage{algorithm}
   - \usepackage{algorithmic}
@@ -54,9 +56,9 @@ fontsize: 12pt
 \vspace*{2cm}
 \renewcommand{\arraystretch}{1.5}
 \begin{tabular}{ll}
-\textbf{\Large Director:} & \textbf{\Large Dr. Nom tutor } \\
-\textbf{\Large Realitzat a:} & \textbf{\Large  Departament....   } \\
- & \textbf{\Large (nom del departament)} \\
+\textbf{\Large Director:} & \textbf{\Large Dr. Josep Vives Santa Eulàlia } \\
+\textbf{\Large Realitzat a:} & \textbf{\Large  Departament de Probabilitat} \\ 
+& \textbf{\Large Lògica, i Estadística}
 \\
 \textbf{\Large Barcelona,} & \textbf{\Large \today }
 \end{tabular}
@@ -182,7 +184,8 @@ El recíproco también es cierto, y cualquier función de $X^*$ que satisfaga (1
 
 ## Unicidad de los Procesos
 
-Este apartado estará dedicado a demostrar la unicidad de los procesos mediante el siguiente Teorema.
+Este apartado estará dedicado a demostrar la unicidad de los procesos mediante el siguiente Teorema. Nos basamos en la demostración dada por Daniel Ray Upper en Theory and Algorithms for Hidden Markov Models
+and Generalized Hidden Markov Models.
 
 \textbf{Teorema.} Dado $f: X^* \rightarrow [0,1]$ que satisface:
  $$1.f(\emptyset)=1 $$
@@ -714,15 +717,13 @@ Una filtración es un conjunto incremental de $\sigma$-álgebras $\{\mathcal{F}\
 2. $\forall s, t \in \mathbb{N}$ tal que $t>s$, $X_s=\mathbb{E}(X_t|\mathcal{F})$.
 
 
+Utilizaremos el Teorema de Convergencia de Martingalas de Doob, sin entrar en demostraciones.
 
-¡¡¡ COMPLETAR APARTADO !!!
+**Teorema.** Si $\{\mathcal{F_n}\}$ es una secuencia crecientes de $\sigma$-álgebras, y $X$ es una función medile tal que $\mathbb{E}(|X|) < \infty$, entonces $\lim_{n \rightarrow \infty} \mathbb{E}(X|\mathcal{F}_n)$ converve de fomar casi segura a $\mathbb{E}(X|\mathcal{F})$, donde $\mathcal{F}$ es la menor $\sigma$-álgebra que contiene todas las $\mathcal{F}_n$'s.
 
---------
+En nuestro caso, utilizamos la versión reducida del Teorema de Doob para el caso en que $X$ viene dada por la función indicadora $1_A$.
 
-
-
-
-
+**Corolario.** Si $\mathcal{F}_n$ es una secuenciea creciente de $\sigma$-álgebras  y $A$ es un evento. Entonces $P(A|\mathcal{F}_n) \rightarrow P(A|\mathcal{F})$ casi seguramente, donde $\mathcal{F}$ es la menor $\sigma$-álgebra que contiene todas las $\sigma$-álgbras $\mathcal{F}_n$'s. *cqd*
 
 ##Tipos de Estado
 
@@ -898,6 +899,9 @@ $$
 $$
 \pi_i=P(q_1=i), \forall i \in \{1, \ldots, N\}
 $$
+![hmm](HMMfig1.png)
+
+
 Para denotar los parámetros de un HMM con frecuencia se usa:
 
 $$
@@ -914,7 +918,16 @@ Cuando se trata de distribuciones contínuas asociadas a funciones de densidad.
 
 ## Arquitectura de los HMM
 
-????
+El siguiente diagrama muestra la arquitectura general de un HMM de parámetros $\lambda_i$ con los dos procesos estocásticos asociados a este modelo.
+
+
+![hmm](HMMfig2.png)
+
+Para cada tiempo $t$ tenemos la variable aleatoria $S(t)$ que representa el estado oculto (no observable directamente). La variable $O$ es la de las observaciones. 
+
+El primer proceso estocástico resulta de que el valor de la variable oculta $s(t)$ en el tiempo $t$, conocidos todos los valores de $S$ anteriores solo depende de $S(t-1)$. Por lo tanto la propiedad de Markov es satisfecha.
+
+El segundo procesos estocástico viene de que el valor de $O(t)$ depende de la variable oculta asociada $S(t)$.
 
 ## Algoritmos Relacionados con los HMM's
 
@@ -1237,19 +1250,21 @@ La cuestión es que esta conexión sináptica cambia durante la vida de las neur
 
 ## Definición de Red Neuronal Artificial (ANN)
 
-Una neurona artificial puede ser implementada de muchas maneras. La definición matemática general es la siguiente:
+Una neurona artificial puede ser implementada de muchas maneras. La definición matemática general para una ANN de una sola capa, como la mostrada en la figura, es la siguiente:
 
 $$
 y(x)=g \big(\sum_{i=0}^n w_i x_i -\theta_i \big)
 $$
 donde $x$ es una neurona con $n$ inputs $x=(x_1, \ldots, x_n)$ y un axón de output $y(x)$. Los términos $w=w_0, \ldots, x_n$ son los pesos, y determinan cómo deben ser de intensificados los inputs. $\theta_i$ es el umbral o sesgo del input $i$.
 
-$g$ es una función de activación que balancea cómo de potentes debe ser el output (si existe) de la neurona, basado en la suma de los input. En el caso de neuronas reales, $g$ es una función $\delta$ de Kronecker que determina una relación binaria de todo o nada para el output. Sin embargo, no se suele implementar de esa manera una neurona artificiales, ya que como veremos luego, los algoritmos para entrenarlas suelen venir determinados por funciones diferenciables.
+$g$ es una función de activación que balancea cómo de potente debe ser el output (si existe) de la neurona, basándose en la suma de los input. En el caso de neuronas reales, $g$ es una función $\delta$ de Kronecker que determina una relación binaria de todo o nada para el output. Sin embargo, no se suele implementar de esa manera una neurona artificial, ya que como veremos luego, los algoritmos para entrenarlas suelen venir determinados por funciones diferenciables.
+
+![1sdasd](ANNfig1.png)
 
 Entre los tipos de funciones de activación más habituales están:
 
 $$
-f_1(x) = \alpha x, \alpha \in \mathbb{R} \text{ la función lineal}
+f_1(x) = \alpha x, \alpha \in \mathbb{R}
 $$
 
 $$
@@ -1268,18 +1283,18 @@ f_3(x) =  \frac{m}{1 + e^{-x}}
 $$
 con $m$ el coeficiente de magnitud. Esta función es diferenciable y con un dominio $D(f_3(x))=(0, m)$.
 
-La función sigmoidal es una función real de variable real diferenciable. Si $y(x)=f_3(x)$,
+La función sigmoidal es una función real de variable real diferenciable. Si $y(x)= \frac{1}{1 + e^{-x}}$,
 
 $$
 \frac{dy(x)}{dx} = \frac{e^{-x}}{(1+e^{-x})^2} = y(x)(1-y(x))
 $$
 
-por lo que $y(x)$ tiene una derivada simple
+por lo que $y(x)$ tiene una derivada simple. En adelante, la función de activación que utilizaremos será la sigmoidal logística para $m=1$.
 
 
 ## Backpropagation
 
-Entre las ANN's existentes, una de las más empleadas por su alta eficiencia es el Perceptrón Multicapa (MLP) mediante el uso del algoritmo de *Back-Propagation* descrito por Jian-Rong Chen . A diferencia del Perceptrón de una única capa, el MLP puede implementar gran variedad de funciones complejas, incluída la función XOR, que no puede ser realizada por el de una única capa como demostraron Minsky y Papert^{ojo} (Perceptrons: an introduction to computational geometry is a book written by Marvin Minsky and Seymour Papert and published in 1969).
+Entre las ANN's existentes, una de las más empleadas por su alta eficiencia es el Perceptrón Multicapa (MLP) mediante el uso del algoritmo de *Back-Propagation* descrito por Jian-Rong Chen . A diferencia del Perceptrón de una única capa, el MLP puede implementar gran variedad de funciones complejas, incluída la función XOR, que no puede ser realizada por el de una única capa como demostraron Minsky y Papert *(Perceptrons: an introduction to computational geometry is a book written by Marvin Minsky and Seymour Papert and published in 1969)*.
 
 En un MLP una unidad solo puede conectarse a la capa adyacente siguiente, no permitiéndose conexiones recurrentes ni en la misma capa. Sea $K$ el número de capas, $M$ el número de inputs y $N$ el número de outputs.  El input en una unidad (siempre que no sea en la capa de entrada) es la suma de los outputs de unidades conectadas en la capa anterior. Sea $x_i^j$ el input de la unidad $i$ en la capa $j$, $w_{ij}^k$ el peso de la conexión entre la unidad $i$ en la capa $k$ y la unidad $j$ de la capa $k+1$, $y_i^j$ el output de la unidad $i$ en la capa $j$ y, por último, $\theta_i^j$ el umbral (o sesgo) de la unidad $i$ en la capa $j$. Entonces tenemos
 que los input de la capa $k+1$ son:
@@ -1479,7 +1494,7 @@ $$
 $$
 con $N$ el número de capas del MLP y $P$ el número de outputs. Así, $\Delta \mathcal{E}(t), \quad t \geq 2$ sería el decremento de $\mathcal{E}(t)$, y $h(t)$ será un filtro recursivo de $\Delta \mathcal{E}(t)$: un filtro recursivo reutiliza uno o más de sus outputs como inputs, y permite controlar de esta manera que haya cambios bruscos en $\Delta \mathcal{E}(t)$, creando un versión del algoritmo más estable. 
 
-Los parámetros $a_1$ y $a_2$ del filtro recursivo $h(t)$ son los encargados de controlar está adaptación. Para una gran muestra de entrenamiento, un valor pequeño de $a_1$ y grande en $a_2$, combinado con una $\eta$ de gran tamaño también es lo que más favorece la convergencia **Tesauro, G . and Janssens, B. Scaling Relationships in Back Propagation LearningComplex System vol-2 No.l pp38-44 1988**.
+Los parámetros $a_1$ y $a_2$ del filtro recursivo $h(t)$ son los encargados de controlar está adaptación. Para una gran muestra de entrenamiento, un valor pequeño de $a_1$ y grande en $a_2$, combinado con una $\eta$ de gran tamaño también es lo que más favorece la convergencia *Tesauro, G . and Janssens, B. Scaling Relationships in Back Propagation LearningComplex System vol-2 No.l pp38-44 1988*.
 
 Un análisis del algoritmo nos permite ver que si $h(t)$ es positivo, entonces la tendencia de $\mathcal{E}(t)$ en el pasado inmediato es incrementar, por lo que $1 - h(t)\mathcal{E}(t) < 1$, y por lo tanto $\alpha$ decrecerá en este paso. De forma similar concluimos que si la tendencia de $\mathcal{E}(t)$ es decrecer, entonces $\alpha$ crecerá. Y finalmente, si $\mathcal{E}(t)$ es muy pequeño, significará que el MLP ya casi ha terminado de aprender, y la adaptación de muy baja magnitud, estabilizando el algoritmo.
 
@@ -1524,47 +1539,67 @@ Cuando inicializamos el algoritmo, todos los valores de actualización de pesos 
 
 El valor de $\Delta_{max}$ no es de gran importancia en la mayoría de casos, pero conviene fijar uno para evitar posibles problemas de rebote alrededor de un mínimo. Por último, $\Delta_{min}$ sí que es un valor de importancia, ya que fijar un valor adecuado del mismo evitará que el algoritmo se quede atascado si se encuentra con algún mínimo local subóptimo. En su estudio Riedmiller fija un valor de $\Delta_{min} = 1 e^{-6}$.
 
-Así, el pseudo-código de implementacion del algoritmo de Resilient Back-propagation sería este:
-
-!!!!
-
-$$
-\forall i, j: \Delta_{ij}(t) = \Delta_0
-$$
-$$
-\forall i, j: \frac{\partial \mathcal{E}}{\partial w_{ij}} = 0
-$$
+![asdasd](ResBackprop.png)
 
 
-<!-- https://rosapolis.net/2008/04/21/escribir-algoritmos-en-latex/ -->
+
+
+
+$$
+\forall i, j:\Delta_{ij}(t) = \Delta_0
+$$
+$$
+\forall i, j: \frac{\partial\mathcal{E}}{\partial w_{ij}(t-1)}=0
+$$
+\floatname{algorithm}{Algoritmo}
+\renewcommand{\listalgorithmname}{Lista de algoritmos}
+\renewcommand{\algorithmicrequire}{\textbf{Entrada:}}
+\renewcommand{\algorithmicensure}{\textbf{Salida:}}
+\renewcommand{\algorithmicend}{\textbf{fin}}
+\renewcommand{\algorithmicif}{\textbf{si}}
+\renewcommand{\algorithmicthen}{\textbf{entonces}}
+\renewcommand{\algorithmicelse}{\textbf{si no}}
+\renewcommand{\algorithmicelsif}{\algorithmicelse,\ \algorithmicif}
+\renewcommand{\algorithmicendif}{\algorithmicend\ \algorithmicif}
+\renewcommand{\algorithmicfor}{\textbf{para}}
+\renewcommand{\algorithmicforall}{\textbf{para todo}}
+\renewcommand{\algorithmicdo}{\textbf{hacer}}
+\renewcommand{\algorithmicendfor}{\algorithmicend\ \algorithmicfor}
+\renewcommand{\algorithmicwhile}{\textbf{mientras}}
+\renewcommand{\algorithmicendwhile}{\algorithmicend\ \algorithmicwhile}
+\renewcommand{\algorithmicloop}{\textbf{repetir}}
+\renewcommand{\algorithmicendloop}{\algorithmicend\ \algorithmicloop}
+\renewcommand{\algorithmicrepeat}{\textbf{repetir}}
+\renewcommand{\algorithmicuntil}{\textbf{hasta que}}
+\renewcommand{\algorithmicprint}{\textbf{imprimir}}
+\renewcommand{\algorithmicreturn}{\textbf{devolver}}
+\renewcommand{\algorithmictrue}{\textbf{cierto }}
+\renewcommand{\algorithmicfalse}{\textbf{falso }}
+
+
+
+
 \begin{algorithm}
-\caption{Calculate $y = x^n$}
-\label{alg1}
-\begin{algorithmic}
-\REQUIRE $n \geq 0 \vee x \neq 0$
-\ENSURE $y = x^n$
-\STATE $y \leftarrow 1$
-\IF{$n < 0$}
-\STATE $X \leftarrow 1 / x$
-\STATE $N \leftarrow -n$
-\ELSE
-\STATE $X \leftarrow x$
-\STATE $N \leftarrow n$
+\begin{algorithmic}[1]
+\REPEAT {\STATE computar gradiente $\frac{\partial \mathcal{E}}{\partial w}(t)$}
+\FOR{todos los pesos y sesgos}
+\IF{$\frac{\partial \mathcal{E}}{\partial w_{ij}}(t-1)\frac{\partial \mathcal{E}}{\partial w_{ij}}(t)>0$}
+\STATE $\Delta_{ij}(t) = \textbf{ min}(\Delta_{ij}(t-1)\eta^+, \Delta_{max}$)
+\STATE $\Delta w_{ij}(t) = -\textbf{ sign}\Big(\frac{\partial \mathcal{E}}{\partial w_{ij}}(t)\Big)\Delta_{ij}(t)$
+\STATE $w_{ij}(t+1)=w_{ij}(t)+\Delta_{ij}(t)$
+\STATE $\frac{\partial \mathcal{E}}{\partial w_{ij}}(t-1) = \frac{\partial \mathcal{E}}{\partial w_{ij}}(t)$
+\ELSIF{$\frac{\partial \mathcal{E}}{\partial w_{ij}}(t-1)\frac{\partial \mathcal{E}}{\partial w_{ij}}(t)<0$}
+\STATE $\Delta_{ij}(t) = \textbf{ maximum}(\Delta_{ij}(t-1)\eta^-, \Delta_{min})$
+\STATE $\frac{\partial \mathcal{E}}{\partial w_{ij}}(t-1)=0$
+\ELSIF{$\frac{\partial \mathcal{E}}{\partial w_{ij}}(t-1)\frac{\partial \mathcal{E}}{\partial w_{ij}}(t)=0$}
+\STATE $\Delta w_{ij}(t) = -\textbf{ sign}\Big(\frac{\partial \mathcal{E}}{\partial w_{ij}}(t)\Big)\Delta_{ij}(t)$
+\STATE $w_{ij}(t+1)=w_{ij}(t)+\Delta_{ij}(t)$
+\STATE $\frac{\partial \mathcal{E}}{\partial w_{ij}}(t-1) = \frac{\partial \mathcal{E}}{\partial w_{ij}}(t)$
 \ENDIF
-\WHILE{$N \neq 0$}
-\IF{$N$ is even}
-\STATE $X \leftarrow X \times X$
-\STATE $N \leftarrow N / 2$
-\ELSE[$N$ is odd]
-\STATE $y \leftarrow y \times X$
-\STATE $N \leftarrow N - 1$
-\ENDIF
-\ENDWHILE
+\ENDFOR
+\UNTIL {\textbf{converja}}
 \end{algorithmic}
 \end{algorithm}
-
-
- <!-- \newfloatcommand{capbtabbox}{table}[][\FBwidth] -->
 
 
 
@@ -1591,9 +1626,8 @@ source_url('https://gist.githubusercontent.com/fawda123/7471137/raw/466c1474d0a5
 
 Output <- runif(50, 0, 100) 
 df <- data.frame(Output, Input=sqrt(Output))
-net.sqrt <- neuralnet(Output~Input,  df, hidden=10,
-                   threshold=0.01)
-
+net.sqrt <- neuralnet(Output~Input,  df, hidden=10, 
+                  threshold=0.1)
 #plot.nnet(net.sqrt, node.labs = F)
 
 
@@ -1720,9 +1754,10 @@ El valor de $\sigma$ dependerá del caso.
 
 ##4.2 Planteamiento Modelo HMM-ANN
 
-La idea de este modelo mixto es utilizar ANN's entrenadas específicamente para cada uno de los estados del HMM, que será de tipo Gaussiano, de manera que la verosimilitud de cada estado para las observaciones vendrá determinado por los pesos de las redes neuronales.
+La idea de este modelo mixto es utilizar ANN's entrenadas específicamente para cada uno de los estados del HMM, que será de tipo Gaussiano (GHMM), de manera que la verosimilitud de cada estado para las observaciones vendrá determinado por los pesos de las redes neuronales.
 
-**Dibujo**
+![Caption for the picture.](GHMM-ANN_fig1.png)
+
 
 En particular emplearemos para entrenar las ANN's una versión de las reglas STDP. Primero recordamos que sobre una muestra $y$ de dimensi, definimos las función de distribución de una Gaussiana como:
 
@@ -1775,13 +1810,67 @@ $$
 
 Donde $M$ es el número de muestras de entrenamiento.
 
+En este ANN, $k$ es la neurona de output que acaba de disparar y el cual se supone corresponde al $\mu_k$ del GHMM, y se actualiza con cada nueva muestra. Para calcular el $w_k$ final, lo que haremos será al valor $\mu_k$ que obtengamos, añadirle un término proveniente de aplicar una adaptación de la regla STDP de Nessler, teniendo en cuenta si ha habido señal presináptica en el input $i$ en el intervalo $[t-\sigma, t]$ de la siguiente manera:
 
+$$
+\Delta w_{ki} = 
+\begin{cases}
+e^{-w_{ki}+1}-1 \quad \text{si } \delta_i^k(t) = 1 \\ 
+-1 \quad \quad \quad \quad \text{ }\text{si } \delta_i^k(t) = 0
+\end{cases}
+$$
+
+con $i \in \{1, \ldots, N\}$. En el primer caso se refuerza la conexión, mientras que en el segundo se debilita.
+
+Otor parámetro del GHMM es el coeficiente de mezcla $\pi_k$ obtenido en (4). El peso del sesgo $w_{k0}$, que asemejaría $\pi_k$ y representaría la media de veces que se activa la neurona $k$,  también está sujeto a las reglas STDP de la siguiente manera:
+
+$$
+\Delta w_{k0}= z_ke^{-w_{k0}+1}-1
+$$
+
+Y tendríamos $w_{k0}^{new}=w_{k0}+\Delta w_{k0}$. Para el resto de $w_{ki}$ la regla varía un poco, añadiéndose un término $\eta_k$ proporcional al número de veces que ha disparado la neurona $k$. Y tenemos   
+
+$$
+w_{ki}^{new} = w_{ki} + \eta_k \Delta w_{ki}
+$$
+
+Redefiniendo las $\pi_k$ como hemos visto en función del peso del sesgo tendríamos
+
+$$
+\pi_k^{ann}=\frac{e^{w_{k0}}}{\sum\limits_j e^{w_{j0}}}
+$$
+
+Introducimos este término en (2) para terminar de definir $R(z_{kr})$ en función únicamente de los pesos de la ANN.
+
+$$
+R(z_{kr})=C\frac{\frac{e^{w_{k0}}}{\sum\limits_j e^{w_{j0}}}e^{w_{k}^t y_r}}{\sum\limits_{l=1}^K\frac{e^{w_{l0}}}{\sum\limits_j e^{w_{j0}}}e^{w_{l}^t y_r}}
+$$
+$$
+Pr_(z\text{ dispara}|y_r)=R(z_{kr})=C\frac{e^{w_{j0}+w_{k}^t y_r}}{\sum\limits_{l=1}^K e^{w_{l0}+w_{l}^t y_r}}
+$$
+
+Finalmente, extraemos la probabilidad de que el input sea del tipo que el ANN ha reconocido utilizando $g_k(t)$, que hemos visto en el apartado anterior, definida como
+
+$$
+g_k(t)=w_{k0}+\sum\limits_{i=1}^{N}\delta_i^k(t)w_{ki}(t)
+$$
+
+Así, la probabilidad en el tiempo $t$ según este modelo sería 
+
+$$
+Pr_{snn}(t)=\underset{k \in K}{max}\frac{e^{g_k(t)}}{Z}
+$$
+ 
+ Donde $Z$ es una constante de normalización.
+
+
+\newpage
 
 # Adjunto
 
 ## Algoritmo de Baum-Welch
 
-Este código es la implementación del algoritmo Baum-Welch, es una generalización del desarrollado por **LO DEL BANCO** que únicamente usa una variable (los retornos), en este caso podemos añadir múltiples inputs:
+Este código es la implementación del algoritmo Baum-Welch (Capítulo 2):
 
 
 ```{r,eval=FALSE, size = 'tiny' }
@@ -1828,6 +1917,7 @@ BaumWelch = function(returns, mu, sigma,
     for(j in 1:nrow(returns)){
       R[j,]=returns[j,]-mu[,i]
     }
+    #Calculamos los valores de la proyección sobre las Gaussianas de los valores.
         B[,i] = exp(-.5*apply((as.matrix(R)%*%
                                 solve(as.matrix(sigma[[i]])))*
                                 as.matrix(R), 1,
@@ -1841,7 +1931,7 @@ BaumWelch = function(returns, mu, sigma,
     
   
   # SECCION B
-  forward[1,]=p*B[1,]
+  forward[1,]=p*B[1,] # Valores Forward 
   forward[1,] = forward[1,]/sum(forward[1,])
   
   for (t in 2:L){
@@ -1854,8 +1944,7 @@ BaumWelch = function(returns, mu, sigma,
   }
   
   #SECCION C
-  
-  backward[L,]=B[L,]
+  backward[L,]=B[L,] #Valores Backward
   backward[L,]=backward[L,]/sum(backward[L,])
   
   t=L-1
@@ -1870,7 +1959,7 @@ BaumWelch = function(returns, mu, sigma,
   }               
                  
   #SECCION D
-  for (t in 1:L){
+  for (t in 1:L){ #Probabilidades Smoothed 
     smoothed[t,]= forward[t,]*backward[t,]
     smoothed[t,]= smoothed[t,]/sum(smoothed[t,])
   }
@@ -1884,7 +1973,7 @@ BaumWelch = function(returns, mu, sigma,
   } 
   
   xi[[t]] = A*aux
-  xi[[t]]=xi[[t]]/sum(xi[[t]])
+  xi[[t]]=xi[[t]]/sum(xi[[t]]) 
   t=t+1
   }
   
@@ -1894,7 +1983,7 @@ BaumWelch = function(returns, mu, sigma,
   exp_num_transitions=data.frame(c(rep(0,n_states)),c(rep(0,n_states)))
   for(i in 1:n_states){
     for(j in 1:n_states){
-     exp_num_transitions[i,j]=
+     exp_num_transitions[i,j]= #Número total de transiciones
        sum(sapply(lapply(xi,
                 function(x)sum(x[i,j])), function(x)(sum(x))))  
     }
@@ -1902,7 +1991,8 @@ BaumWelch = function(returns, mu, sigma,
   
   for(i in 1:n_states){
     if(sum(sapply(lapply(xi, function(x)sum(x[i,])), function(x)(sum(x))))!=0){
-    A[i,] = exp_num_transitions[i,]/sum(sapply(lapply(xi,
+    #Redefinimos matriz de transición
+    A[i,] = exp_num_transitions[i,]/sum(sapply(lapply(xi, 
                                     function(x)sum(x[i,])), function(x)(sum(x))))
     }else{A[i,]=c(rep(0,n_states))}
   if(k!=1){
@@ -1912,6 +2002,7 @@ BaumWelch = function(returns, mu, sigma,
     }
   }else{
       if(sum(smoothed[,i])!=0){
+        #Redefinimos mu y sigma
         mu[i,]=sum(smoothed[,i]*returns)/sum(smoothed[,i])
         sigma[i,]=apply((smoothed[,i]*(returns-mu[i,])^2),2,
                         function(x)sum(x)/sum(smoothed[,i]))
@@ -1924,6 +2015,7 @@ BaumWelch = function(returns, mu, sigma,
       for(j in 1:nrow(returns)){
         R[j,]=returns[j,]-mu[,i]
       }
+    # Verosimilitud para determinar convergencia del algoritmo
     likelihood[iteration, i] = log(sum(smoothed[,i]/sum(smoothed[,i])*
                                          exp(-.5*apply((as.matrix(R)%*%
                                          solve(as.matrix(sigma[[i]])))*
@@ -1951,15 +2043,100 @@ BaumWelch = function(returns, mu, sigma,
 
 return(list(mu=mu, sigma=sigma, p = p, A=A, forward=forward, backward=backward, 
             smoothed=smoothed, exp_num_transitions)
-       )41
-
+       )
 }
 
 ```
 
  
 
+##Algoritmo Modelo Mixto GHMM-ANN
 
+```{r, eval=FALSE}
+
+GHMM-ANN = function(returns, w, p, n_states=2, n_samples=10, Tolerance=7*10^{-2}){
+  
+  sample=returns
+  n_samples=10
+  TL = length(sample)
+  
+  #STDP Rule
+  w_change = function(w,L, n_neurons, n_states, stdp){
+      aux=list(data.frame())
+      for(i_1 in 1:L){
+        aux[[i_1]]=w
+        if(i_1 %in% stdp[[1]]){poisson_train=m[,i_1]}else{poisson_train=rev(m[,i_1])}
+          for(i_2 in 1:n_trains){
+            if(poisson_train[i_2]==1){aux[[i_1]][i_2,]=
+            exp(-aux[[i_1]][i_2,]+1)-1}else{aux[[i_1]][i_2,]=rep(-1,n_inputs)}
+        }
+    }
+  return(aux)
+  }
+  
+  p_new=p
+  w_new=w
+  for (s in 1:n_samples){
+  p=p_new
+  w=w_new
+  #Sample  
+  returns=sample[seq((s-1)*trunc(TL/n_samples)+1,s*trunc(TL/n_samples)),]  
+  
+  
+  returns=as.data.frame(returns)
+  L=length(returns)
+  for(i in 1:n_samples){samples[[i]]= returns[((i-1)*round(L/n_samples)+1):(i*round(L/n_samples)),]}
+  w = as.data.frame(w)
+  pi=rep(1/n_states, n_states)
+  #pi=c(0.6,0.4)
+  
+  
+  m=matrix(nrow = n_neurons, ncol = L)
+  R=list(as.data.frame(m), as.data.frame(m))
+  R[1:n_states]=list(data.frame(c(rep(0,L))))
+  iteration=1
+  
+  #Generate Poisson Train
+  n_trains=n_neurons*n_states
+  high_freq=n_trains*.75
+  low_freq=n_trains/10
+  df=1/n_trains
+  m = matrix(ncol = L, nrow = n_trains)
+  for(i in 1:L){
+    m[,i] = as.double(runif(n_trains)<ifelse(i %in% stdp[[1]], high_freq*df, low_freq*df))
+  }
+  eta=apply(m, 1, function(x)sum(x))
+  
+  #Baum-Welch Adaptation
+  for(i in 1:n_states){
+    for(j in 1:L){
+      aux=pi[i]*exp(p[seq(((i-1)*n_inputs+1),i*n_inputs),1])*
+                exp(apply(w_new[[j]][seq(((i-1)*n_inputs+1),i*n_inputs),]*
+                as.double(returns[j,]),1,function(x)sum(x)))
+      R[[i]][j,] = aux/sum(aux)
+    }
+  }
+  aux=returns
+  mu=list()
+  for(i in 1:n_states){
+    for(j in 1:L){
+      aux[j,] = R[[i]][j,]*returns[j,]   
+    }
+    mu[[i]]=sum(aux[j,])/sum(R[[i]])
+    pi[[i]]=sum(R[[i]])/nrow(R[[i]])
+    pi=pi/sum(pi)
+  }
+  
+  
+    w_new=w_change(w,L,n_neurons, n_states, stdp)
+    for(i in 1:L){w_new[[i]]= mu[[i]] + 0.01*eta*w_new[[i]]}
+    p_new=pi*exp(-p+1)-1
+  }
+  
+return(list(mu=mu, pi=pi, p = p))  
+}
+   
+```
 
 
 
