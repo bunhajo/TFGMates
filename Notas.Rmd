@@ -228,28 +228,88 @@ $$
 \renewcommand{\algorithmictrue}{\textbf{cierto }}
 \renewcommand{\algorithmicfalse}{\textbf{falso }}
 
+```{r, eval=FALSE}
 
-
-
-\begin{algorithm}
-\begin{algorithmic}[1]
-\REPEAT {\STATE computar gradiente $\frac{\partial \mathcal{E}}{\partial w}(t)$}
-\FOR{todos los pesos y sesgos}
-\IF{$\frac{\partial \mathcal{E}}{\partial w_{ij}}(t-1)\frac{\partial \mathcal{E}}{\partial w_{ij}}(t)>0$}
-\STATE $\Delta_{ij}(t) = \textbf{ min}(\Delta_{ij}(t-1)\eta^+, \Delta_{max}$)
-\STATE $\Delta w_{ij}(t) = -\textbf{ sign}\Big(\frac{\partial \mathcal{E}}{\partial w_{ij}}(t)\Big)\Delta_{ij}(t)$
-\STATE $w_{ij}(t+1)=w_{ij}(t)+\Delta_{ij}(t)$
-\STATE $\frac{\partial \mathcal{E}}{\partial w_{ij}}(t-1) = \frac{\partial \mathcal{E}}{\partial w_{ij}}(t)$
-\ELSIF{$\frac{\partial \mathcal{E}}{\partial w_{ij}}(t-1)\frac{\partial \mathcal{E}}{\partial w_{ij}}(t)<0$}
-\STATE $\Delta_{ij}(t) = \textbf{ maximum}(\Delta_{ij}(t-1)\eta^-, \Delta_{min})$
-\STATE $\frac{\partial \mathcal{E}}{\partial w_{ij}}(t-1)=0$
-\ELSIF{$\frac{\partial \mathcal{E}}{\partial w_{ij}}(t-1)\frac{\partial \mathcal{E}}{\partial w_{ij}}(t)=0$}
-\STATE $\Delta w_{ij}(t) = -\textbf{ sign}\Big(\frac{\partial \mathcal{E}}{\partial w_{ij}}(t)\Big)\Delta_{ij}(t)$
-\STATE $w_{ij}(t+1)=w_{ij}(t)+\Delta_{ij}(t)$
-\STATE $\frac{\partial \mathcal{E}}{\partial w_{ij}}(t-1) = \frac{\partial \mathcal{E}}{\partial w_{ij}}(t)$
-\ENDIF
-\ENDFOR
-\UNTIL {\textbf{converja}}
-\end{algorithmic}
-\end{algorithm}
-
+GHMM-ANN = function(returns, w, p, n_states=2, n_samples=10, Tolerance=7*10^{-2}){
+  
+  sample=returns
+  n_samples=10
+  TL = length(sample)
+  
+  #STDP Rule
+  w_change = function(w,L, n_neurons, n_states, stdp){
+      aux=list(data.frame())
+      for(i_1 in 1:L){
+        aux[[i_1]]=w
+        if(i_1 %in% stdp[[1]]){poisson_train=m[,i_1]}else{poisson_train=rev(m[,i_1])}
+          for(i_2 in 1:n_trains){
+            if(poisson_train[i_2]==1){aux[[i_1]][i_2,]=
+            exp(-aux[[i_1]][i_2,]+1)-1}else{aux[[i_1]][i_2,]=rep(-1,n_inputs)}
+        }
+    }
+  return(aux)
+  }
+  
+  p_new=p
+  w_new=w
+  for (s in 1:n_samples){
+  p=p_new
+  w=w_new
+  #Sample  
+  returns=sample[seq((s-1)*trunc(TL/n_samples)+1,s*trunc(TL/n_samples)),]  
+  
+  
+  returns=as.data.frame(returns)
+  L=length(returns)
+  for(i in 1:n_samples){samples[[i]]= returns[((i-1)*round(L/n_samples)+1):(i*round(L/n_samples)),]}
+  w = as.data.frame(w)
+  pi=rep(1/n_states, n_states)
+  #pi=c(0.6,0.4)
+  
+  
+  m=matrix(nrow = n_neurons, ncol = L)
+  R=list(as.data.frame(m), as.data.frame(m))
+  R[1:n_states]=list(data.frame(c(rep(0,L))))
+  iteration=1
+  
+  #Generate Poisson Train
+  n_trains=n_neurons*n_states
+  high_freq=n_trains*.75
+  low_freq=n_trains/10
+  df=1/n_trains
+  m = matrix(ncol = L, nrow = n_trains)
+  for(i in 1:L){
+    m[,i] = as.double(runif(n_trains)<ifelse(i %in% stdp[[1]], high_freq*df, low_freq*df))
+  }
+  eta=apply(m, 1, function(x)sum(x))
+  
+  #Baum-Welch Adaptation
+  for(i in 1:n_states){
+    for(j in 1:L){
+      aux=pi[i]*exp(p[seq(((i-1)*n_inputs+1),i*n_inputs),1])*
+                exp(apply(w_new[[j]][seq(((i-1)*n_inputs+1),i*n_inputs),]*
+                as.double(returns[j,]),1,function(x)sum(x)))
+      R[[i]][j,] = aux/sum(aux)
+    }
+  }
+  aux=returns
+  mu=list()
+  for(i in 1:n_states){
+    for(j in 1:L){
+      aux[j,] = R[[i]][j,]*returns[j,]   
+    }
+    mu[[i]]=sum(aux[j,])/sum(R[[i]])
+    pi[[i]]=sum(R[[i]])/nrow(R[[i]])
+    pi=pi/sum(pi)
+  }
+  
+  
+    w_new=w_change(w,L,n_neurons, n_states, stdp)
+    for(i in 1:L){w_new[[i]]= mu[[i]] + 0.01*eta*w_new[[i]]}
+    p_new=pi*exp(-p+1)-1
+  }
+  
+return(list(mu=mu, pi=pi, p = p))  
+}
+   
+```
